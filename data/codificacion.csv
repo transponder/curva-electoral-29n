@@ -1,0 +1,78 @@
+partido,tema,nivel,estado,cita,fuente,url,fecha_consulta,codificadores,nota
+pnv,autogobierno,4,provisional,,,,,v0,
+pnv,fiscalidad,2,provisional,,,,,v0,
+pnv,vivienda,3,provisional,,,,,v0,
+pnv,sanidad-educacion,3,provisional,,,,,v0,
+pnv,trabajo-pensiones,4,provisional,,,,,v0,Reforzar pensiones mínimas y un salario mínimo vasco por encima del estatal.
+pnv,clima-energia,4,provisional,,,,,v0,"Bajar el impuesto eléctrico al 0,5 % y acelerar la inversión en redes."
+pnv,inmigracion,3,provisional,,,,,v0,
+pnv,industria-id,4,provisional,,,,,v0,Alinear ayudas a la innovación y exigir inversiones comprometidas.
+pnv,derechos-civiles,3,provisional,,,,,v0,
+pnv,euskera,4,provisional,,,,,v0,
+pnv,defensa,4,provisional,,Onda Vasca,,,v0,Inversión centrada en I+D y producción europea.
+eh-bildu,autogobierno,5,provisional,,,,,v0,
+eh-bildu,fiscalidad,4,provisional,,,,,v0,
+eh-bildu,vivienda,5,provisional,,,,,v0,
+eh-bildu,sanidad-educacion,5,provisional,,,,,v0,
+eh-bildu,trabajo-pensiones,5,provisional,,,,,v0,
+eh-bildu,clima-energia,4,provisional,,,,,v0,
+eh-bildu,inmigracion,1,provisional,,,,,v0,
+eh-bildu,industria-id,4,provisional,,,,,v0,
+eh-bildu,derechos-civiles,5,provisional,,,,,v0,
+eh-bildu,euskera,5,provisional,,,,,v0,
+eh-bildu,defensa,1,provisional,,Noticias de Navarra,,,v0,Rechaza subir el gasto y pidió debatir la salida de la OTAN.
+pse-ee,autogobierno,3,provisional,,,,,v0,
+pse-ee,fiscalidad,4,provisional,,,,,v0,Subidas a SOCIMI de vivienda y pisos turísticos; evidencia limitada a vivienda.
+pse-ee,vivienda,4,provisional,,,,,v0,
+pse-ee,sanidad-educacion,4,provisional,,,,,v0,
+pse-ee,trabajo-pensiones,4,provisional,,Deia,,,v0,"Salario mínimo anual, pensiones blindadas y jornada de 36 horas en 2030."
+pse-ee,clima-energia,3,estimado,,,,,v0,No consta ningún compromiso para el 29-N que acelere el plan vigente.
+pse-ee,inmigracion,2,provisional,,,,,v0,
+pse-ee,industria-id,4,provisional,,,,,v0,
+pse-ee,derechos-civiles,4,provisional,,,,,v0,
+pse-ee,euskera,3,provisional,,,,,v0,
+pse-ee,defensa,3,provisional,,Onda Vasca,,,v0,"Gasto en el 2,1 % del PIB."
+pp,autogobierno,2,provisional,,,,,v0,
+pp,fiscalidad,2,provisional,,,,,v0,
+pp,vivienda,2,provisional,,,,,v0,
+pp,sanidad-educacion,3,provisional,,Europa Press,,,v0,Al menos 4.500 médicos más en primaria sin cambiar el modelo de gestión.
+pp,trabajo-pensiones,2,provisional,,,,,v0,
+pp,clima-energia,2,provisional,,,,,v0,
+pp,inmigracion,4,provisional,,,,,v0,
+pp,industria-id,2,provisional,,,,,v0,
+pp,derechos-civiles,2,provisional,,,,,v0,
+pp,euskera,1,provisional,,,,,v0,
+pp,defensa,5,provisional,,EFE,,,v0,Más del 2 % del PIB sin concretar porcentaje.
+vox,autogobierno,1,provisional,,,,,v0,
+vox,fiscalidad,1,provisional,,,,,v0,
+vox,vivienda,1,provisional,,,,,v0,
+vox,sanidad-educacion,2,provisional,,,,,v0,
+vox,trabajo-pensiones,1,provisional,,,,,v0,Suprimir el registro horario (indicador del nivel 1).
+vox,clima-energia,1,provisional,,,,,v0,
+vox,inmigracion,5,provisional,,,,,v0,
+vox,industria-id,2,provisional,,Programa de desregulación de Vox (junio 2026),,,v0,Mejora de condiciones generales sin apuestas sectoriales.
+vox,derechos-civiles,1,provisional,,,,,v0,
+vox,euskera,1,provisional,,,,,v0,
+vox,defensa,5,provisional,,The Objective; EFE,,,v0,"Más del 2 % del PIB, destinado a fronteras."
+frente-amplio,autogobierno,4,provisional,,,,,v0,
+frente-amplio,fiscalidad,5,provisional,,,,,v0,
+frente-amplio,vivienda,5,provisional,,,,,v0,
+frente-amplio,sanidad-educacion,4,provisional,,Ministerio de Sanidad,,,v0,La ley de su ministra prioriza la gestión pública sin cifra de aumento del gasto.
+frente-amplio,trabajo-pensiones,5,provisional,,,,,v0,
+frente-amplio,clima-energia,5,provisional,,,,,v0,
+frente-amplio,inmigracion,1,provisional,,,,,v0,
+frente-amplio,industria-id,4,provisional,,,,,v0,
+frente-amplio,derechos-civiles,5,provisional,,,,,v0,
+frente-amplio,euskera,3,provisional,,,,,v0,
+frente-amplio,defensa,2,estimado,,Moncloa.com,,,v0,Política de paz sin propuesta concreta.
+podemos,autogobierno,4,provisional,,,,,v0,
+podemos,fiscalidad,5,provisional,,,,,v0,
+podemos,vivienda,5,provisional,,,,,v0,
+podemos,sanidad-educacion,5,provisional,,,,,v0,
+podemos,trabajo-pensiones,5,provisional,,,,,v0,
+podemos,clima-energia,5,provisional,,,,,v0,
+podemos,inmigracion,1,provisional,,,,,v0,
+podemos,industria-id,5,provisional,,Demócrata,,,v0,Propuesta de nacionalizar Repsol.
+podemos,derechos-civiles,5,provisional,,,,,v0,
+podemos,euskera,3,provisional,,,,,v0,
+podemos,defensa,1,provisional,,El Debate,,,v0,Pide salir de la OTAN.

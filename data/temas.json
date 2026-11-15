@@ -1,0 +1,146 @@
+[
+  {
+    "id": "autogobierno",
+    "nombre": "Autogobierno",
+    "corto": "Autogob.",
+    "pregunta": "¿Qué relación debería tener Euskadi con el Estado?",
+    "opciones": [
+      "Revisar el Concierto Económico y devolver competencias al Estado",
+      "Mantener el Estatuto y el Concierto sin nuevas transferencias",
+      "Completar las transferencias pendientes del Estatuto de Gernika",
+      "Un nuevo estatus con reconocimiento nacional y relación bilateral",
+      "Derecho a decidir y camino hacia la independencia"
+    ]
+  },
+  {
+    "id": "fiscalidad",
+    "nombre": "Fiscalidad",
+    "corto": "Fiscalidad",
+    "pregunta": "¿Qué debería hacerse con los impuestos?",
+    "opciones": [
+      "Bajar de forma general los impuestos a personas y empresas",
+      "Bajadas selectivas para rentas medias, familias y autónomos",
+      "Mantener la presión fiscal actual",
+      "Subir impuestos a rentas altas, grandes empresas y patrimonio",
+      "Una reforma fiscal muy progresiva, con tipos más altos sobre patrimonio y beneficios"
+    ]
+  },
+  {
+    "id": "vivienda",
+    "nombre": "Vivienda",
+    "corto": "Vivienda",
+    "pregunta": "¿Cómo debería abordarse el acceso a la vivienda?",
+    "opciones": [
+      "Liberalizar suelo, reducir trámites y dejar actuar al mercado",
+      "Ayudas a la compra y más seguridad jurídica para los propietarios",
+      "Combinar más oferta privada con vivienda protegida",
+      "Un gran parque público de alquiler y límites al alquiler en zonas tensionadas",
+      "Topes generalizados al alquiler y límites a la compra de vivienda que no sea para residir"
+    ]
+  },
+  {
+    "id": "sanidad-educacion",
+    "nombre": "Sanidad y educación",
+    "corto": "San./Edu.",
+    "pregunta": "¿Qué modelo quieres para la sanidad y la educación?",
+    "opciones": [
+      "Contener el gasto y ampliar la gestión privada y la libre elección",
+      "Mantener el gasto y la colaboración público-privada",
+      "Más gasto, manteniendo el modelo de gestión actual",
+      "Más gasto y prioridad a la gestión pública",
+      "Un gran aumento del gasto y revertir la gestión privada"
+    ]
+  },
+  {
+    "id": "trabajo-pensiones",
+    "nombre": "Trabajo y pensiones",
+    "corto": "Trabajo",
+    "pregunta": "¿Qué hacer con el mercado laboral y las pensiones?",
+    "opciones": [
+      "Flexibilizar el mercado laboral y complementar las pensiones con ahorro privado",
+      "Ajustes para la sostenibilidad: retrasar la jubilación o revisar el cálculo",
+      "Mantener las reformas laboral y de pensiones actuales",
+      "Subir el salario mínimo, reducir la jornada y revalorizar las pensiones con el IPC",
+      "Jornada de 32 a 35 horas, subir las pensiones por encima del IPC y más negociación colectiva"
+    ]
+  },
+  {
+    "id": "clima-energia",
+    "nombre": "Clima y energía",
+    "corto": "Clima",
+    "pregunta": "¿A qué ritmo debería avanzar la transición energética?",
+    "opciones": [
+      "Retirar los objetivos climáticos actuales",
+      "Ralentizar la transición y aplazar sus plazos",
+      "Cumplir los objetivos europeos sin acelerarlos",
+      "Acelerar renovables y electrificación con apoyo público",
+      "Una transición rápida, con cierre acelerado de los combustibles fósiles"
+    ]
+  },
+  {
+    "id": "inmigracion",
+    "nombre": "Inmigración",
+    "corto": "Inmigración",
+    "pregunta": "¿Qué política de inmigración prefieres?",
+    "opciones": [
+      "Regularización amplia, vías legales y prioridad a la acogida",
+      "Facilitar la integración y la inmigración laboral ordenada",
+      "Mantener la política actual",
+      "Más control de fronteras y requisitos más estrictos de entrada y residencia",
+      "Inmigración muy restringida y expulsión de quienes estén en situación irregular"
+    ],
+    "aviso": "Escala modificada el 13 de noviembre: las puntuaciones de este tema están pendientes de revisión."
+  },
+  {
+    "id": "industria-id",
+    "nombre": "Industria e I+D",
+    "corto": "Industria",
+    "pregunta": "¿Qué papel debería tener el sector público en la industria y la innovación?",
+    "opciones": [
+      "Ninguno: que decida el mercado y menos subvenciones",
+      "Mejorar las condiciones generales, como impuestos o energía, sin apuestas sectoriales",
+      "Apoyo puntual a sectores estratégicos",
+      "Política industrial activa con fondos para I+D y sectores estratégicos",
+      "Inversión pública masiva en I+D y participación pública en empresas estratégicas"
+    ]
+  },
+  {
+    "id": "derechos-civiles",
+    "nombre": "Derechos civiles",
+    "corto": "Derechos",
+    "pregunta": "¿Qué hacer con las leyes de derechos civiles (por ejemplo, aborto, eutanasia o igualdad de género)?",
+    "opciones": [
+      "Revisarlas para restringirlas o derogarlas",
+      "Mantenerlas con algunos límites adicionales",
+      "Mantenerlas como están",
+      "Ampliarlas y darles rango constitucional, por ejemplo el aborto en la Constitución",
+      "Ampliarlas de forma ambiciosa y reconocer nuevos derechos"
+    ]
+  },
+  {
+    "id": "euskera",
+    "nombre": "Euskera",
+    "corto": "Euskera",
+    "pregunta": "¿Qué política lingüística prefieres para el euskera?",
+    "opciones": [
+      "Reducir los requisitos de euskera en empleo público y educación",
+      "Mantener los requisitos con más flexibilidad",
+      "Mantener el modelo actual de perfiles lingüísticos y modelos educativos",
+      "Generalizar el euskera como lengua vehicular en la educación",
+      "Euskera como lengua principal en todos los ámbitos públicos"
+    ]
+  },
+  {
+    "id": "defensa",
+    "nombre": "Gasto en defensa",
+    "corto": "Defensa",
+    "pregunta": "¿Qué debería hacer España con el gasto en defensa?",
+    "opciones": [
+      "Reducir el gasto militar",
+      "No aumentar el gasto militar y priorizar la diplomacia",
+      "Mantener el gasto actual, en torno al 2 % del PIB",
+      "Aumentar el gasto de forma gradual, ligado a la industria y la I+D europeas",
+      "Aumentar el gasto por encima del 2 % como prioridad"
+    ]
+  }
+]
