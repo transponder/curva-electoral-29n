@@ -25,6 +25,11 @@
   }
   function h(tag, attrs, ...children) { return add(setAttrs(document.createElement(tag), attrs), children); }
   function s(tag, attrs, ...children) { return add(setAttrs(document.createElementNS(SVGNS, tag), attrs), children); }
+  // Al volver a pintar un bloque se pierde el foco del teclado. Los controles llevan data-fk
+  // (una clave estable) y, tras pintar, el foco vuelve al control con la misma clave.
+  const focusKey = box => { const a = document.activeElement; return a && box.contains(a) ? a.getAttribute('data-fk') : null; };
+  function refocus(box, fk) { if (!fk) return; const el = box.querySelector('[data-fk="' + fk + '"]'); if (el) el.focus({ preventScroll: true }); }
+  function keepFocus(box, fn) { const fk = focusKey(box); fn(); refocus(box, fk); }
 
   // ---------- Carga de datos ----------
   function parseCSV(text) {
@@ -83,9 +88,12 @@
   // series: [{id, label, color, user?, valores: {temaId: {nivel, estado}}}]
   function curveChart(opts) {
     const box = h('div', { class: 'chart' });
+    let pendingFocus = opts.focusKey || null;
     const draw = () => {
       const W = Math.max(280, box.clientWidth || 800);
+      const fk = pendingFocus || focusKey(box); pendingFocus = null;
       box.replaceChildren(drawSVG(W, opts));
+      refocus(box, fk);
     };
     let lastW = 0;
     const ro = new ResizeObserver(entries => {
@@ -129,7 +137,7 @@
         : { x: c - half, y: 0, width: M.step, height: H };
       const band = s('rect', { ...attrs, class: 'band' + (t.id === selected ? ' sel' : '') });
       if (onSelect) {
-        setAttrs(band, { tabindex: 0, role: 'button', 'aria-label': 'Ver detalle: ' + t.nombre, onclick: () => onSelect(t.id),
+        setAttrs(band, { tabindex: 0, role: 'button', 'data-fk': 'band-' + t.id, 'aria-pressed': String(t.id === selected), 'aria-label': 'Ver detalle: ' + t.nombre, onclick: () => onSelect(t.id),
           onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(t.id); } } });
       } else band.style.cursor = 'default';
       svg.appendChild(band);
@@ -231,7 +239,7 @@
   function partyChip(p, { pressed, onclick, small } = {}) {
     return h(onclick ? 'button' : 'span', {
       class: 'chip' + (onclick ? '' : ' chip-static'), type: onclick ? 'button' : null,
-      'aria-pressed': onclick ? String(!!pressed) : null, onclick, style: small ? { fontSize: '13px' } : null,
+      'aria-pressed': onclick ? String(!!pressed) : null, 'data-fk': onclick ? 'chip-' + p.id : null, onclick, style: small ? { fontSize: '13px' } : null,
     }, h('i', { class: 'dot', style: { background: p.color } }), p.siglas);
   }
 
@@ -288,21 +296,21 @@
     const chartSlot = h('div');
     const detailSlot = h('div');
     const chips = h('div', { class: 'chips' });
-    const renderChips = () => {
+    const renderChips = () => keepFocus(chips, () => {
       chips.replaceChildren(
         ...S.partidos.map(p => partyChip(p, { pressed: S.visible.has(p.id), onclick: () => {
           if (S.visible.has(p.id)) S.visible.delete(p.id); else S.visible.add(p.id);
           renderChips(); renderChart(); renderDetail();
         } })),
         h('span', { class: 'chip-row-actions' },
-          h('button', { class: 'linklike', type: 'button', onclick: () => { S.visible = new Set(S.partidos.map(p => p.id)); renderChips(); renderChart(); renderDetail(); } }, 'Todos'),
-          h('button', { class: 'linklike', type: 'button', onclick: () => { S.visible.clear(); renderChips(); renderChart(); renderDetail(); } }, 'Ninguno')));
-    };
+          h('button', { class: 'linklike', type: 'button', 'data-fk': 'todos', onclick: () => { S.visible = new Set(S.partidos.map(p => p.id)); renderChips(); renderChart(); renderDetail(); } }, 'Todos'),
+          h('button', { class: 'linklike', type: 'button', 'data-fk': 'ninguno', onclick: () => { S.visible.clear(); renderChips(); renderChart(); renderDetail(); } }, 'Ninguno')));
+    });
     const visibles = () => S.partidos.filter(p => S.visible.has(p.id));
-    const renderChart = () => {
+    const renderChart = (fk) => {
       const series = visibles().map(seriePartido);
       const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
-      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, onSelect: id => { S.temaSel = id; renderChart(); renderDetail(true); } }), legendNote());
+      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, focusKey: fk || focusKey(chartSlot), onSelect: id => { S.temaSel = id; renderChart('band-' + id); renderDetail(true); } }), legendNote());
     };
     const renderDetail = (scroll) => {
       const u = S.resultsReady && S.quiz ? S.quiz.answers[S.temaSel] : null;
@@ -354,13 +362,13 @@
 
   function viewPartido(id) {
     const p = partido(id);
-    if (!p) return h('div', { class: 'error-box' }, 'No encontramos ese partido. ', h('a', { href: '#/' }, 'Volver al inicio'));
+    if (!p) return h('div', { class: 'error-box' }, h('h1', null, 'No encontramos ese partido'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
     const root = h('div');
     const series = [seriePartido(p)];
     const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
     root.appendChild(h('div', { class: 'party-head' },
       h('i', { class: 'swatch', style: { background: p.color } }),
-      h('div', null, h('h1', null, p.siglas), p.nombre !== p.siglas ? h('p', { class: 'muted', style: { margin: '4px 0 0' } }, p.nombre) : null)));
+      h('div', null, h('h1', null, p.siglas), p.nombre !== p.siglas ? h('p', { class: 'muted', lang: p.lang || null, style: { margin: '4px 0 0' } }, p.nombre) : null)));
     root.appendChild(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' },
       curveChart({ temas: S.temas, series, compact: false }),
       u ? h('p', { class: 'muted small' }, 'La línea negra es tu curva, según tus respuestas al test.') : null,
@@ -460,25 +468,25 @@
           h('li', null, 'Puedes saltarte cualquier pregunta.'),
           h('li', null, 'Tus respuestas no salen de tu dispositivo: no se envían ni se guardan. Al cerrar la pestaña desaparecen.'),
           h('li', null, 'El resultado no es una recomendación de voto, sino una forma de ver qué propone cada partido.')),
-        h('div', { class: 'cta-row' }, h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Empezar')));
+        h('div', { class: 'cta-row' }, h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar')));
       return root;
     }
     if (S.resultsReady) return viewResultados();
 
     const q = S.quiz, i = q.step, t = S.temas[i];
     const sel = q.answers[t.id];
-    const go = d => { q.step = Math.min(S.temas.length, Math.max(0, i + d)); if (q.step >= S.temas.length) S.resultsReady = true; route(); window.scrollTo({ top: 0 }); };
+    const go = d => { q.step = Math.min(S.temas.length, Math.max(0, i + d)); if (q.step >= S.temas.length) S.resultsReady = true; route({ focusHeading: true }); window.scrollTo({ top: 0 }); };
     const pick = v => { q.answers[t.id] = v; route(); };
     root.append(
       h('div', { class: 'q-kicker' }, `Pregunta ${i + 1} de ${S.temas.length} · ${t.nombre}`),
-      h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': S.temas.length, 'aria-valuenow': i }, h('i', { style: { width: (i / S.temas.length * 100) + '%' } })),
+      h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Progreso del test', 'aria-valuemin': 0, 'aria-valuemax': S.temas.length, 'aria-valuenow': i }, h('i', { style: { width: (i / S.temas.length * 100) + '%' } })),
       h('h1', { class: 'q-title' }, t.pregunta),
       h('div', { class: 'options', role: 'radiogroup', 'aria-label': t.pregunta },
-        q.order[t.id].map(k => h('button', { class: 'option', type: 'button', role: 'radio', 'aria-checked': String(sel === k + 1), onclick: () => pick(k + 1) }, h('span', { class: 'radio' }), h('span', null, t.opciones[k]))),
-        h('button', { class: 'option skip-opt', type: 'button', role: 'radio', 'aria-checked': String(sel === 0), onclick: () => pick(0) }, h('span', { class: 'radio' }), h('span', null, 'No lo tengo claro / prefiero no contestar'))),
+        q.order[t.id].map(k => h('button', { class: 'option', type: 'button', role: 'radio', 'data-fk': 'opt-' + (k + 1), 'aria-checked': String(sel === k + 1), onclick: () => pick(k + 1) }, h('span', { class: 'radio' }), h('span', null, t.opciones[k]))),
+        h('button', { class: 'option skip-opt', type: 'button', role: 'radio', 'data-fk': 'opt-0', 'aria-checked': String(sel === 0), onclick: () => pick(0) }, h('span', { class: 'radio' }), h('span', null, 'No lo tengo claro / prefiero no contestar'))),
       h('div', { class: 'importance' },
         h('span', { class: 'label', id: 'imp-l' }, '¿Cuánto te importa este tema?'),
-        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'imp-l' }, PESOS.map(w => h('button', { type: 'button', 'aria-pressed': String(q.weights[t.id] === w.v), onclick: () => { q.weights[t.id] = w.v; route(); } }, w.t)))),
+        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'imp-l' }, PESOS.map(w => h('button', { type: 'button', 'data-fk': 'imp-' + w.v, 'aria-pressed': String(q.weights[t.id] === w.v), onclick: () => { q.weights[t.id] = w.v; route(); } }, w.t)))),
       h('div', { class: 'q-nav' },
         h('button', { class: 'btn btn-ghost', type: 'button', disabled: i === 0 ? true : null, onclick: () => go(-1) }, '← Anterior'),
         h('button', { class: 'btn btn-primary', type: 'button', disabled: sel === undefined ? true : null, onclick: () => go(1) }, i === S.temas.length - 1 ? 'Ver mi curva' : 'Siguiente →')));
@@ -491,7 +499,7 @@
     const contestadas = S.temas.filter(t => S.quiz.answers[t.id]).length;
     root.append(h('span', { class: 'q-kicker' }, 'Tu resultado'), h('h1', { style: { marginTop: '8px' } }, 'Tu curva frente a la de los partidos'));
     if (!contestadas) {
-      root.append(h('p', { class: 'lead' }, 'No has elegido ninguna opción, así que no podemos dibujar tu curva.'), h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Repetir el test'));
+      root.append(h('p', { class: 'lead' }, 'No has elegido ninguna opción, así que no podemos dibujar tu curva.'), h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Repetir el test'));
       return root;
     }
     root.append(h('p', { class: 'lead' }, `Has contestado ${contestadas} de ${S.temas.length} temas. La cercanía mide cuánto se parecen tus respuestas a las posiciones de cada partido, dando más peso a los temas que más te importan.`));
@@ -499,7 +507,7 @@
     const sel = new Set(res.slice(0, 3).map(r => r.p.id));
     const chipsBox = h('div', { class: 'chips' }), chartBox = h('div');
     const draw = () => {
-      chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } })));
+      keepFocus(chipsBox, () => chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } }))));
       chartBox.replaceChildren(curveChart({ temas: S.temas, series: [...S.partidos.filter(p => sel.has(p.id)).map(seriePartido), serieUsuario()] }));
     };
     draw();
@@ -520,8 +528,8 @@
     };
     const btnShare = h('button', { class: 'btn btn-accent', type: 'button', onclick: share }, 'Compartir el test');
     root.append(h('div', { class: 'cta-row' }, btnShare,
-      h('button', { class: 'btn', type: 'button', onclick: () => { S.quiz.step = 0; S.resultsReady = false; route(); } }, 'Revisar respuestas'),
-      h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Empezar de cero')));
+      h('button', { class: 'btn', type: 'button', onclick: () => { S.quiz.step = 0; S.resultsReady = false; route({ focusHeading: true }); } }, 'Revisar respuestas'),
+      h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar de cero')));
     return root;
   }
 
@@ -625,32 +633,55 @@
 
   // ---------- Router ----------
   const app = document.getElementById('app');
-  function route() {
+  const TITULO = document.title;
+  function focusHeading() {
+    const el = app.querySelector('h1') || app;
+    el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+  }
+  // opts.focusHeading: la vista es nueva (otra ruta u otra pregunta) y el foco va a su título.
+  // Sin esa opción se conserva el foco en el control que se acaba de usar.
+  function route(opts) {
+    opts = opts || {};
+    const fk = opts.focusHeading ? null : focusKey(app);
     const parts = (location.hash.replace(/^#\/?/, '').split('#')[0] || '').split('/').filter(Boolean);
     const [r, a, b] = parts;
-    let view, nav;
+    let view, nav, titulo = '';
     switch (r) {
       case undefined: view = viewInicio(); nav = 'inicio'; break;
-      case 'test': view = viewTest(); nav = 'test'; break;
-      case 'partido': view = viewPartido(a); nav = 'inicio'; break;
-      case 'comparar': view = viewComparar(a, b); nav = 'comparar'; break;
-      case 'metodologia': view = viewMetodologia(); nav = 'metodologia'; break;
-      case 'privacidad': view = viewPrivacidad(); nav = null; break;
-      default: view = h('div', { class: 'error-box' }, 'Página no encontrada. ', h('a', { href: '#/' }, 'Volver al inicio'));
+      case 'test':
+        view = viewTest(); nav = 'test';
+        titulo = !S.quiz ? 'Haz el test' : S.resultsReady ? 'Tu resultado' : `Pregunta ${S.quiz.step + 1} de ${S.temas.length}`;
+        break;
+      case 'partido': view = viewPartido(a); nav = 'inicio'; titulo = (partido(a) || {}).siglas || 'Partido no encontrado'; break;
+      case 'comparar': view = viewComparar(a, b); nav = 'comparar'; titulo = 'Compara dos partidos'; break;
+      case 'metodologia': view = viewMetodologia(); nav = 'metodologia'; titulo = 'Metodología y fuentes'; break;
+      case 'privacidad': view = viewPrivacidad(); nav = null; titulo = 'Privacidad y aviso legal'; break;
+      default:
+        view = h('div', { class: 'error-box' }, h('h1', null, 'Página no encontrada'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
+        titulo = 'Página no encontrada';
     }
     app.replaceChildren(view);
+    document.title = titulo ? titulo + ' · ' + TITULO : TITULO;
     document.querySelectorAll('[data-nav]').forEach(el => {
       if (el.dataset.nav === nav) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
     });
     const anchor = location.hash.split('#')[2];
-    if (anchor) { const el = document.getElementById(anchor); if (el) el.scrollIntoView(); }
+    const target = anchor ? document.getElementById(anchor) : null;
+    if (target) { target.scrollIntoView(); if (opts.focusHeading) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); } }
+    else if (opts.focusHeading) focusHeading();
+    else refocus(app, fk);
   }
   let lastRoute = '';
   window.addEventListener('hashchange', () => {
     const base = location.hash.split('#').slice(0, 2).join('#');
-    route();
-    if (base !== lastRoute) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
+    const cambia = base !== lastRoute;
+    route({ focusHeading: cambia || !!location.hash.split('#')[2] });
+    if (cambia) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
   });
+  // «Saltar al contenido»: mueve el foco sin cambiar el hash (el router lo leería como una ruta).
+  const skip = document.querySelector('.skip');
+  if (skip) skip.addEventListener('click', e => { e.preventDefault(); focusHeading(); (app.querySelector('h1') || app).scrollIntoView({ block: 'center' }); });
 
   load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); }).catch(err => {
     console.error(err);
