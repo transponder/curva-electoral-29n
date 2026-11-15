@@ -72,6 +72,9 @@ button, select, input { font: inherit; color: inherit; }
 
 main { padding-top: 24px; padding-bottom: 56px; outline: none; }
 .loading, .error-box { padding: 48px 0; color: var(--ink-2); }
+.error-box h1 { color: var(--ink); }
+/* Títulos que reciben el foco al cambiar de vista: sin marco para quien usa ratón o táctil. */
+h1[tabindex="-1"]:focus:not(:focus-visible), main:focus { outline: none; }
 .error-box { color: var(--ink); }
 
 /* Tipografía */
