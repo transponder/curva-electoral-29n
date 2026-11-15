@@ -18,7 +18,8 @@ python3 -m http.server 8000
 ```
 index.html            Página única (rutas con #/…)
 css/styles.css        Estilos, sin fuentes externas
-js/app.js             Toda la lógica, sin dependencias
+js/app.js             Interfaz y vistas, sin dependencias
+js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
 data/temas.json       11 temas: pregunta y 5 opciones (texto exacto del codebook)
 data/partidos.json    Partidos con curva, color neutro, candidaturas y enlaces (a verificar)
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
@@ -45,6 +46,20 @@ Edita `data/codificacion.csv` (se puede abrir en Excel o Google Sheets y exporta
 Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`.
 
 La metodología completa está en la página `#/metodologia`, basada en el codebook del proyecto.
+
+## Tests y sensibilidad del cálculo
+
+El cálculo de cercanía está en `js/cercania.js`, separado de la interfaz. Para comprobarlo:
+
+```bash
+node --test
+```
+
+Para ver si la fórmula favorece por sí sola a algún partido (simulación con respuestas al azar):
+
+```bash
+python3 scripts/sensibilidad.py
+```
 
 ## Privacidad
 
