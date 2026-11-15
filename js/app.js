@@ -119,7 +119,7 @@
       levelPos = lv => M.l + (lv - 1) / 4 * iw;
       M.step = rowH;
     }
-    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': 'Curvas de valor por tema: cada punto es la opción que mejor describe la propuesta de cada partido, del 1 al 5.' });
+    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: onSelect ? 'group' : 'img', 'aria-label': 'Gráfico de curvas: ' + (series.map(se => se.label).join(', ') || 'ningún partido seleccionado') + '. Cada punto es la opción, de 1 a 5, que mejor describe su propuesta en cada tema.' + (onSelect ? ' Las mismas posiciones están en la tabla que sigue al gráfico.' : '') });
 
     // Bandas de tema (clicables)
     temas.forEach((t, i) => {
@@ -223,6 +223,21 @@
     h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado'),
     h('span', null, '1 y 5 son los extremos de cada tema: no significan izquierda o derecha, ni mejor o peor.'));
 
+  // Alternativa en tabla al gráfico: mismas posiciones, legibles sin ver el gráfico.
+  // La celda muestra el número y, para lectores de pantalla, el texto de la opción.
+  function tablaPosiciones(partidos) {
+    return h('details', { class: 'tabla-alt' },
+      h('summary', null, 'Ver las posiciones como tabla'),
+      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Posiciones de cada partido por tema' },
+        h('table', { class: 'data-table' },
+          h('caption', null, 'Opción asignada a cada partido en cada tema, de 1 a 5. El 1 y el 5 son los extremos de cada tema, no izquierda o derecha. «est.» indica una posición estimada.'),
+          h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Tema'), partidos.map(p => h('th', { scope: 'col' }, p.siglas)))),
+          h('tbody', null, S.temas.map(t => h('tr', null,
+            h('th', { scope: 'row', style: { textTransform: 'none', fontSize: '14px', color: 'var(--ink)', letterSpacing: 0 } }, t.nombre),
+            partidos.map(p => { const c = celda(p.id, t.id);
+              return h('td', { class: 'c' }, c ? [String(c.nivel), c.estado === 'estimado' ? ' est.' : null, h('span', { class: 'sr-only' }, ': ' + t.opciones[c.nivel - 1])] : '—'); })))))));
+  }
+
   function estadoBadge(estado) {
     const map = { provisional: 'Provisional', estimado: 'Estimado', validado: 'Validado' };
     return h('span', { class: 'badge ' + (estado || '') }, map[estado] || estado || '—');
@@ -316,7 +331,7 @@
         h('h2', null, 'Las curvas de valor'),
         h('p', null, 'Cada línea es un partido. En cada tema, su punto marca la opción que mejor describe su propuesta concreta. Toca un tema para ver las cinco opciones y quién está en cada una.'))),
       chips,
-      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot), detailSlot)));
+      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot, tablaPosiciones(S.partidos)), detailSlot)));
 
     // Fichas
     root.appendChild(h('section', { id: 'fichas' },
@@ -374,7 +389,7 @@
         const pt = props.filter(x => x.tema === t.id);
         return h('div', { class: 'card tema-item' },
           h('div', { class: 'row' }, h('h3', null, t.nombre), c ? estadoBadge(c.estado) : null),
-          c ? h('div', { class: 'levelbar', style: { '--c': p.color }, 'aria-label': `Opción ${c.nivel} de 5` }, [1, 2, 3, 4, 5].map(lv => h('i', { class: lv === c.nivel ? 'on' : null }))) : null,
+          c ? h('div', { class: 'levelbar', style: { '--c': p.color }, role: 'img', 'aria-label': `Opción ${c.nivel} de 5` }, [1, 2, 3, 4, 5].map(lv => h('i', { class: lv === c.nivel ? 'on' : null }))) : null,
           h('div', { class: 'opcion' }, c ? t.opciones[c.nivel - 1] : 'Sin codificar'),
           c && (c.cita || c.nota) ? h('div', null, c.cita ? h('q', null, c.cita) : h('span', { class: 'muted' }, c.nota)) : null,
           c && c.fuente ? h('div', { class: 'meta' }, 'Fuente: ', c.url ? h('a', { href: c.url, target: '_blank', rel: 'noopener' }, c.fuente) : c.fuente, c.fecha_consulta ? ' · consultada el ' + c.fecha_consulta : '') : null,
@@ -413,7 +428,7 @@
       curveChart({ temas: S.temas, series: [seriePartido(pa), seriePartido(pb)] }), legendNote()));
     root.appendChild(h('p', { style: { fontSize: '18px', marginTop: '20px' } }, h('strong', null, `Coinciden en ${same} de ${S.temas.length} temas.`)));
     root.appendChild(h('div', { class: 'card', style: { padding: '6px 14px' } }, h('table', { class: 'cmp-table' },
-      h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, pa.siglas), h('th', null, pb.siglas), h('th', null, ''))),
+      h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, pa.siglas), h('th', null, pb.siglas), h('th', null, h('span', { class: 'sr-only' }, 'Diferencia')))),
       h('tbody', null, S.temas.map(t => {
         const x = celda(a, t.id), y = celda(b, t.id);
         const eq = x && y && x.nivel === y.nivel;
@@ -593,13 +608,13 @@
   function acuerdoTabla() {
     const a = S.meta.acuerdo_por_tema || {};
     if (!Object.keys(a).length) return h('p', { class: 'placeholder' }, 'El acuerdo por tema se publicará al terminar la segunda codificación.');
-    return h('div', { class: 'table-scroll' }, h('table', { class: 'data-table' }, h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, 'Acuerdo inicial'))),
+    return h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Acuerdo inicial por tema' }, h('table', { class: 'data-table' }, h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, 'Acuerdo inicial'))),
       h('tbody', null, S.temas.map(t => h('tr', null, h('td', null, t.nombre), h('td', { class: 'c' }, a[t.id] != null ? a[t.id] + ' %' : '—'))))));
   }
   function estadoTabla() {
     const abbr = { provisional: 'P', estimado: 'E', validado: 'V' };
     return h('div', null,
-      h('div', { class: 'table-scroll' }, h('table', { class: 'data-table' },
+      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Estado de la codificación por partido y tema' }, h('table', { class: 'data-table' },
         h('thead', null, h('tr', null, h('th', null, 'Partido'), S.temas.map(t => h('th', { title: t.nombre }, t.corto)))),
         h('tbody', null, S.partidos.map(p => h('tr', null, h('td', null, h('strong', null, p.siglas)),
           S.temas.map(t => { const c = celda(p.id, t.id); return h('td', { class: 'c', title: c ? c.estado : '' }, c ? `${c.nivel}${abbr[c.estado] ? ' ' + abbr[c.estado] : ''}` : '—'); })))))),
