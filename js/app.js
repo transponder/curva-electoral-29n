@@ -317,7 +317,7 @@
     const renderChart = () => {
       const series = visibles().map(seriePartido);
       const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
-      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, onSelect: id => { S.temaSel = id; renderChart(); renderDetail(true); } }), legendNote(), tablaPosiciones(visibles()));
+      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, onSelect: id => { S.temaSel = id; renderChart(); renderDetail(true); } }), legendNote());
     };
     const renderDetail = (scroll) => {
       const u = S.resultsReady && S.quiz ? S.quiz.answers[S.temaSel] : null;
@@ -331,7 +331,7 @@
         h('h2', null, 'Las curvas de valor'),
         h('p', null, 'Cada línea es un partido. En cada tema, su punto marca la opción que mejor describe su propuesta concreta. Toca un tema para ver las cinco opciones y quién está en cada una.'))),
       chips,
-      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot), detailSlot)));
+      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot, tablaPosiciones(S.partidos)), detailSlot)));
 
     // Fichas
     root.appendChild(h('section', { id: 'fichas' },
