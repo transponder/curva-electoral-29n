@@ -46,6 +46,16 @@ Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Prog
 
 La metodología completa está en la página `#/metodologia`, basada en el codebook del proyecto.
 
+## Validar los datos antes de publicar
+
+Cada cambio en `data/` se comprueba automáticamente en GitHub (workflow «Validar datos»). Para comprobarlo en local:
+
+```bash
+python3 scripts/validar_datos.py
+```
+
+La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y dos nombres en `codificadores` (separados por `;`). Una casilla `estimado` necesita una `nota`.
+
 ## Privacidad
 
 Sin cookies ni registro. Las respuestas del test se procesan solo en el navegador y no se envían a ningún sitio.
