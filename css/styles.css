@@ -70,7 +70,10 @@ button, select, input { font: inherit; color: inherit; }
 .notice { background: var(--warn-bg); color: var(--ink); font-size: 14px; border-bottom: 1px solid var(--line); }
 .notice .wrap { padding-top: 8px; padding-bottom: 8px; }
 
-main { padding-top: 24px; padding-bottom: 56px; outline: none; }
+main { padding-top: 24px; padding-bottom: 56px; outline: none; min-height: 100vh; }
+/* El pie no se muestra hasta que hay contenido: evita el salto de diseño (CLS) al cargar. */
+html.cargando .site-footer { visibility: hidden; }
+noscript .prose { padding-bottom: 24px; }
 .loading, .error-box { padding: 48px 0; color: var(--ink-2); }
 .error-box { color: var(--ink); }
 
