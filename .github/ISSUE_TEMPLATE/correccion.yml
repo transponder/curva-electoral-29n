@@ -1,0 +1,89 @@
+name: Corregir una posición
+description: Señala un error en la posición de un partido en un tema, aportando la fuente.
+title: "Corrección: [partido] · [tema]"
+labels: ["corrección"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por ayudar a que los datos sean correctos. Cualquier persona o partido puede pedir una corrección.
+        Solo podemos cambiar una posición si la fuente que aportas es de rango igual o superior a la que usamos (ver la jerarquía de fuentes en la metodología). Respondemos en 48 horas.
+  - type: dropdown
+    id: partido
+    attributes:
+      label: Partido
+      options:
+        - EH Bildu
+        - Frente Amplio
+        - PNV
+        - Podemos
+        - PP
+        - PSE-EE
+        - Vox
+    validations:
+      required: true
+  - type: dropdown
+    id: tema
+    attributes:
+      label: Tema
+      options:
+        - Autogobierno
+        - Fiscalidad
+        - Vivienda
+        - Sanidad y educación
+        - Trabajo y pensiones
+        - Clima y energía
+        - Inmigración
+        - Industria e I+D
+        - Derechos civiles
+        - Euskera
+        - Gasto en defensa
+    validations:
+      required: true
+  - type: dropdown
+    id: nivel
+    attributes:
+      label: Opción que propones (1 a 5)
+      description: El texto de cada opción está en la página de metodología, apartado «Los temas y sus opciones».
+      options: ["1", "2", "3", "4", "5"]
+    validations:
+      required: true
+  - type: textarea
+    id: cita
+    attributes:
+      label: Cita textual
+      description: Copia la frase exacta de la fuente (máximo dos frases).
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Enlace a la fuente
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: rango
+    attributes:
+      label: Tipo de fuente
+      options:
+        - 1 · Programa electoral del 29-N
+        - 2 · Documento programático oficial de 2026
+        - 3 · Compromiso de campaña recogido por un medio
+        - 4 · Votación nominal en el Congreso (2023-2026)
+        - 5 · Declaración pública de un dirigente desde 2024
+    validations:
+      required: true
+  - type: textarea
+    id: explicacion
+    attributes:
+      label: Por qué la posición actual es incorrecta
+    validations:
+      required: false
+  - type: checkboxes
+    id: vinculo
+    attributes:
+      label: Transparencia
+      options:
+        - label: Escribo en nombre de un partido o candidatura.
+          required: false
