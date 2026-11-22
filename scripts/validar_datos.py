@@ -17,6 +17,7 @@ CABECERA = ["partido", "tema", "nivel", "estado", "cita", "fuente", "url",
 CABECERA_PROPUESTAS = ["partido", "tema", "etiqueta", "texto", "fuente", "url", "fecha_consulta"]
 ESTADOS = {"validado", "provisional", "estimado"}
 ETIQUETAS = {"Programa", "Campaña", "Antes del 29-N"}
+ETIQUETAS_EU = {"Programa": "Programa", "Campaña": "Kanpaina", "Antes del 29-N": "A-29 aurretik"}
 FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MAX_FRASES_CITA = 2
 
@@ -28,6 +29,56 @@ def n_frases(texto):
 
 def n_codificadores(valor):
     return len([c for c in re.split(r"[;,+/]", valor) if c.strip()])
+
+
+def validar_euskera(carpeta, temas, propuestas, err):
+    """Cada tema, cada propuesta y la interfaz tienen que tener su versión en euskera."""
+    ruta = carpeta / "temas.eu.json"
+    if not ruta.exists():
+        err("i18n/temas.eu.json: falta el fichero")
+    else:
+        eu = {t.get("id"): t for t in json.loads(ruta.read_text(encoding="utf-8"))}
+        for t in temas:
+            te = eu.get(t.get("id"))
+            if not te:
+                err(f"i18n/temas.eu.json: falta el tema «{t.get('id')}»")
+                continue
+            for campo in ("nombre", "pregunta"):
+                if not (te.get(campo) or "").strip():
+                    err(f"i18n/temas.eu.json: el tema «{t['id']}» no tiene «{campo}»")
+            if len(te.get("opciones", [])) != 5 or not all(isinstance(o, str) and o.strip() for o in te.get("opciones", [])):
+                err(f"i18n/temas.eu.json: el tema «{t['id']}» debe tener exactamente 5 opciones con texto")
+        for i in eu:
+            if i not in {t.get("id") for t in temas}:
+                err(f"i18n/temas.eu.json: tema «{i}» que no existe en temas.json")
+
+    ruta = carpeta / "propuestas.eu.csv"
+    if not ruta.exists():
+        if propuestas:
+            err("i18n/propuestas.eu.csv: falta el fichero")
+    else:
+        with open(ruta, encoding="utf-8-sig", newline="") as f:
+            lector = csv.DictReader(f)
+            if lector.fieldnames != ["partido", "tema", "etiqueta", "texto"]:
+                err("i18n/propuestas.eu.csv: la cabecera debe ser exactamente partido,tema,etiqueta,texto")
+                return
+            filas = list(lector)
+        if len(filas) != len(propuestas):
+            err(f"i18n/propuestas.eu.csv: tiene {len(filas)} propuestas y propuestas.csv tiene {len(propuestas)}; deben ir en el mismo orden, una por una")
+        for n, (r, es) in enumerate(zip(filas, propuestas), start=2):
+            if (r["partido"], r["tema"], r["etiqueta"]) != (es[0], es[1], ETIQUETAS_EU.get(es[2])):
+                err(f"i18n/propuestas.eu.csv línea {n}: no corresponde a la línea {n} de propuestas.csv ({es[0]} · {es[1]} · {ETIQUETAS_EU.get(es[2], es[2])})")
+            if not (r["texto"] or "").strip():
+                err(f"i18n/propuestas.eu.csv línea {n}: falta el «texto»")
+
+    ruta = carpeta / "ui.eu.json"
+    if not ruta.exists():
+        err("i18n/ui.eu.json: falta el fichero")
+    else:
+        ui = json.loads(ruta.read_text(encoding="utf-8")).get("ui", {})
+        vacios = [k for k, v in ui.items() if not (isinstance(v, str) and v.strip())]
+        if not ui or vacios:
+            err(f"i18n/ui.eu.json: textos vacíos o ausentes: {', '.join(vacios) or 'todos'}")
 
 
 def validar(carpeta):
@@ -121,6 +172,7 @@ def validar(carpeta):
             if est == "estimado" and documentadas and min(abs(nv - d) for d in documentadas) > 1:
                 avisos.append(f"codificacion.csv ({p} · {tema}): casilla estimada a más de un paso de cualquier posición documentada del partido")
 
+    propuestas = []
     ruta_prop = carpeta / "propuestas.csv"
     if ruta_prop.exists():
         with open(ruta_prop, encoding="utf-8-sig", newline="") as f:
@@ -140,6 +192,12 @@ def validar(carpeta):
                         err(f"{donde}: falta el «texto»")
                     if r["url"] and not r["url"].startswith("https://"):
                         err(f"{donde}: «url» debe empezar por https://")
+                    # Toda propuesta que se muestra lleva su origen y un enlace.
+                    if not (r["fuente"] or "").strip() or not (r["url"] or "").strip():
+                        err(f"{donde}: una propuesta necesita «fuente» y «url»")
+                    propuestas.append((r["partido"], r["tema"], r["etiqueta"]))
+
+    validar_euskera(carpeta / "i18n", temas, propuestas, err)
 
     total = len(ids_partido) * len(ids_tema)
     con_cita = sum(1 for r in filas if (r.get("cita") or "").strip() and (r.get("url") or "").strip())

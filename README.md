@@ -24,6 +24,7 @@ data/temas.json       11 temas: pregunta y 5 opciones (texto exacto del codebook
 data/partidos.json    Partidos con curva, color neutro, candidaturas y enlaces (a verificar)
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
 data/propuestas.csv   Propuestas concretas por partido y tema (fichas)
+data/i18n/            Versión en euskera: temas, propuestas (mismo orden) e interfaz
 data/meta.json        Versión, fechas (congelación 24-N), contacto de correcciones
 assets/               Favicon e imagen para compartir
 ```
@@ -43,7 +44,17 @@ Edita `data/codificacion.csv` (se puede abrir en Excel o Google Sheets y exporta
 | `codificadores` | quién la ha codificado |
 | `nota` | justificación breve si aún no hay cita |
 
-Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`.
+Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`. Cada propuesta necesita `fuente` y `url`.
+
+### Euskera
+
+Cada cambio en temas o propuestas tiene que ir también en `data/i18n/`:
+
+- `temas.eu.json`: mismos `id` que `temas.json`, con `nombre`, `pregunta` y 5 `opciones`.
+- `propuestas.eu.csv`: una fila por cada fila de `propuestas.csv`, **en el mismo orden**, con la etiqueta traducida (`Programa`, `Kanpaina`, `A-29 aurretik`).
+- `ui.eu.json`: textos de la interfaz.
+
+La validación falla si falta alguna traducción o si las filas no se corresponden.
 
 La metodología completa está en la página `#/metodologia`, basada en el codebook del proyecto.
 
