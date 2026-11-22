@@ -1,7 +1,7 @@
 {
   "_nota": "Colores neutros asignados por orden alfabético (paleta apta para daltonismo), no los corporativos de cada partido. Webs y cuentas se rellenan solo tras verificarlas (codebook, pendiente v1).",
   "codificados": [
-    { "id": "eh-bildu", "siglas": "EH Bildu", "nombre": "Euskal Herria Bildu", "color": "#0072B2", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
+    { "id": "eh-bildu", "siglas": "EH Bildu", "nombre": "Euskal Herria Bildu", "lang": "eu", "color": "#0072B2", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
     { "id": "frente-amplio", "siglas": "Frente Amplio", "nombre": "Frente Amplio", "color": "#E69F00", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
     { "id": "pnv", "siglas": "PNV", "nombre": "Euzko Alderdi Jeltzalea – Partido Nacionalista Vasco", "color": "#009E73", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
     { "id": "podemos", "siglas": "Podemos", "nombre": "Podemos", "color": "#CC79A7", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },

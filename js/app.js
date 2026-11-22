@@ -25,6 +25,11 @@
   }
   function h(tag, attrs, ...children) { return add(setAttrs(document.createElement(tag), attrs), children); }
   function s(tag, attrs, ...children) { return add(setAttrs(document.createElementNS(SVGNS, tag), attrs), children); }
+  // Al volver a pintar un bloque se pierde el foco del teclado. Los controles llevan data-fk
+  // (una clave estable) y, tras pintar, el foco vuelve al control con la misma clave.
+  const focusKey = box => { const a = document.activeElement; return a && box.contains(a) ? a.getAttribute('data-fk') : null; };
+  function refocus(box, fk) { if (!fk) return; const el = box.querySelector('[data-fk="' + fk + '"]'); if (el) el.focus({ preventScroll: true }); }
+  function keepFocus(box, fn) { const fk = focusKey(box); fn(); refocus(box, fk); }
 
   // ---------- Carga de datos ----------
   function parseCSV(text) {
@@ -75,6 +80,13 @@
       if (nivel >= 1 && nivel <= 5) S.cod.set(key(r.partido, r.tema), { ...r, nivel });
     }
     S.propuestas = prop;
+    // Evidencia real: casillas con cita textual y enlace. Todo lo que la web dice sobre
+    // «cuántas posiciones tienen cita» sale de aquí, no de un texto escrito a mano.
+    S.total = S.partidos.length * S.temas.length;
+    S.conCita = [...S.cod.values()].filter(c => c.cita && c.url).length;
+    S.validadas = [...S.cod.values()].filter(c => c.estado === 'validado').length;
+    const estado = document.getElementById('estado-datos');
+    if (estado) estado.textContent = `Hoy tienen cita y enlace ${S.conCita} de ${S.total}.` + (meta.congelacion ? ` El ${fmtDiaMes(meta.congelacion)} publicamos la versión revisada.` : '');
     S.visible = new Set(S.partidos.map(p => p.id));
     S.temaSel = S.temas[0].id;
   }
@@ -83,9 +95,12 @@
   // series: [{id, label, color, user?, valores: {temaId: {nivel, estado}}}]
   function curveChart(opts) {
     const box = h('div', { class: 'chart' });
+    let pendingFocus = opts.focusKey || null;
     const draw = () => {
       const W = Math.max(280, box.clientWidth || 800);
+      const fk = pendingFocus || focusKey(box); pendingFocus = null;
       box.replaceChildren(drawSVG(W, opts));
+      refocus(box, fk);
     };
     let lastW = 0;
     const ro = new ResizeObserver(entries => {
@@ -119,7 +134,7 @@
       levelPos = lv => M.l + (lv - 1) / 4 * iw;
       M.step = rowH;
     }
-    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': 'Curvas de valor por tema: cada punto es la opción que mejor describe la propuesta de cada partido, del 1 al 5.' });
+    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: onSelect ? 'group' : 'img', 'aria-label': 'Gráfico de curvas: ' + (series.map(se => se.label).join(', ') || 'ningún partido seleccionado') + '. Cada punto es la opción, de 1 a 5, que mejor describe su propuesta en cada tema.' + (onSelect ? ' Las mismas posiciones están en la tabla que sigue al gráfico.' : '') });
 
     // Bandas de tema (clicables)
     temas.forEach((t, i) => {
@@ -129,7 +144,7 @@
         : { x: c - half, y: 0, width: M.step, height: H };
       const band = s('rect', { ...attrs, class: 'band' + (t.id === selected ? ' sel' : '') });
       if (onSelect) {
-        setAttrs(band, { tabindex: 0, role: 'button', 'aria-label': 'Ver detalle: ' + t.nombre, onclick: () => onSelect(t.id),
+        setAttrs(band, { tabindex: 0, role: 'button', 'data-fk': 'band-' + t.id, 'aria-pressed': String(t.id === selected), 'aria-label': 'Ver detalle: ' + t.nombre, onclick: () => onSelect(t.id),
           onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(t.id); } } });
       } else band.style.cursor = 'default';
       svg.appendChild(band);
@@ -219,9 +234,24 @@
   }
 
   const legendNote = () => h('div', { class: 'chart-legend-note' },
-    h('span', null, h('i', { class: 'lg-dot' }), 'Con evidencia (provisional)'),
-    h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado'),
+    h('span', null, h('i', { class: 'lg-dot' }), 'Provisional'),
+    h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado (sin fuente directa)'),
     h('span', null, '1 y 5 son los extremos de cada tema: no significan izquierda o derecha, ni mejor o peor.'));
+
+  // Alternativa en tabla al gráfico: mismas posiciones, legibles sin ver el gráfico.
+  // La celda muestra el número y, para lectores de pantalla, el texto de la opción.
+  function tablaPosiciones(partidos) {
+    return h('details', { class: 'tabla-alt' },
+      h('summary', null, 'Ver las posiciones como tabla'),
+      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Posiciones de cada partido por tema' },
+        h('table', { class: 'data-table' },
+          h('caption', null, 'Opción asignada a cada partido en cada tema, de 1 a 5. El 1 y el 5 son los extremos de cada tema, no izquierda o derecha. «est.» indica una posición estimada.'),
+          h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Tema'), partidos.map(p => h('th', { scope: 'col' }, p.siglas)))),
+          h('tbody', null, S.temas.map(t => h('tr', null,
+            h('th', { scope: 'row', style: { textTransform: 'none', fontSize: '14px', color: 'var(--ink)', letterSpacing: 0 } }, t.nombre),
+            partidos.map(p => { const c = celda(p.id, t.id);
+              return h('td', { class: 'c' }, c ? [String(c.nivel), c.estado === 'estimado' ? ' est.' : null, h('span', { class: 'sr-only' }, ': ' + t.opciones[c.nivel - 1])] : '—'); })))))));
+  }
 
   function estadoBadge(estado) {
     const map = { provisional: 'Provisional', estimado: 'Estimado', validado: 'Validado' };
@@ -231,7 +261,7 @@
   function partyChip(p, { pressed, onclick, small } = {}) {
     return h(onclick ? 'button' : 'span', {
       class: 'chip' + (onclick ? '' : ' chip-static'), type: onclick ? 'button' : null,
-      'aria-pressed': onclick ? String(!!pressed) : null, onclick, style: small ? { fontSize: '13px' } : null,
+      'aria-pressed': onclick ? String(!!pressed) : null, 'data-fk': onclick ? 'chip-' + p.id : null, onclick, style: small ? { fontSize: '13px' } : null,
     }, h('i', { class: 'dot', style: { background: p.color } }), p.siglas);
   }
 
@@ -278,31 +308,31 @@
     const root = h('div');
     root.appendChild(h('section', { class: 'hero', style: { marginTop: 0 } },
       h('span', { class: 'kicker' }, 'Generales 29-N · Araba, Bizkaia y Gipuzkoa'),
-      h('h1', null, '¿Qué propone cada partido? ', h('span', { class: 'mark' }, 'Míralo en una curva.')),
-      h('p', { class: 'lead' }, `${S.temas.length} temas, ${S.partidos.length} partidos. Compara sus propuestas de un vistazo, contesta ${S.temas.length} preguntas y descubre qué partidos están más cerca de lo que tú piensas.`),
+      h('h1', null, '¿Qué propone cada partido el 29-N? ', h('span', { class: 'mark' }, 'Compáralo en 3 minutos.')),
+      h('p', { class: 'lead' }, `${S.temas.length} temas y ${S.partidos.length} partidos, sin nuestra opinión. Mira sus propuestas y, si quieres, compáralas con lo que piensas tú.`),
       h('div', { class: 'cta-row' },
-        h('a', { class: 'btn btn-accent', href: '#/test' }, 'Haz el test (2 min)'),
+        h('a', { class: 'btn btn-accent', href: '#/test' }, `Empieza el test · ${S.temas.length} preguntas, 3 min`),
         h('a', { class: 'btn', href: '#/comparar' }, 'Compara dos partidos'))));
 
     // Curvas
     const chartSlot = h('div');
     const detailSlot = h('div');
     const chips = h('div', { class: 'chips' });
-    const renderChips = () => {
+    const renderChips = () => keepFocus(chips, () => {
       chips.replaceChildren(
         ...S.partidos.map(p => partyChip(p, { pressed: S.visible.has(p.id), onclick: () => {
           if (S.visible.has(p.id)) S.visible.delete(p.id); else S.visible.add(p.id);
           renderChips(); renderChart(); renderDetail();
         } })),
         h('span', { class: 'chip-row-actions' },
-          h('button', { class: 'linklike', type: 'button', onclick: () => { S.visible = new Set(S.partidos.map(p => p.id)); renderChips(); renderChart(); renderDetail(); } }, 'Todos'),
-          h('button', { class: 'linklike', type: 'button', onclick: () => { S.visible.clear(); renderChips(); renderChart(); renderDetail(); } }, 'Ninguno')));
-    };
+          h('button', { class: 'linklike', type: 'button', 'data-fk': 'todos', onclick: () => { S.visible = new Set(S.partidos.map(p => p.id)); renderChips(); renderChart(); renderDetail(); } }, 'Todos'),
+          h('button', { class: 'linklike', type: 'button', 'data-fk': 'ninguno', onclick: () => { S.visible.clear(); renderChips(); renderChart(); renderDetail(); } }, 'Ninguno')));
+    });
     const visibles = () => S.partidos.filter(p => S.visible.has(p.id));
-    const renderChart = () => {
+    const renderChart = (fk) => {
       const series = visibles().map(seriePartido);
       const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
-      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, onSelect: id => { S.temaSel = id; renderChart(); renderDetail(true); } }), legendNote());
+      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, focusKey: fk || focusKey(chartSlot), onSelect: id => { S.temaSel = id; renderChart('band-' + id); renderDetail(true); } }), legendNote());
     };
     const renderDetail = (scroll) => {
       const u = S.resultsReady && S.quiz ? S.quiz.answers[S.temaSel] : null;
@@ -316,17 +346,17 @@
         h('h2', null, 'Las curvas de valor'),
         h('p', null, 'Cada línea es un partido. En cada tema, su punto marca la opción que mejor describe su propuesta concreta. Toca un tema para ver las cinco opciones y quién está en cada una.'))),
       chips,
-      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot), detailSlot)));
+      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot, tablaPosiciones(S.partidos)), detailSlot)));
 
     // Fichas
     root.appendChild(h('section', { id: 'fichas' },
-      h('div', { class: 'section-head' }, h('div', null, h('h2', null, 'Fichas de partido'), h('p', null, 'Sus posiciones tema a tema, con la evidencia y las fuentes.'))),
+      h('div', { class: 'section-head' }, h('div', null, h('h2', null, 'Fichas de partido'), h('p', null, 'Sus posiciones tema a tema y de dónde sale cada una.'))),
       h('div', { class: 'grid' }, S.partidos.map(p => {
-        const ev = S.temas.filter(t => { const c = celda(p.id, t.id); return c && c.estado !== 'estimado' && (c.cita || c.fuente || c.nota); }).length;
+        const ev = S.temas.filter(t => { const c = celda(p.id, t.id); return c && c.cita && c.url; }).length;
         return h('a', { class: 'card party-card', href: '#/partido/' + p.id },
           h('div', { class: 'top' }, h('i', { class: 'swatch', style: { background: p.color } }), h('span', { class: 'name' }, p.siglas)),
           sparkline(p),
-          h('span', { class: 'sub' }, `${ev} de ${S.temas.length} temas con nota de evidencia`));
+          h('span', { class: 'sub' }, `${ev} de ${S.temas.length} temas con cita y enlace`));
       })),
       S.sinCurva.length ? h('p', { class: 'muted small' }, 'Otras candidaturas proclamadas (sin curva, por falta de programa evaluable): ' + S.sinCurva.join(', ') + '.') : null));
 
@@ -334,9 +364,9 @@
     root.appendChild(h('section', null, h('div', { class: 'card' },
       h('h2', null, 'Cómo lo hacemos'),
       h('div', { class: 'grid', style: { marginTop: '14px' } },
-        miniPoint('1', 'Lo que proponen', 'Codificamos lo que cada partido propone para el Congreso y el Gobierno, a partir de su programa del 29-N y otras fuentes oficiales.'),
-        miniPoint('2', 'Con cita y fuente', 'Cada posición lleva una cita textual y un enlace. Sin cita, la casilla es provisional o estimada, y lo decimos.'),
-        miniPoint('3', 'Dos personas, por separado', 'Dos personas codifican cada casilla sin ver la otra. Publicamos su grado de acuerdo.')),
+        miniPoint('1', 'Lo que proponen', 'Codificamos lo que cada partido propone para el Congreso y el Gobierno. La fuente principal es su programa del 29-N.'),
+        miniPoint('2', 'Cita y enlace, en marcha', `Cada posición llevará una cita textual y un enlace. Hoy la tienen ${S.conCita} de ${S.total}; el resto está marcado como provisional o estimado.`),
+        miniPoint('3', 'Segunda revisión, pendiente', (S.meta.congelacion ? `Antes del ${fmtDiaMes(S.meta.congelacion)}, dos` : 'Dos') + ` personas codificarán cada casilla por separado y publicaremos su grado de acuerdo. Hoy hay ${S.validadas} de ${S.total} validadas así.`)),
       h('p', { style: { marginBottom: 0 } }, h('a', { href: '#/metodologia' }, 'Lee la metodología completa →')))));
     return root;
   }
@@ -354,13 +384,13 @@
 
   function viewPartido(id) {
     const p = partido(id);
-    if (!p) return h('div', { class: 'error-box' }, 'No encontramos ese partido. ', h('a', { href: '#/' }, 'Volver al inicio'));
+    if (!p) return h('div', { class: 'error-box' }, h('h1', null, 'No encontramos ese partido'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
     const root = h('div');
     const series = [seriePartido(p)];
     const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
     root.appendChild(h('div', { class: 'party-head' },
       h('i', { class: 'swatch', style: { background: p.color } }),
-      h('div', null, h('h1', null, p.siglas), p.nombre !== p.siglas ? h('p', { class: 'muted', style: { margin: '4px 0 0' } }, p.nombre) : null)));
+      h('div', null, h('h1', null, p.siglas), p.nombre !== p.siglas ? h('p', { class: 'muted', lang: p.lang || null, style: { margin: '4px 0 0' } }, p.nombre) : null)));
     root.appendChild(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' },
       curveChart({ temas: S.temas, series, compact: false }),
       u ? h('p', { class: 'muted small' }, 'La línea negra es tu curva, según tus respuestas al test.') : null,
@@ -374,7 +404,7 @@
         const pt = props.filter(x => x.tema === t.id);
         return h('div', { class: 'card tema-item' },
           h('div', { class: 'row' }, h('h3', null, t.nombre), c ? estadoBadge(c.estado) : null),
-          c ? h('div', { class: 'levelbar', style: { '--c': p.color }, 'aria-label': `Opción ${c.nivel} de 5` }, [1, 2, 3, 4, 5].map(lv => h('i', { class: lv === c.nivel ? 'on' : null }))) : null,
+          c ? h('div', { class: 'levelbar', style: { '--c': p.color }, role: 'img', 'aria-label': `Opción ${c.nivel} de 5` }, [1, 2, 3, 4, 5].map(lv => h('i', { class: lv === c.nivel ? 'on' : null }))) : null,
           h('div', { class: 'opcion' }, c ? t.opciones[c.nivel - 1] : 'Sin codificar'),
           c && (c.cita || c.nota) ? h('div', null, c.cita ? h('q', null, c.cita) : h('span', { class: 'muted' }, c.nota)) : null,
           c && c.fuente ? h('div', { class: 'meta' }, 'Fuente: ', c.url ? h('a', { href: c.url, target: '_blank', rel: 'noopener' }, c.fuente) : c.fuente, c.fecha_consulta ? ' · consultada el ' + c.fecha_consulta : '') : null,
@@ -413,7 +443,7 @@
       curveChart({ temas: S.temas, series: [seriePartido(pa), seriePartido(pb)] }), legendNote()));
     root.appendChild(h('p', { style: { fontSize: '18px', marginTop: '20px' } }, h('strong', null, `Coinciden en ${same} de ${S.temas.length} temas.`)));
     root.appendChild(h('div', { class: 'card', style: { padding: '6px 14px' } }, h('table', { class: 'cmp-table' },
-      h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, pa.siglas), h('th', null, pb.siglas), h('th', null, ''))),
+      h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, pa.siglas), h('th', null, pb.siglas), h('th', null, h('span', { class: 'sr-only' }, 'Diferencia')))),
       h('tbody', null, S.temas.map(t => {
         const x = celda(a, t.id), y = celda(b, t.id);
         const eq = x && y && x.nivel === y.nivel;
@@ -431,28 +461,23 @@
     S.quiz = { step: 0, order: {}, answers: {}, weights: {} };
     S.resultsReady = false;
     for (const t of S.temas) { S.quiz.order[t.id] = shuffle([0, 1, 2, 3, 4]); S.quiz.weights[t.id] = 1; }
+    // Orden de los partidos empatados: se baraja una vez por test para que no decida el alfabeto.
+    S.quiz.desempate = shuffle(S.partidos.map(p => p.id));
   }
 
+  // El cálculo está en js/cercania.js (módulo puro, con tests en tests/cercania.test.js).
   function cercania() {
-    const q = S.quiz; const out = [];
-    for (const p of S.partidos) {
-      let num = 0, den = 0, n = 0;
-      for (const t of S.temas) {
-        const u = q.answers[t.id], c = celda(p.id, t.id);
-        if (!u || !c) continue;
-        const w = q.weights[t.id] || 1;
-        num += w * Math.abs(u - c.nivel); den += w * 4; n++;
-      }
-      out.push({ p, pct: den ? Math.round(100 * (1 - num / den)) : null, n });
-    }
-    return out.sort((x, y) => (y.pct ?? -1) - (x.pct ?? -1) || x.p.siglas.localeCompare(y.p.siglas, 'es'));
+    const q = S.quiz, pos = {};
+    for (const p of S.partidos) { pos[p.id] = {}; for (const t of S.temas) { const c = celda(p.id, t.id); if (c) pos[p.id][t.id] = c.nivel; } }
+    return Cercania.clasificar(Cercania.calcular(q.answers, q.weights, pos, S.temas.map(t => t.id)), q.desempate)
+      .map(r => ({ ...r, p: partido(r.id) }));
   }
 
   function viewTest() {
     const root = h('div', { class: 'quiz' });
     if (!S.quiz) {
       root.append(
-        h('span', { class: 'q-kicker' }, 'Test · ' + S.temas.length + ' preguntas · 2 minutos'),
+        h('span', { class: 'q-kicker' }, 'Test · ' + S.temas.length + ' preguntas · unos 3 minutos'),
         h('h1', { style: { marginTop: '8px' } }, 'Encuentra tu curva'),
         h('p', { class: 'lead' }, 'En cada tema elige la opción que más se acerque a lo que piensas, y dinos cuánto te importa. Al final verás tu curva junto a la de cada partido.'),
         h('ul', { class: 'prose', style: { color: 'var(--ink-2)' } },
@@ -460,25 +485,25 @@
           h('li', null, 'Puedes saltarte cualquier pregunta.'),
           h('li', null, 'Tus respuestas no salen de tu dispositivo: no se envían ni se guardan. Al cerrar la pestaña desaparecen.'),
           h('li', null, 'El resultado no es una recomendación de voto, sino una forma de ver qué propone cada partido.')),
-        h('div', { class: 'cta-row' }, h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Empezar')));
+        h('div', { class: 'cta-row' }, h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar')));
       return root;
     }
     if (S.resultsReady) return viewResultados();
 
     const q = S.quiz, i = q.step, t = S.temas[i];
     const sel = q.answers[t.id];
-    const go = d => { q.step = Math.min(S.temas.length, Math.max(0, i + d)); if (q.step >= S.temas.length) S.resultsReady = true; route(); window.scrollTo({ top: 0 }); };
+    const go = d => { q.step = Math.min(S.temas.length, Math.max(0, i + d)); if (q.step >= S.temas.length) S.resultsReady = true; route({ focusHeading: true }); window.scrollTo({ top: 0 }); };
     const pick = v => { q.answers[t.id] = v; route(); };
     root.append(
       h('div', { class: 'q-kicker' }, `Pregunta ${i + 1} de ${S.temas.length} · ${t.nombre}`),
-      h('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': S.temas.length, 'aria-valuenow': i }, h('i', { style: { width: (i / S.temas.length * 100) + '%' } })),
+      h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Progreso del test', 'aria-valuemin': 0, 'aria-valuemax': S.temas.length, 'aria-valuenow': i }, h('i', { style: { width: (i / S.temas.length * 100) + '%' } })),
       h('h1', { class: 'q-title' }, t.pregunta),
       h('div', { class: 'options', role: 'radiogroup', 'aria-label': t.pregunta },
-        q.order[t.id].map(k => h('button', { class: 'option', type: 'button', role: 'radio', 'aria-checked': String(sel === k + 1), onclick: () => pick(k + 1) }, h('span', { class: 'radio' }), h('span', null, t.opciones[k]))),
-        h('button', { class: 'option skip-opt', type: 'button', role: 'radio', 'aria-checked': String(sel === 0), onclick: () => pick(0) }, h('span', { class: 'radio' }), h('span', null, 'No lo tengo claro / prefiero no contestar'))),
+        q.order[t.id].map(k => h('button', { class: 'option', type: 'button', role: 'radio', 'data-fk': 'opt-' + (k + 1), 'aria-checked': String(sel === k + 1), onclick: () => pick(k + 1) }, h('span', { class: 'radio' }), h('span', null, t.opciones[k]))),
+        h('button', { class: 'option skip-opt', type: 'button', role: 'radio', 'data-fk': 'opt-0', 'aria-checked': String(sel === 0), onclick: () => pick(0) }, h('span', { class: 'radio' }), h('span', null, 'No lo tengo claro / prefiero no contestar'))),
       h('div', { class: 'importance' },
         h('span', { class: 'label', id: 'imp-l' }, '¿Cuánto te importa este tema?'),
-        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'imp-l' }, PESOS.map(w => h('button', { type: 'button', 'aria-pressed': String(q.weights[t.id] === w.v), onclick: () => { q.weights[t.id] = w.v; route(); } }, w.t)))),
+        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'imp-l' }, PESOS.map(w => h('button', { type: 'button', 'data-fk': 'imp-' + w.v, 'aria-pressed': String(q.weights[t.id] === w.v), onclick: () => { q.weights[t.id] = w.v; route(); } }, w.t)))),
       h('div', { class: 'q-nav' },
         h('button', { class: 'btn btn-ghost', type: 'button', disabled: i === 0 ? true : null, onclick: () => go(-1) }, '← Anterior'),
         h('button', { class: 'btn btn-primary', type: 'button', disabled: sel === undefined ? true : null, onclick: () => go(1) }, i === S.temas.length - 1 ? 'Ver mi curva' : 'Siguiente →')));
@@ -491,28 +516,33 @@
     const contestadas = S.temas.filter(t => S.quiz.answers[t.id]).length;
     root.append(h('span', { class: 'q-kicker' }, 'Tu resultado'), h('h1', { style: { marginTop: '8px' } }, 'Tu curva frente a la de los partidos'));
     if (!contestadas) {
-      root.append(h('p', { class: 'lead' }, 'No has elegido ninguna opción, así que no podemos dibujar tu curva.'), h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Repetir el test'));
+      root.append(h('p', { class: 'lead' }, 'No has elegido ninguna opción, así que no podemos dibujar tu curva.'), h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Repetir el test'));
       return root;
     }
     root.append(h('p', { class: 'lead' }, `Has contestado ${contestadas} de ${S.temas.length} temas. La cercanía mide cuánto se parecen tus respuestas a las posiciones de cada partido, dando más peso a los temas que más te importan.`));
 
-    const sel = new Set(res.slice(0, 3).map(r => r.p.id));
+    const suficientes = contestadas >= Cercania.MIN_RESPUESTAS;
+    const hayEmpate = res.some(r => r.empate);
+    const sel = new Set(suficientes ? Cercania.seleccionInicial(res, 3) : []);
     const chipsBox = h('div', { class: 'chips' }), chartBox = h('div');
     const draw = () => {
-      chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } })));
+      keepFocus(chipsBox, () => chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } }))));
       chartBox.replaceChildren(curveChart({ temas: S.temas, series: [...S.partidos.filter(p => sel.has(p.id)).map(seriePartido), serieUsuario()] }));
     };
     draw();
     root.append(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' }, chipsBox, chartBox,
-      h('div', { class: 'chart-legend-note' }, h('span', null, h('i', { class: 'lg-dot', style: { background: 'var(--ink)', borderRadius: '2px' } }), 'Tu curva'), h('span', null, 'Se muestran los tres más cercanos: activa otros para compararte.')))));
+      h('div', { class: 'chart-legend-note' }, h('span', null, h('i', { class: 'lg-dot', style: { background: 'var(--ink)', borderRadius: '2px' } }), 'Tu curva'), h('span', null, suficientes ? 'Se muestran los más cercanos y los empatados con ellos: activa otros para compararte.' : 'Activa los partidos con los que quieras compararte.')))));
 
     root.append(h('section', null, h('h2', null, 'Cercanía con cada partido'),
-      h('div', { class: 'card results-list', style: { marginTop: '14px' } }, res.map(r => h('a', { href: '#/partido/' + r.p.id, class: 'result-row', style: { textDecoration: 'none' } },
-        h('span', { class: 'who' }, h('i', { class: 'dot', style: { width: '10px', height: '10px', borderRadius: '50%', background: r.p.color, display: 'inline-block' } }), r.p.siglas),
-        h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
-        h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%')))),
-      h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.'),
-      h('p', { class: 'aviso' }, 'Esto no es una recomendación de voto. Mira las fichas para ver qué propone cada partido y de dónde sale cada posición.')));
+      suficientes
+        ? h('div', { class: 'card results-list', style: { marginTop: '14px' } }, res.map(r => h('a', { href: '#/partido/' + r.p.id, class: 'result-row', style: { textDecoration: 'none' } },
+            h('span', { class: 'who' }, h('i', { class: 'dot', style: { width: '10px', height: '10px', borderRadius: '50%', background: r.p.color, display: 'inline-block' } }), r.p.siglas, r.empate ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'Empate') : null),
+            h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
+            h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%'))))
+        : h('p', { class: 'aviso', style: { marginTop: '14px' } }, `Has contestado ${contestadas} ${contestadas === 1 ? 'tema' : 'temas'}. Con menos de ${Cercania.MIN_RESPUESTAS} no calculamos la cercanía: el número diría muy poco. Arriba puedes comparar tu curva con la de cada partido, o volver al test y contestar más temas.`),
+      suficientes && hayEmpate ? h('p', { class: 'muted small' }, 'Los partidos con el mismo porcentaje están empatados: su orden es aleatorio y no indica preferencia.') : null,
+      suficientes ? h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.') : null,
+      h('p', { class: 'aviso' }, `Esto no te dice a quién votar. Solo compara ${S.temas.length} temas, y un partido es mucho más que eso. Antes de decidir, lee sus programas.`)));
 
     const share = async () => {
       const data = { title: 'Tu curva de valor electoral · Euskadi 29-N', text: 'He hecho el test: compara en una curva lo que propone cada partido en Euskadi para el 29-N.', url: location.href.split('#')[0] };
@@ -520,8 +550,8 @@
     };
     const btnShare = h('button', { class: 'btn btn-accent', type: 'button', onclick: share }, 'Compartir el test');
     root.append(h('div', { class: 'cta-row' }, btnShare,
-      h('button', { class: 'btn', type: 'button', onclick: () => { S.quiz.step = 0; S.resultsReady = false; route(); } }, 'Revisar respuestas'),
-      h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { nuevoQuiz(); route(); } }, 'Empezar de cero')));
+      h('button', { class: 'btn', type: 'button', onclick: () => { S.quiz.step = 0; S.resultsReady = false; route({ focusHeading: true }); } }, 'Revisar respuestas'),
+      h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar de cero')));
     return root;
   }
 
@@ -533,6 +563,7 @@
       h('h1', null, 'Metodología y fuentes'),
       h('p', { class: 'lead' }, 'Cómo decidimos dónde está cada partido en cada tema, para que cualquiera pueda comprobarlo.'),
       h('p', { class: 'small muted' }, `Codificación ${m.version_codificacion} · actualizada el ${fmtFecha(m.actualizado)} · las posiciones se congelan el ${fmtFecha(m.congelacion)} salvo errores de hecho.`),
+      h('p', { class: 'aviso' }, h('strong', null, 'Estado hoy: '), `${S.conCita} de ${S.total} posiciones tienen cita y enlace, y ${S.validadas} están validadas por dos personas. Lo que sigue describe el método completo; todavía no está aplicado a todas las casillas.`),
 
       h('h2', null, 'Qué medimos'),
       P(`En cada uno de los ${S.temas.length} temas asignamos a cada partido una de cinco opciones. La opción elegida es la que mejor describe su propuesta más concreta sobre ese tema, no su retórica general.`),
@@ -570,10 +601,15 @@
 
       h('h2', { id: 'correcciones' }, 'Correcciones'),
       P('Cualquier persona o partido puede señalar un error aportando su fuente. Si la fuente es de rango igual o superior a la usada, recodificamos en 48 horas y anotamos el cambio con fecha.'),
-      P(m.contacto_correcciones ? ['Escríbenos a ', h('a', { href: 'mailto:' + m.contacto_correcciones }, m.contacto_correcciones), '.'] : h('span', { class: 'placeholder', style: { display: 'block' } }, 'Canal de correcciones pendiente (correo o formulario).')),
+      m.repositorio ? P(h('a', { class: 'btn', href: m.repositorio + '/issues/new?template=correccion.yml', target: '_blank', rel: 'noopener' }, 'Pedir una corrección')) : null,
+      m.repositorio ? h('p', { class: 'small', style: { color: 'var(--ink-2)' } }, 'Se abre un formulario público en GitHub; necesitas una cuenta.') : null,
+      m.repositorio ? P(h('a', { href: m.repositorio + '/issues?q=label%3Acorrecci%C3%B3n', target: '_blank', rel: 'noopener' }, 'Ver las correcciones pedidas y cómo se resolvieron')) : null,
+      P(m.contacto_correcciones ? ['También puedes escribirnos a ', h('a', { href: 'mailto:' + m.contacto_correcciones }, m.contacto_correcciones), '.'] : h('span', { class: 'placeholder', style: { display: 'block' } }, 'Correo de contacto pendiente, para quien no use GitHub.')),
 
       h('h2', null, 'Cómo se calcula la cercanía del test'),
       P('En cada tema que contestas, medimos la distancia entre tu opción y la del partido (de 0 a 4 pasos) y la multiplicamos por la importancia que le das (poco ×0,5, bastante ×1, mucho ×2). La cercanía es 100 % menos la distancia total dividida por la máxima posible. Los temas que te saltas no cuentan. El cálculo se hace en tu navegador.'),
+      P(`Si contestas menos de ${Cercania.MIN_RESPUESTAS} temas no mostramos porcentajes. Cuando dos partidos obtienen el mismo porcentaje los mostramos como empate, en un orden aleatorio que no indica preferencia.`),
+      P('Este cálculo tiene una limitación conocida: un partido situado en opciones intermedias nunca puede quedar tan lejos de alguien como uno situado en los extremos, así que tiende a aparecer más arriba. Por eso el porcentaje es una ayuda para explorar y no una clasificación.'),
 
       h('h2', null, 'Los temas y sus opciones'),
       ...S.temas.map((t, i) => h('div', null,
@@ -593,17 +629,20 @@
   function acuerdoTabla() {
     const a = S.meta.acuerdo_por_tema || {};
     if (!Object.keys(a).length) return h('p', { class: 'placeholder' }, 'El acuerdo por tema se publicará al terminar la segunda codificación.');
-    return h('div', { class: 'table-scroll' }, h('table', { class: 'data-table' }, h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, 'Acuerdo inicial'))),
+    return h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Acuerdo inicial por tema' }, h('table', { class: 'data-table' }, h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, 'Acuerdo inicial'))),
       h('tbody', null, S.temas.map(t => h('tr', null, h('td', null, t.nombre), h('td', { class: 'c' }, a[t.id] != null ? a[t.id] + ' %' : '—'))))));
   }
   function estadoTabla() {
     const abbr = { provisional: 'P', estimado: 'E', validado: 'V' };
     return h('div', null,
-      h('div', { class: 'table-scroll' }, h('table', { class: 'data-table' },
+      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Estado de la codificación por partido y tema' }, h('table', { class: 'data-table' },
         h('thead', null, h('tr', null, h('th', null, 'Partido'), S.temas.map(t => h('th', { title: t.nombre }, t.corto)))),
         h('tbody', null, S.partidos.map(p => h('tr', null, h('td', null, h('strong', null, p.siglas)),
           S.temas.map(t => { const c = celda(p.id, t.id); return h('td', { class: 'c', title: c ? c.estado : '' }, c ? `${c.nivel}${abbr[c.estado] ? ' ' + abbr[c.estado] : ''}` : '—'); })))))),
       h('p', { class: 'small muted' }, 'Número: opción asignada (1 a 5). Letra: V validado, P provisional, E estimado.'));
+  }
+  function fmtDiaMes(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   }
   function fmtFecha(iso) {
     if (!iso) return '—';
@@ -625,34 +664,59 @@
 
   // ---------- Router ----------
   const app = document.getElementById('app');
-  function route() {
+  const TITULO = document.title;
+  function focusHeading() {
+    const el = app.querySelector('h1') || app;
+    el.setAttribute('tabindex', '-1');
+    el.focus({ preventScroll: true });
+  }
+  // opts.focusHeading: la vista es nueva (otra ruta u otra pregunta) y el foco va a su título.
+  // Sin esa opción se conserva el foco en el control que se acaba de usar.
+  function route(opts) {
+    opts = opts || {};
+    const fk = opts.focusHeading ? null : focusKey(app);
     const parts = (location.hash.replace(/^#\/?/, '').split('#')[0] || '').split('/').filter(Boolean);
     const [r, a, b] = parts;
-    let view, nav;
+    let view, nav, titulo = '';
     switch (r) {
       case undefined: view = viewInicio(); nav = 'inicio'; break;
-      case 'test': view = viewTest(); nav = 'test'; break;
-      case 'partido': view = viewPartido(a); nav = 'inicio'; break;
-      case 'comparar': view = viewComparar(a, b); nav = 'comparar'; break;
-      case 'metodologia': view = viewMetodologia(); nav = 'metodologia'; break;
-      case 'privacidad': view = viewPrivacidad(); nav = null; break;
-      default: view = h('div', { class: 'error-box' }, 'Página no encontrada. ', h('a', { href: '#/' }, 'Volver al inicio'));
+      case 'test':
+        view = viewTest(); nav = 'test';
+        titulo = !S.quiz ? 'Haz el test' : S.resultsReady ? 'Tu resultado' : `Pregunta ${S.quiz.step + 1} de ${S.temas.length}`;
+        break;
+      case 'partido': view = viewPartido(a); nav = 'inicio'; titulo = (partido(a) || {}).siglas || 'Partido no encontrado'; break;
+      case 'comparar': view = viewComparar(a, b); nav = 'comparar'; titulo = 'Compara dos partidos'; break;
+      case 'metodologia': view = viewMetodologia(); nav = 'metodologia'; titulo = 'Metodología y fuentes'; break;
+      case 'privacidad': view = viewPrivacidad(); nav = null; titulo = 'Privacidad y aviso legal'; break;
+      default:
+        view = h('div', { class: 'error-box' }, h('h1', null, 'Página no encontrada'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
+        titulo = 'Página no encontrada';
     }
     app.replaceChildren(view);
+    document.title = titulo ? titulo + ' · ' + TITULO : TITULO;
     document.querySelectorAll('[data-nav]').forEach(el => {
       if (el.dataset.nav === nav) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
     });
     const anchor = location.hash.split('#')[2];
-    if (anchor) { const el = document.getElementById(anchor); if (el) el.scrollIntoView(); }
+    const target = anchor ? document.getElementById(anchor) : null;
+    if (target) { target.scrollIntoView(); if (opts.focusHeading) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); } }
+    else if (opts.focusHeading) focusHeading();
+    else refocus(app, fk);
   }
   let lastRoute = '';
   window.addEventListener('hashchange', () => {
     const base = location.hash.split('#').slice(0, 2).join('#');
-    route();
-    if (base !== lastRoute) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
+    const cambia = base !== lastRoute;
+    route({ focusHeading: cambia || !!location.hash.split('#')[2] });
+    if (cambia) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
   });
+  // «Saltar al contenido»: mueve el foco sin cambiar el hash (el router lo leería como una ruta).
+  const skip = document.querySelector('.skip');
+  if (skip) skip.addEventListener('click', e => { e.preventDefault(); focusHeading(); (app.querySelector('h1') || app).scrollIntoView({ block: 'center' }); });
 
-  load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); }).catch(err => {
+  const listo = () => document.documentElement.classList.remove('cargando');
+  load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); listo(); }).catch(err => {
+    listo();
     console.error(err);
     app.replaceChildren(h('div', { class: 'error-box' },
       h('h2', null, 'No se han podido cargar los datos'),

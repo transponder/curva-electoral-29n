@@ -18,7 +18,8 @@ python3 -m http.server 8000
 ```
 index.html            Página única (rutas con #/…)
 css/styles.css        Estilos, sin fuentes externas
-js/app.js             Toda la lógica, sin dependencias
+js/app.js             Interfaz y vistas, sin dependencias
+js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
 data/temas.json       11 temas: pregunta y 5 opciones (texto exacto del codebook)
 data/partidos.json    Partidos con curva, color neutro, candidaturas y enlaces (a verificar)
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
@@ -55,6 +56,19 @@ python3 scripts/validar_datos.py
 ```
 
 La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y dos nombres en `codificadores` (separados por `;`). Una casilla `estimado` necesita una `nota`.
+## Tests y sensibilidad del cálculo
+
+El cálculo de cercanía está en `js/cercania.js`, separado de la interfaz. Para comprobarlo:
+
+```bash
+node --test
+```
+
+Para ver si la fórmula favorece por sí sola a algún partido (simulación con respuestas al azar):
+
+```bash
+python3 scripts/sensibilidad.py
+```
 
 ## Privacidad
 

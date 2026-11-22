@@ -1,26 +1,38 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="cargando">
+<!-- La clase «cargando» la quita js/app.js; sin JavaScript la quita la regla noscript de abajo. -->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tu curva de valor electoral · Euskadi 29-N</title>
   <meta name="description" content="Compara lo que proponen los partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N en 11 temas, y descubre cuáles están más cerca de lo que piensas. Iniciativa independiente, sin afiliación partidista.">
   <meta name="theme-color" content="#F6F4EF">
+  <link rel="canonical" href="https://transponder.github.io/curva-electoral-29n/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tu curva de valor electoral">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:url" content="https://transponder.github.io/curva-electoral-29n/">
   <meta property="og:title" content="Tu curva de valor electoral · Euskadi 29-N">
   <meta property="og:description" content="11 temas, 7 partidos, una curva. Compara sus propuestas y encuentra tu sitio.">
-  <meta property="og:image" content="assets/og-image.png">
+  <meta property="og:image" content="https://transponder.github.io/curva-electoral-29n/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Tu curva de valor electoral · Euskadi 29-N: compara en una curva lo que propone cada partido.">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tu curva de valor electoral · Euskadi 29-N">
+  <meta name="twitter:description" content="11 temas, 7 partidos, una curva. Compara sus propuestas y encuentra tu sitio.">
+  <meta name="twitter:image" content="https://transponder.github.io/curva-electoral-29n/assets/og-image.png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
+  <noscript><style>.loading { display: none; } html.cargando .site-footer { visibility: visible; }</style></noscript>
 </head>
 <body>
   <a class="skip" href="#app">Saltar al contenido</a>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="#/" aria-label="Inicio">
+      <a class="brand" href="#/">
         <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22 L10 12 L16 18 L22 8 L29 14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Tu curva <em>· 29-N</em></span>
+        <span>Tu curva <em>· 29-N</em><span class="sr-only">, inicio</span></span>
       </a>
       <nav class="site-nav" aria-label="Principal">
         <a href="#/" data-nav="inicio">Curvas</a>
@@ -31,14 +43,25 @@
     </div>
   </header>
 
-  <div class="notice" role="note">
+  <aside class="notice" aria-label="Estado de los datos">
     <div class="wrap">
-      <strong>Versión de prueba.</strong> Las posiciones son provisionales (codificación v0): aún falta la doble codificación y la cita de cada casilla.
+      <strong>Versión provisional.</strong> Estamos comprobando cada posición con el programa de cada partido.
+      <!-- js/app.js sustituye este texto por las cifras reales del CSV y la fecha de data/meta.json. -->
+      <span id="estado-datos">Hoy tienen cita y enlace … de 77. El 24 de noviembre publicamos la versión revisada.</span> <a href="#/metodologia#correcciones">¿Ves un error? Dínoslo.</a>
     </div>
-  </div>
+  </aside>
 
   <main id="app" class="wrap" tabindex="-1">
     <p class="loading">Cargando…</p>
+    <noscript>
+      <div class="prose">
+        <h1>¿Qué propone cada partido el 29-N?</h1>
+        <p>Esta web compara lo que proponen los partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las elecciones generales del 29 de noviembre de 2026. Es una iniciativa ciudadana independiente y no es una recomendación de voto.</p>
+        <p><strong>Partidos:</strong> EH Bildu, Frente Amplio, PNV, Podemos, PP, PSE-EE y Vox.</p>
+        <p><strong>Temas:</strong> autogobierno, fiscalidad, vivienda, sanidad y educación, trabajo y pensiones, clima y energía, inmigración, industria e I+D, derechos civiles, euskera y gasto en defensa.</p>
+        <p>Las curvas y el test necesitan JavaScript. Sin él puedes descargar los datos: <a href="data/codificacion.csv">posiciones de cada partido (CSV)</a> y <a href="data/temas.json">temas y opciones (JSON)</a>.</p>
+      </div>
+    </noscript>
   </main>
 
   <footer class="site-footer">
@@ -54,6 +77,7 @@
     </div>
   </footer>
 
+  <script src="js/cercania.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

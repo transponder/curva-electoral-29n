@@ -6,7 +6,7 @@
   --panel: #FFFFFF;
   --ink: #16161D;
   --ink-2: #4A4A55;
-  --ink-3: #7A7A85;
+  --ink-3: #66666F;        /* 5,2:1 sobre el fondo y 5,7:1 sobre blanco (AA pide 4,5:1) */
   --line: #E2DED5;
   --line-2: #CFCAC0;
   --accent: #FFE14D;       /* resaltador: sin asociación partidista */
@@ -32,6 +32,7 @@
     --line-2: #3A3A44;
     --accent: #FFE14D;
     --accent-ink: #16161D;
+    --ok: #62C796;           /* el verde del modo claro no llega a 4,5:1 sobre fondo oscuro */
     --warn: #F5C46B;
     --warn-bg: #2A2414;
     --shadow: none;
@@ -70,8 +71,14 @@ button, select, input { font: inherit; color: inherit; }
 .notice { background: var(--warn-bg); color: var(--ink); font-size: 14px; border-bottom: 1px solid var(--line); }
 .notice .wrap { padding-top: 8px; padding-bottom: 8px; }
 
-main { padding-top: 24px; padding-bottom: 56px; outline: none; }
+main { padding-top: 24px; padding-bottom: 56px; outline: none; min-height: 100vh; }
+/* El pie no se muestra hasta que hay contenido: evita el salto de diseño (CLS) al cargar. */
+html.cargando .site-footer { visibility: hidden; }
+noscript .prose { padding-bottom: 24px; }
 .loading, .error-box { padding: 48px 0; color: var(--ink-2); }
+.error-box h1 { color: var(--ink); }
+/* Títulos que reciben el foco al cambiar de vista: sin marco para quien usa ratón o táctil. */
+h1[tabindex="-1"]:focus:not(:focus-visible), main:focus { outline: none; }
 .error-box { color: var(--ink); }
 
 /* Tipografía */
@@ -151,6 +158,14 @@ section { margin-top: 44px; }
 .scale .empty { color: var(--ink-3); font-size: 13px; font-weight: 400; margin-top: 4px; }
 .aviso { background: var(--warn-bg); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 14px; margin: 0 0 12px; }
 details.why { margin-top: 14px; }
+details.tabla-alt { margin-top: 12px; font-size: 14px; }
+details.tabla-alt summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+details.tabla-alt .table-scroll { margin-top: 8px; }
+details.tabla-alt caption { caption-side: bottom; text-align: left; padding: 8px 10px; color: var(--ink-2); font-size: 13px; }
+.table-scroll:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+/* Sin esto, una tabla ancha dentro de la tarjeta ensancha la columna de la rejilla en móvil. */
+.curvas-layout > * { min-width: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 details.why summary { cursor: pointer; font-weight: 700; }
 .why-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; font-size: 14px; }
 .why-list li { padding-left: 14px; border-left: 3px solid var(--line-2); }
@@ -208,7 +223,10 @@ details.why summary { cursor: pointer; font-weight: 700; }
 
 .results-list { display: grid; gap: 10px; }
 .result-row { display: grid; grid-template-columns: minmax(84px, 130px) 1fr 52px; gap: 12px; align-items: center; }
-.result-row .who { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.result-row .who { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-weight: 700; min-width: 0; }
+.result-row .who .dot { flex: none; }
+.result-row .who .badge { margin-left: 0 !important; }
+@media (max-width: 560px) { .result-row { grid-template-columns: minmax(0, 1fr) minmax(60px, 1fr) 44px; gap: 10px; } }
 .result-row .track { height: 12px; background: var(--line); border-radius: 6px; overflow: hidden; }
 .result-row .fill { height: 100%; border-radius: 6px; }
 .result-row .pct { font-variant-numeric: tabular-nums; font-weight: 800; text-align: right; }
@@ -235,7 +253,7 @@ details.why summary { cursor: pointer; font-weight: 700; }
 .prose h3 { margin-top: 24px; }
 .prose p, .prose li { color: var(--ink-2); }
 .prose ol, .prose ul { padding-left: 22px; }
-.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.table-scroll { position: relative; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
 .data-table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--panel); }
 .data-table th, .data-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 .data-table th { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .04em; }
@@ -244,7 +262,8 @@ details.why summary { cursor: pointer; font-weight: 700; }
 /* Pie */
 .site-footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--ink-2); }
 .site-footer p { margin: 0 0 6px; }
-.footer-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px !important; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px !important; }
+.footer-links a { display: inline-block; padding: 4px 0; } /* área táctil de 24 px o más */
 
 @media (max-width: 560px) {
   .header-inner { padding-top: 8px; padding-bottom: 8px; }
