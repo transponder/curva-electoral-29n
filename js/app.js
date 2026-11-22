@@ -461,21 +461,16 @@
     S.quiz = { step: 0, order: {}, answers: {}, weights: {} };
     S.resultsReady = false;
     for (const t of S.temas) { S.quiz.order[t.id] = shuffle([0, 1, 2, 3, 4]); S.quiz.weights[t.id] = 1; }
+    // Orden de los partidos empatados: se baraja una vez por test para que no decida el alfabeto.
+    S.quiz.desempate = shuffle(S.partidos.map(p => p.id));
   }
 
+  // El cálculo está en js/cercania.js (módulo puro, con tests en tests/cercania.test.js).
   function cercania() {
-    const q = S.quiz; const out = [];
-    for (const p of S.partidos) {
-      let num = 0, den = 0, n = 0;
-      for (const t of S.temas) {
-        const u = q.answers[t.id], c = celda(p.id, t.id);
-        if (!u || !c) continue;
-        const w = q.weights[t.id] || 1;
-        num += w * Math.abs(u - c.nivel); den += w * 4; n++;
-      }
-      out.push({ p, pct: den ? Math.round(100 * (1 - num / den)) : null, n });
-    }
-    return out.sort((x, y) => (y.pct ?? -1) - (x.pct ?? -1) || x.p.siglas.localeCompare(y.p.siglas, 'es'));
+    const q = S.quiz, pos = {};
+    for (const p of S.partidos) { pos[p.id] = {}; for (const t of S.temas) { const c = celda(p.id, t.id); if (c) pos[p.id][t.id] = c.nivel; } }
+    return Cercania.clasificar(Cercania.calcular(q.answers, q.weights, pos, S.temas.map(t => t.id)), q.desempate)
+      .map(r => ({ ...r, p: partido(r.id) }));
   }
 
   function viewTest() {
@@ -526,7 +521,9 @@
     }
     root.append(h('p', { class: 'lead' }, `Has contestado ${contestadas} de ${S.temas.length} temas. La cercanía mide cuánto se parecen tus respuestas a las posiciones de cada partido, dando más peso a los temas que más te importan.`));
 
-    const sel = new Set(res.slice(0, 3).map(r => r.p.id));
+    const suficientes = contestadas >= Cercania.MIN_RESPUESTAS;
+    const hayEmpate = res.some(r => r.empate);
+    const sel = new Set(suficientes ? Cercania.seleccionInicial(res, 3) : []);
     const chipsBox = h('div', { class: 'chips' }), chartBox = h('div');
     const draw = () => {
       keepFocus(chipsBox, () => chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } }))));
@@ -534,14 +531,17 @@
     };
     draw();
     root.append(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' }, chipsBox, chartBox,
-      h('div', { class: 'chart-legend-note' }, h('span', null, h('i', { class: 'lg-dot', style: { background: 'var(--ink)', borderRadius: '2px' } }), 'Tu curva'), h('span', null, 'Se muestran los tres más cercanos: activa otros para compararte.')))));
+      h('div', { class: 'chart-legend-note' }, h('span', null, h('i', { class: 'lg-dot', style: { background: 'var(--ink)', borderRadius: '2px' } }), 'Tu curva'), h('span', null, suficientes ? 'Se muestran los más cercanos y los empatados con ellos: activa otros para compararte.' : 'Activa los partidos con los que quieras compararte.')))));
 
     root.append(h('section', null, h('h2', null, 'Cercanía con cada partido'),
-      h('div', { class: 'card results-list', style: { marginTop: '14px' } }, res.map(r => h('a', { href: '#/partido/' + r.p.id, class: 'result-row', style: { textDecoration: 'none' } },
-        h('span', { class: 'who' }, h('i', { class: 'dot', style: { width: '10px', height: '10px', borderRadius: '50%', background: r.p.color, display: 'inline-block' } }), r.p.siglas),
-        h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
-        h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%')))),
-      h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.'),
+      suficientes
+        ? h('div', { class: 'card results-list', style: { marginTop: '14px' } }, res.map(r => h('a', { href: '#/partido/' + r.p.id, class: 'result-row', style: { textDecoration: 'none' } },
+            h('span', { class: 'who' }, h('i', { class: 'dot', style: { width: '10px', height: '10px', borderRadius: '50%', background: r.p.color, display: 'inline-block' } }), r.p.siglas, r.empate ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'Empate') : null),
+            h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
+            h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%'))))
+        : h('p', { class: 'aviso', style: { marginTop: '14px' } }, `Has contestado ${contestadas} ${contestadas === 1 ? 'tema' : 'temas'}. Con menos de ${Cercania.MIN_RESPUESTAS} no calculamos la cercanía: el número diría muy poco. Arriba puedes comparar tu curva con la de cada partido, o volver al test y contestar más temas.`),
+      suficientes && hayEmpate ? h('p', { class: 'muted small' }, 'Los partidos con el mismo porcentaje están empatados: su orden es aleatorio y no indica preferencia.') : null,
+      suficientes ? h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.') : null,
       h('p', { class: 'aviso' }, `Esto no te dice a quién votar. Solo compara ${S.temas.length} temas, y un partido es mucho más que eso. Antes de decidir, lee sus programas.`)));
 
     const share = async () => {
@@ -608,6 +608,8 @@
 
       h('h2', null, 'Cómo se calcula la cercanía del test'),
       P('En cada tema que contestas, medimos la distancia entre tu opción y la del partido (de 0 a 4 pasos) y la multiplicamos por la importancia que le das (poco ×0,5, bastante ×1, mucho ×2). La cercanía es 100 % menos la distancia total dividida por la máxima posible. Los temas que te saltas no cuentan. El cálculo se hace en tu navegador.'),
+      P(`Si contestas menos de ${Cercania.MIN_RESPUESTAS} temas no mostramos porcentajes. Cuando dos partidos obtienen el mismo porcentaje los mostramos como empate, en un orden aleatorio que no indica preferencia.`),
+      P('Este cálculo tiene una limitación conocida: un partido situado en opciones intermedias nunca puede quedar tan lejos de alguien como uno situado en los extremos, así que tiende a aparecer más arriba. Por eso el porcentaje es una ayuda para explorar y no una clasificación.'),
 
       h('h2', null, 'Los temas y sus opciones'),
       ...S.temas.map((t, i) => h('div', null,
