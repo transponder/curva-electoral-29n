@@ -1,83 +1,300 @@
 <!doctype html>
-<html lang="es" class="cargando">
-<!-- La clase «cargando» la quita js/app.js; sin JavaScript la quita la regla noscript de abajo. -->
+<html lang="es" class="cargando-datos">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tu curva de valor electoral · Euskadi 29-N</title>
-  <meta name="description" content="Compara lo que proponen los partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N en 11 temas, y descubre cuáles están más cerca de lo que piensas. Iniciativa independiente, sin afiliación partidista.">
-  <meta name="theme-color" content="#F6F4EF">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; font-src 'self'; connect-src 'self' https://*.goatcounter.com; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Kurba · Tu curva de valor electoral · Euskadi 29-N</title>
+  <meta name="description" content="Responde 11 preguntas y compara tu curva con la de los 7 partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N. Cada dato con su fuente. Iniciativa independiente: no te dice a quién votar.">
+  <meta name="theme-color" content="#F2F3F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)">
   <link rel="canonical" href="https://transponder.github.io/curva-electoral-29n/">
+  <link rel="alternate" hreflang="es" href="https://transponder.github.io/curva-electoral-29n/">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Tu curva de valor electoral">
+  <meta property="og:site_name" content="Kurba">
   <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="eu_ES">
   <meta property="og:url" content="https://transponder.github.io/curva-electoral-29n/">
-  <meta property="og:title" content="Tu curva de valor electoral · Euskadi 29-N">
-  <meta property="og:description" content="11 temas, 7 partidos, una curva. Compara sus propuestas y encuentra tu sitio.">
+  <meta property="og:title" content="Kurba · Tu curva de valor electoral · Euskadi 29-N">
+  <meta property="og:description" content="11 temas, 7 candidaturas, cada dato con su fuente. Mira en qué coincides con cada partido. 2 minutos.">
   <meta property="og:image" content="https://transponder.github.io/curva-electoral-29n/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Tu curva de valor electoral · Euskadi 29-N: compara en una curva lo que propone cada partido.">
+  <meta property="og:image:alt" content="Kurba: tu curva de valor electoral para las generales del 29-N en Euskadi.">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Tu curva de valor electoral · Euskadi 29-N">
-  <meta name="twitter:description" content="11 temas, 7 partidos, una curva. Compara sus propuestas y encuentra tu sitio.">
+  <meta name="twitter:title" content="Kurba · Tu curva de valor electoral · Euskadi 29-N">
+  <meta name="twitter:description" content="11 temas, 7 candidaturas, cada dato con su fuente. Mira en qué coincides con cada partido. 2 minutos.">
   <meta name="twitter:image" content="https://transponder.github.io/curva-electoral-29n/assets/og-image.png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/styles.css">
-  <noscript><style>.loading { display: none; } html.cargando .site-footer { visibility: visible; }</style></noscript>
+  <link rel="preload" href="assets/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/kurba.css">
+  <script src="js/cercania.js" defer></script>
+  <script src="js/analitica.js" defer></script>
+  <script src="js/datos.js" defer></script>
+  <script src="js/paginas.js" defer></script>
+  <script src="js/app.js" defer></script>
 </head>
 <body>
-  <a class="skip" href="#app">Saltar al contenido</a>
-  <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="brand" href="#/">
-        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22 L10 12 L16 18 L22 8 L29 14" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>Tu curva <em>· 29-N</em><span class="sr-only">, inicio</span></span>
-      </a>
-      <nav class="site-nav" aria-label="Principal">
-        <a href="#/" data-nav="inicio">Curvas</a>
-        <a href="#/test" data-nav="test">Haz el test</a>
-        <a href="#/comparar" data-nav="comparar">Comparar</a>
-        <a href="#/metodologia" data-nav="metodologia">Metodología</a>
-      </nav>
+<a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
+<main id="contenido" tabindex="-1">
+
+<header class="top">
+  <button class="brand" id="home" aria-label="Kurba, volver al inicio" data-ta="a_home">
+    <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#FFC533"/><polyline points="7,25 14,13 22,20 29,9" fill="none" stroke="#14161B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="13" r="2.6" fill="#14161B"/><circle cx="22" cy="20" r="2.6" fill="#14161B"/></svg>
+    <b>kurba</b><span class="beta" data-t="beta">Beta</span>
+  </button>
+  <div class="lang" role="group" aria-label="Idioma" data-ta="a_lang">
+    <button aria-pressed="true" lang="es" id="es">ES</button>
+    <button aria-pressed="false" lang="eu" id="eu">EU</button>
+  </div>
+</header>
+
+<!-- INICIO -->
+<section id="s-start" class="stack">
+  <div class="hero" aria-hidden="true">
+    <svg viewBox="0 0 310 118" preserveAspectRatio="none">
+      <line x1="0" y1="14" x2="310" y2="14" stroke="#2C3038"/><line x1="0" y1="59" x2="310" y2="59" stroke="#2C3038"/><line x1="0" y1="104" x2="310" y2="104" stroke="#2C3038"/>
+      <polyline points="15,36 55,70 95,36 135,14 175,70 215,70 255,82 295,92" fill="none" stroke="#8A909C" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+      <polyline points="15,92 55,36 95,70 135,70 175,36 215,14 255,92 295,36" fill="none" stroke="#8A909C" stroke-width="2" stroke-dasharray="5 5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+      <polyline points="15,70 55,36 95,12 135,36 175,70 215,36 255,98 295,70" fill="none" stroke="#FFC533" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </div>
+  <div class="stack" style="gap:10px">
+    <p class="kicker" data-t="k_start">Euskadi · Elecciones generales 29-N</p>
+    <h1 data-t="title">Tu curva de valor electoral</h1>
+    <p class="lead" data-t="lead">Responde once preguntas sobre los temas que deciden unas elecciones. No te diremos a quién votar: verás en qué coincides con cada partido y en qué no, tema a tema.</p>
+  </div>
+  <div class="bul">
+    <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-t="b1">Tus respuestas no salen de tu dispositivo</span></div>
+    <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/></svg><span data-t="b2">No es una encuesta: no se recoge ni se agrega ninguna respuesta</span></div>
+    <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/></svg><span data-t="b3">Once temas, siete candidaturas, cada dato con su fuente</span></div>
+  </div>
+  <button class="btn acc" id="go" data-t="go">Empezar · 2 min</button>
+  <div class="links"><button class="link" id="explore" data-t="explore">Ver las curvas sin hacer el test</button></div>
+  <div class="links"><button class="link" id="to-method" data-t="method">Método</button><button class="link" id="to-guides" data-t="guides_t">Guías rápidas para votar</button></div>
+  <div class="card stack" style="gap:14px">
+    <h3 data-t="how_h">Cómo lo hacemos</h3>
+    <div class="how">
+      <div><b class="n">1</b><strong data-t="how1_t">Lo que proponen</strong><span data-t="how1_s">Recogemos lo que cada partido propone para el Congreso y el Gobierno, a partir de su programa del 29-N y otras fuentes públicas.</span></div>
+      <div><b class="n">2</b><strong data-t="how2_t">Con fuente</strong><span data-t="how2_s">Cada propuesta lleva su enlace. Si en un tema no encontramos ninguna, la posición se marca como estimada y lo decimos.</span></div>
+      <div><b class="n">3</b><strong data-t="how3_t">Sin decirte a quién votar</strong><span data-t="how3_s">Las opciones salen sin números y en orden aleatorio, y el resultado muestra coincidencias, no un ganador.</span></div>
     </div>
-  </header>
+  </div>
+  <div class="card stack" style="gap:10px" id="quienes" hidden>
+    <h3 data-t="who_h">Quiénes somos</h3>
+    <div class="stack small" style="gap:8px;font-size:14.5px" id="quienes-txt"></div>
+  </div>
+  <p class="small" data-t="disc">Las posiciones de los partidos se han elaborado a partir de sus programas electorales e información pública. No han sido validadas por los partidos. En este piloto son provisionales.</p>
+</section>
 
-  <aside class="notice" aria-label="Estado de los datos">
-    <div class="wrap">
-      <strong>Versión provisional.</strong> Estamos comprobando cada posición con el programa de cada partido.
-      <!-- js/app.js sustituye este texto por las cifras reales del CSV y la fecha de data/meta.json. -->
-      <span id="estado-datos">Hoy tienen cita y enlace … de 77. El 24 de noviembre publicamos la versión revisada.</span> <a href="#/metodologia#correcciones">¿Ves un error? Dínoslo.</a>
+<!-- PREGUNTA -->
+<section id="s-q" class="stack" hidden>
+  <div class="qtop">
+    <button class="iconbtn" id="q-back" aria-label="Atrás" data-ta="a_back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="count" id="q-count"></span>
+    <span style="width:44px" aria-hidden="true"></span>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="q-bar"></i></div>
+  <span class="chip-topic" id="q-topic"></span>
+  <h2 id="q-text"></h2>
+  <div class="opts" id="q-opts" role="group" aria-labelledby="q-text"></div>
+  <button class="opt dk" id="q-dk" aria-pressed="false"><span data-t="dk">No lo tengo claro</span></button>
+  <p class="help" id="q-help" hidden></p>
+  <div class="imp">
+    <span id="imp-label" data-t="imp_q">¿Qué importancia le das a este tema?</span>
+    <div class="seg" role="group" aria-labelledby="imp-label" id="q-imp">
+      <button data-w="2" data-t="w2">Alta</button><button data-w="1" data-t="w1">Media</button><button data-w="0" data-t="w0">Ninguna</button>
     </div>
-  </aside>
+  </div>
+  <p class="small" id="q-hint" role="status"></p>
+  <button class="btn ink" id="q-next" disabled>Siguiente</button>
+</section>
 
-  <main id="app" class="wrap" tabindex="-1">
-    <p class="loading">Cargando…</p>
-    <noscript>
-      <div class="prose">
-        <h1>¿Qué propone cada partido el 29-N?</h1>
-        <p>Esta web compara lo que proponen los partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las elecciones generales del 29 de noviembre de 2026. Es una iniciativa ciudadana independiente y no es una recomendación de voto.</p>
-        <p><strong>Partidos:</strong> EH Bildu, Frente Amplio, PNV, Podemos, PP, PSE-EE y Vox.</p>
-        <p><strong>Temas:</strong> autogobierno, fiscalidad, vivienda, sanidad y educación, trabajo y pensiones, clima y energía, inmigración, industria e I+D, derechos civiles, euskera y gasto en defensa.</p>
-        <p>Las curvas y el test necesitan JavaScript. Sin él puedes descargar los datos: <a href="data/codificacion.csv">posiciones de cada partido (CSV)</a> y <a href="data/temas.json">temas y opciones (JSON)</a>.</p>
-      </div>
-    </noscript>
-  </main>
+<!-- GUÍA -->
+<section id="s-rec" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="rec-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <p class="kicker" data-t="k_rec">Guía para votar</p>
+  <h1 id="rec-t" style="font-size:28px"></h1>
+  <div class="card stack recbody" id="rec-b" style="gap:12px"></div>
+  <div id="rec-src"></div>
+  <div class="stack" style="gap:8px"><h3 data-t="more">Otras guías</h3><div class="recmore" id="rec-more"></div></div>
+</section>
 
-  <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <p><strong>Tu curva de valor electoral</strong> · Elecciones generales del 29 de noviembre de 2026 · Araba, Bizkaia y Gipuzkoa.</p>
-      <p>Iniciativa ciudadana independiente, sin afiliación ni financiación de ningún partido. No es una recomendación de voto.</p>
-      <p class="footer-links">
-        <a href="#/metodologia">Metodología y fuentes</a>
-        <a href="#/metodologia#correcciones">Señalar un error</a>
-        <a href="#/privacidad">Privacidad y aviso legal</a>
-        <a href="data/codificacion.csv" download>Descargar datos</a>
-      </p>
+<!-- MÉTODO (desde inicio) -->
+<section id="s-met" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="met-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <h1 style="font-size:28px" data-t="method">Método</h1>
+  <div class="card stack small" id="met-body" style="gap:10px;font-size:14.5px"></div>
+  <div class="prose" id="met-full"></div>
+</section>
+
+<!-- RESULTADO -->
+<section id="s-res" class="stack" hidden>
+  <div class="card exbar" id="exbar" hidden>
+    <p class="small" style="font-size:14.5px;margin:0" data-t="ex_note">Estás viendo las curvas y las fichas de los partidos sin haber hecho el test.</p>
+    <button class="btn acc" id="ex-go" data-t="ex_go">Hacer el test · 2 min</button>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Secciones del resultado" data-ta="a_tabs">
+    <button role="tab" id="tb-cer" aria-controls="t-cer" aria-selected="true" data-t="tab1">Cercanía</button>
+    <button role="tab" id="tb-cur" aria-controls="t-cur" aria-selected="false" data-t="tab2">Curvas</button>
+    <button role="tab" id="tb-fic" aria-controls="t-fic" aria-selected="false" data-t="tab3">Fichas</button>
+    <button role="tab" id="tb-gui" aria-controls="t-gui" aria-selected="false" data-t="tab4">Guías</button>
+  </div>
+
+  <!-- Cercanía -->
+  <div role="tabpanel" id="t-cer" aria-labelledby="tb-cer" class="stack">
+    <div class="stack" style="gap:8px">
+      <p class="kicker" id="r-ed"></p>
+      <h1 style="font-size:28px" data-t="res_h">Tu resultado</h1>
+      <p class="lead" id="r-lead" style="font-size:15px"></p>
     </div>
-  </footer>
+    <div class="card stack" style="gap:4px">
+      <h3 data-t="rank_h">Cercanía con cada partido</h3>
+      <p class="small" style="margin-bottom:6px" data-t="rank_s">Lo habitual es coincidir en parte con varios. Toca uno para ver su ficha.</p>
+      <div class="rank" id="rank"></div>
+    </div>
+    <div class="card stack" style="gap:10px" id="sep-card">
+      <h3 data-t="sep_h">Qué separa a tus más cercanos</h3>
+      <p class="small" id="sep-lead"></p>
+      <div class="sep" id="sep"></div>
+    </div>
+    <div class="card dark stack" style="gap:10px">
+      <h3 data-t="ori_h">Para orientarte</h3>
+      <div class="orient" id="orient"></div>
+    </div>
+    <button class="btn acc" id="to-curves" data-t="to_cur">Ver las curvas</button>
+    <button class="btn" id="to-cmp" data-t="to_cmp">Comparar dos partidos</button>
+    <div class="card stack" style="gap:10px">
+      <h3 data-t="sh_h">Comparte tu curva</h3>
+      <p class="small" data-t="sh_s">Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva: ni partidos ni porcentajes.</p>
+      <img id="shareimg" alt="Imagen con tu curva de valor, sin partidos ni porcentajes" data-talt="a_img">
+      <div class="actions"><button class="ghost" id="copy" data-t="copy">Copiar resumen</button><span class="small" id="copied" role="status"></span></div>
+    </div>
+    <div class="actions">
+      <button class="ghost" id="r-edit" data-t="edit">Cambiar respuestas</button>
+      <button class="ghost" id="r-restart" data-t="restart">Empezar de nuevo</button>
+    </div>
+  </div>
 
-  <script src="js/cercania.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Curvas -->
+  <div role="tabpanel" id="t-cur" aria-labelledby="tb-cur" class="stack" hidden>
+    <div class="stack" style="gap:8px">
+      <h2 id="cur-h" data-t="cur_h">Tu curva y la de los partidos</h2>
+      <p class="small" style="font-size:14.5px" data-t="cur_s">Toca un partido para mostrarlo u ocultarlo. Toca un tema en el gráfico para ver los valores.</p>
+    </div>
+    <div class="pchips" id="chips"></div>
+    <div class="quick"><button class="link" data-q="all" data-t="q_all">Todos</button><button class="link you-only" data-q="top3" data-t="q_top">Los 3 más cercanos</button><button class="link you-only" data-q="none" data-t="q_none">Solo mi curva</button></div>
+    <div class="card stack" style="gap:8px">
+      <div class="chartwrap" id="wrap"><svg id="chart" role="img" aria-label="Tu curva superpuesta a la de los partidos" data-ta="a_chart"></svg><div id="tip"></div></div>
+      <div class="key" id="key"></div>
+      <p class="small" data-t="est_note">Marcador hueco: posición estimada, sin propuesta localizada.</p>
+      <details class="tabla-alt"><summary data-t="tbl_s">Ver las posiciones en una tabla</summary><div id="tabla-alt"></div></details>
+    </div>
+    <div class="card stack you-only" style="gap:6px">
+      <h3 data-t="adj_h">Ajusta tu curva</h3>
+      <p class="small" data-t="adj_s">Mueve cualquier punto o cambia su importancia: la cercanía y las curvas se recalculan al momento.</p>
+      <div id="adjust"></div>
+    </div>
+  </div>
+
+  <!-- Fichas -->
+  <div role="tabpanel" id="t-fic" aria-labelledby="tb-fic" class="stack" hidden>
+    <div class="scroller" id="fsw" role="group" aria-label="Elegir partido" data-ta="a_pick"></div>
+    <p class="note" id="f-pick" data-t="f_pick" hidden>Hay empate en cabeza. Elige un partido para ver su ficha.</p>
+    <div class="stack" id="f-body">
+    <div class="stack" style="gap:8px" id="ficha">
+      <div class="fhead"><h2 id="f-name"></h2><span class="fpc you-only" id="f-pc"></span></div>
+      <p class="note" id="p-note"></p>
+    </div>
+    <div class="stack" style="gap:10px">
+      <h3 id="top-h" data-t="top_h">Tema a tema, de lo que más a lo que menos te importa</h3>
+      <div class="stack" style="gap:10px" id="topics"></div>
+      <p class="small" data-th="legend">Información pública recopilada a 11 de noviembre de 2026. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
+    </div>
+    <div class="stack" style="gap:10px" id="f-otros-w">
+      <h3 data-t="otros_h">Otros compromisos</h3>
+      <ul class="pts card" id="f-otros"></ul>
+    </div>
+    <div class="stack" style="gap:10px">
+      <h3 data-t="cand_h">Candidaturas en Euskadi</h3>
+      <ul class="ppl list" id="f-ppl"></ul>
+      <p class="small" id="f-sen"></p>
+    </div>
+    <div class="stack" style="gap:10px">
+      <h3 data-t="prog_h">Programa y web</h3>
+      <div class="darklist" id="f-prog"></div>
+    </div>
+    <div class="stack" style="gap:10px">
+      <h3 data-t="rest_h">El resto de partidos</h3>
+      <p class="small" style="font-size:14px" data-t="rest_s">Cada partido tiene la misma ficha: tema a tema, candidaturas y programa.</p>
+      <nav class="list others" id="others" aria-label="Fichas del resto de partidos" data-ta="a_rest"></nav>
+    </div>
+    </div>
+    <div class="card stack" id="cmp" style="gap:12px">
+      <h3 data-t="cmp_h">Compara dos partidos</h3>
+      <p class="small" style="font-size:14px" data-t="cmp_s">Elige dos y mira en qué temas proponen lo mismo y en cuáles no.</p>
+      <div class="cmp-pick"><select id="cmp-a" aria-label="Primer partido" data-ta="a_cmpa"></select><span class="small" data-t="cmp_vs">frente a</span><select id="cmp-b" aria-label="Segundo partido" data-ta="a_cmpb"></select></div>
+      <svg id="cmp-chart" role="img" aria-label="Curvas de los dos partidos" data-ta="a_cmpc"></svg>
+      <p class="cmp-sum" id="cmp-sum"></p>
+      <div class="stack" style="gap:10px" id="cmp-rows"></div>
+    </div>
+  </div>
+
+  <!-- Guías -->
+  <div role="tabpanel" id="t-gui" aria-labelledby="tb-gui" class="stack" hidden>
+    <div class="stack" style="gap:8px">
+      <h2 data-t="gui_h">Antes de votar</h2>
+      <p class="small" style="font-size:14.5px" data-t="gui_s">Tu resultado es un punto de partida. Si alguna de estas preguntas te suena nueva, la guía te lo explica en dos minutos.</p>
+    </div>
+    <div class="recs" id="recs-res"></div>
+    <details class="card" id="method-res">
+      <summary data-t="method">Método</summary>
+      <div class="stack small method" style="gap:8px;margin-top:10px;font-size:14px"></div>
+    </details>
+  </div>
+</section>
+
+<!-- GUÍAS (desde inicio) -->
+<section id="s-gl" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="gl-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <h1 style="font-size:28px" data-t="guides_t">Guías rápidas para votar</h1>
+  <p class="small" style="font-size:14.5px" data-t="gl_s">Si alguna de estas preguntas te suena nueva, échale un vistazo: son dos minutos.</p>
+  <div class="recs" id="recs-start"></div>
+</section>
+<!-- PRIVACIDAD -->
+<section id="s-priv" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="priv-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <div class="prose" id="priv-body"></div>
+</section>
+
+<!-- NO ENCONTRADA -->
+<section id="s-404" class="stack" hidden>
+  <h1 style="font-size:28px" data-t="nf_h">Página no encontrada</h1>
+  <p class="lead" data-t="nf_s">El enlace no lleva a ninguna parte de Kurba.</p>
+  <a class="btn acc" href="#/" data-t="nf_go">Ir al inicio</a>
+</section>
+
+<noscript>
+  <div class="card stack" style="gap:8px">
+    <h3>Kurba necesita JavaScript</h3>
+    <p class="small">El test y las curvas se calculan en tu navegador. Mientras tanto, puedes descargar los datos: <a href="data/codificacion.csv">posiciones</a> · <a href="data/propuestas.csv">propuestas con fuente</a> · <a href="data/temas.json">temas</a>.</p>
+  </div>
+</noscript>
+</main>
+
+<footer class="pie">
+  <nav aria-label="Pie" data-ta="a_pie">
+    <a href="#/metodologia" data-t="f_met">Metodología y fuentes</a>
+    <a href="#/metodologia/correcciones" data-t="f_err">Señalar un error</a>
+    <a href="#/privacidad" data-t="f_priv">Privacidad y aviso legal</a>
+    <a href="data/codificacion.csv" download data-t="f_data">Descargar datos</a>
+  </nav>
+  <p data-t="beta_pie">Beta: las posiciones son provisionales hasta completar la segunda codificación.</p>
+  <p data-t="f_indep">Iniciativa ciudadana independiente, sin afiliación ni financiación de ningún partido. No es una recomendación de voto.</p>
+</footer>
+<div id="toast" role="status" hidden></div>
+<canvas id="cv" width="1080" height="1080" hidden></canvas>
 </body>
 </html>

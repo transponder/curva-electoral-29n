@@ -35,7 +35,7 @@ def main():
 
     random.seed(1)
     primero = collections.Counter()
-    empates = cambia = 0
+    empates = cambia = cerca = 0
     for _ in range(n):
         u = [random.randint(1, 5) for _ in temas]
         pct = {p: round(100 * (1 - sum(abs(a - b) for a, b in zip(u, pos[p])) / maximo)) for p in partidos}
@@ -44,6 +44,8 @@ def main():
         for p in tops:
             primero[p] += 1 / len(tops)          # los empates se reparten a partes iguales
         empates += len(tops) > 1
+        orden = sorted(pct.values(), reverse=True)
+        cerca += orden[0] - orden[1] <= 8          # grupo «los más cercanos» de Kurba con dos o más partidos
         i = random.randrange(len(temas))          # ¿mover una respuesta un paso cambia quién va primero?
         u2 = u[:]
         u2[i] = u[i] + 1 if u[i] < 5 else 4
@@ -55,6 +57,7 @@ def main():
     for p in sorted(partidos, key=lambda p: -primero[p]):
         print(f"  {p:14} {100 * primero[p] / n:5.1f} %")
     print(f"\nEmpate en el primer puesto: {100 * empates / n:.1f} %")
+    print(f"Segundo partido a 8 puntos o menos del primero: {100 * cerca / n:.1f} %")
     print(f"Mover un paso una sola respuesta cambia el primer puesto: {100 * cambia / n:.1f} %")
 
 

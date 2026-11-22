@@ -17,8 +17,11 @@ CABECERA = ["partido", "tema", "nivel", "estado", "cita", "fuente", "url",
 CABECERA_PROPUESTAS = ["partido", "tema", "etiqueta", "texto", "fuente", "url", "fecha_consulta"]
 ESTADOS = {"validado", "provisional", "estimado"}
 ETIQUETAS = {"Programa", "Campaña", "Antes del 29-N"}
+ETIQUETAS_EU = {"Programa": "Programa", "Campaña": "Kanpaina", "Antes del 29-N": "A-29 aurretik"}
 FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MAX_FRASES_CITA = 2
+FORMAS = {"circle", "square", "triup", "diamond", "tridown", "penta", "cross"}
+COLOR = re.compile(r"^#[0-9A-Fa-f]{6}$")
 
 
 def n_frases(texto):
@@ -28,6 +31,122 @@ def n_frases(texto):
 
 def n_codificadores(valor):
     return len([c for c in re.split(r"[;,+/]", valor) if c.strip()])
+
+
+def validar_euskera(carpeta, temas, propuestas, err):
+    """Cada tema, cada propuesta y la interfaz tienen que tener su versión en euskera."""
+    ruta = carpeta / "temas.eu.json"
+    if not ruta.exists():
+        err("i18n/temas.eu.json: falta el fichero")
+    else:
+        eu = {t.get("id"): t for t in json.loads(ruta.read_text(encoding="utf-8"))}
+        for t in temas:
+            te = eu.get(t.get("id"))
+            if not te:
+                err(f"i18n/temas.eu.json: falta el tema «{t.get('id')}»")
+                continue
+            for campo in ("nombre", "codigo", "pregunta"):
+                if not (te.get(campo) or "").strip():
+                    err(f"i18n/temas.eu.json: el tema «{t['id']}» no tiene «{campo}»")
+            if len(te.get("opciones", [])) != 5 or not all(isinstance(o, str) and o.strip() for o in te.get("opciones", [])):
+                err(f"i18n/temas.eu.json: el tema «{t['id']}» debe tener exactamente 5 opciones con texto")
+        for i in eu:
+            if i not in {t.get("id") for t in temas}:
+                err(f"i18n/temas.eu.json: tema «{i}» que no existe en temas.json")
+
+    ruta = carpeta / "propuestas.eu.csv"
+    if not ruta.exists():
+        if propuestas:
+            err("i18n/propuestas.eu.csv: falta el fichero")
+    else:
+        with open(ruta, encoding="utf-8-sig", newline="") as f:
+            lector = csv.DictReader(f)
+            if lector.fieldnames != ["partido", "tema", "etiqueta", "texto"]:
+                err("i18n/propuestas.eu.csv: la cabecera debe ser exactamente partido,tema,etiqueta,texto")
+                return
+            filas = list(lector)
+        if len(filas) != len(propuestas):
+            err(f"i18n/propuestas.eu.csv: tiene {len(filas)} propuestas y propuestas.csv tiene {len(propuestas)}; deben ir en el mismo orden, una por una")
+        for n, (r, es) in enumerate(zip(filas, propuestas), start=2):
+            if (r["partido"], r["tema"], r["etiqueta"]) != (es[0], es[1], ETIQUETAS_EU.get(es[2])):
+                err(f"i18n/propuestas.eu.csv línea {n}: no corresponde a la línea {n} de propuestas.csv ({es[0]} · {es[1]} · {ETIQUETAS_EU.get(es[2], es[2])})")
+            if not (r["texto"] or "").strip():
+                err(f"i18n/propuestas.eu.csv línea {n}: falta el «texto»")
+
+    ruta = carpeta / "ui.eu.json"
+    if not ruta.exists():
+        err("i18n/ui.eu.json: falta el fichero")
+    else:
+        ui = json.loads(ruta.read_text(encoding="utf-8")).get("ui", {})
+        vacios = [k for k, v in ui.items() if not (isinstance(v, str) and v.strip())]
+        if not ui or vacios:
+            err(f"i18n/ui.eu.json: textos vacíos o ausentes: {', '.join(vacios) or 'todos'}")
+
+
+def validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos):
+    """Guías (recursos.json) y fichas de partido en euskera."""
+    ruta = carpeta / "recursos.json"
+    recursos = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else []
+    if not ruta.exists():
+        err("recursos.json: falta el fichero")
+    ids = [r.get("id") for r in recursos]
+    if len(set(ids)) != len(ids):
+        err("recursos.json: hay ids de guía repetidos")
+    for r in recursos:
+        for campo in ("id", "titulo", "pregunta"):
+            if not (r.get(campo) or "").strip():
+                err(f"recursos.json: la guía «{r.get('id')}» no tiene «{campo}»")
+        if not r.get("cuerpo"):
+            err(f"recursos.json: la guía «{r.get('id')}» no tiene «cuerpo»")
+        for f in r.get("fuentes", []):
+            if not f.get("fuente") or not str(f.get("url", "")).startswith("https://"):
+                err(f"recursos.json: cada fuente de la guía «{r.get('id')}» necesita «fuente» y una «url» https://")
+    ruta = carpeta / "i18n" / "recursos.eu.json"
+    eu = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else {}
+    for r in recursos:
+        e = eu.get(r.get("id"))
+        if not e or not all((e.get(c) or "") for c in ("titulo", "pregunta", "cuerpo")):
+            err(f"i18n/recursos.eu.json: falta la guía «{r.get('id')}» en euskera (titulo, pregunta y cuerpo)")
+
+    ruta = carpeta / "i18n" / "partidos.eu.json"
+    eu = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else {}
+    for p in partidos.get("codificados", []):
+        e = eu.get(p.get("id"))
+        if not e:
+            err(f"i18n/partidos.eu.json: falta el partido «{p.get('id')}»")
+            continue
+        if p.get("nota") and not e.get("nota"):
+            err(f"i18n/partidos.eu.json: «{p['id']}» no tiene «nota»")
+        for lista in ("personas", "otros"):
+            if len(e.get(lista, [])) != len(p.get(lista, [])):
+                err(f"i18n/partidos.eu.json: «{p['id']}» tiene {len(e.get(lista, []))} «{lista}» y partidos.json tiene {len(p.get(lista, []))}")
+
+    # Textos de interfaz: los que falten en euskera salen en castellano (aviso, no error).
+    es = json.loads((carpeta / "i18n" / "ui.es.json").read_text(encoding="utf-8")).get("ui", {}) if (carpeta / "i18n" / "ui.es.json").exists() else {}
+    claves = set(es)
+    html = carpeta.parent / "index.html"
+    if html.exists():
+        claves |= set(re.findall(r'data-(?:t|th|ta|talt)="([^"]+)"', html.read_text(encoding="utf-8")))
+    ui_eu = json.loads((carpeta / "i18n" / "ui.eu.json").read_text(encoding="utf-8")).get("ui", {}) if (carpeta / "i18n" / "ui.eu.json").exists() else {}
+    faltan = sorted(claves - set(ui_eu))
+    if faltan:
+        avisos.append(f"i18n/ui.eu.json: {len(faltan)} textos sin traducir (salen en castellano): {', '.join(faltan)}")
+
+
+def pendientes_de_publicar(carpeta, avisos):
+    """Lo que hay que rellenar antes de hacer pública la web (aviso, no error)."""
+    meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
+    for campo, que in (("contacto_correcciones", "correo de correcciones"), ("titular", "titular de la web (aviso legal, LSSI)")):
+        if not (meta.get(campo) or "").strip():
+            avisos.append(f"meta.json: falta «{campo}» ({que}) — pendiente antes de publicar")
+    gc = (meta.get("goatcounter") or "").strip()
+    if not gc:
+        avisos.append("meta.json: falta «goatcounter» (código de GoatCounter): la analítica está apagada")
+    q = meta.get("quienes_somos") or {}
+    if not (q.get("es") or "").strip():
+        avisos.append("meta.json: falta «quienes_somos.es» — pendiente antes de publicar")
+    elif not (q.get("eu") or "").strip():
+        avisos.append("meta.json: falta «quienes_somos.eu» (sale en castellano)")
 
 
 def validar(carpeta):
@@ -45,7 +164,7 @@ def validar(carpeta):
     if len(set(ids_partido)) != len(ids_partido):
         err("partidos.json: hay ids de partido repetidos")
     for t in temas:
-        for campo in ("id", "nombre", "corto", "pregunta"):
+        for campo in ("id", "nombre", "corto", "codigo", "pregunta"):
             if not t.get(campo):
                 err(f"temas.json: el tema «{t.get('id')}» no tiene «{campo}»")
         if len(t.get("opciones", [])) != 5 or not all(isinstance(o, str) and o.strip() for o in t.get("opciones", [])):
@@ -54,8 +173,27 @@ def validar(carpeta):
         for campo in ("id", "siglas", "nombre", "color"):
             if not p.get(campo):
                 err(f"partidos.json: el partido «{p.get('id')}» no tiene «{campo}»")
-        if p.get("color") and not re.match(r"^#[0-9A-Fa-f]{6}$", p["color"]):
+        if p.get("color") and not COLOR.match(p["color"]):
             err(f"partidos.json: el color de «{p.get('id')}» debe tener el formato #RRGGBB")
+        if p.get("color_oscuro") and not COLOR.match(p["color_oscuro"]):
+            err(f"partidos.json: el color_oscuro de «{p.get('id')}» debe tener el formato #RRGGBB")
+        if p.get("forma") not in FORMAS:
+            err(f"partidos.json: la «forma» de «{p.get('id')}» debe ser una de {', '.join(sorted(FORMAS))}")
+        for campo in ("web",):
+            if p.get(campo) and not p[campo].startswith("https://"):
+                err(f"partidos.json: «{campo}» de «{p.get('id')}» debe empezar por https://")
+        for d in p.get("programa_docs", []):
+            if not d.get("titulo") or not str(d.get("url", "")).startswith("https://"):
+                err(f"partidos.json: cada documento de «programa_docs» de «{p.get('id')}» necesita «titulo» y una «url» https://")
+        for lista, campos in (("personas", ("nombre", "cargo", "fuente", "url")), ("otros", ("texto", "etiqueta", "fuente", "url"))):
+            for n, x in enumerate(p.get(lista, []), start=1):
+                for campo in campos:
+                    if not (x.get(campo) or "").strip():
+                        err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}» no tiene «{campo}»")
+                if x.get("url") and not x["url"].startswith("https://"):
+                    err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: la url debe empezar por https://")
+                if lista == "otros" and x.get("etiqueta") and x["etiqueta"] not in ETIQUETAS:
+                    err(f"partidos.json: «otros» n.º {n} de «{p.get('id')}»: etiqueta debe ser Programa, Campaña o Antes del 29-N")
 
     with open(carpeta / "codificacion.csv", encoding="utf-8-sig", newline="") as f:
         lector = csv.DictReader(f)
@@ -121,6 +259,7 @@ def validar(carpeta):
             if est == "estimado" and documentadas and min(abs(nv - d) for d in documentadas) > 1:
                 avisos.append(f"codificacion.csv ({p} · {tema}): casilla estimada a más de un paso de cualquier posición documentada del partido")
 
+    propuestas = []
     ruta_prop = carpeta / "propuestas.csv"
     if ruta_prop.exists():
         with open(ruta_prop, encoding="utf-8-sig", newline="") as f:
@@ -140,6 +279,18 @@ def validar(carpeta):
                         err(f"{donde}: falta el «texto»")
                     if r["url"] and not r["url"].startswith("https://"):
                         err(f"{donde}: «url» debe empezar por https://")
+                    # Toda propuesta que se muestra lleva su origen y un enlace.
+                    if not (r["fuente"] or "").strip() or not (r["url"] or "").strip():
+                        err(f"{donde}: una propuesta necesita «fuente» y «url»")
+                    propuestas.append((r["partido"], r["tema"], r["etiqueta"]))
+
+    validar_euskera(carpeta / "i18n", temas, propuestas, err)
+    validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos)
+    pendientes_de_publicar(carpeta, avisos)
+    meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
+    gc = (meta.get("goatcounter") or "").strip()
+    if gc and not re.match(r"^https://[a-z0-9-]+\.goatcounter\.com/count$", gc):
+        err("meta.json: «goatcounter» debe ser https://<código>.goatcounter.com/count")
 
     total = len(ids_partido) * len(ids_tema)
     con_cita = sum(1 for r in filas if (r.get("cita") or "").strip() and (r.get("url") or "").strip())

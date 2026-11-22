@@ -1,0 +1,145 @@
+[
+  {
+    "id": "autogobierno",
+    "nombre": "Autogobernua",
+    "codigo": "AUT",
+    "pregunta": "Zer harreman izan beharko luke Euskadik Estatuarekin?",
+    "opciones": [
+      "Kontzertu Ekonomikoa berrikusi eta eskumenak Estatuari itzuli",
+      "Estatutuari eta Kontzertuari eutsi, transferentzia berririk gabe",
+      "Gernikako Estatutuan egiteke dauden transferentziak osatu",
+      "Estatus berri bat, nazio-aitortzarekin eta aldebiko harremanarekin",
+      "Erabakitzeko eskubidea eta independentziarako bidea"
+    ]
+  },
+  {
+    "id": "fiscalidad",
+    "nombre": "Zergak",
+    "codigo": "ZER",
+    "pregunta": "Zer egin beharko litzateke zergekin?",
+    "opciones": [
+      "Zergak oro har jaitsi pertsonei eta enpresei",
+      "Jaitsiera selektiboak errenta ertainentzat, familientzat eta autonomoentzat",
+      "Egungo zerga-presioari eutsi",
+      "Zergak igo errenta altuei, enpresa handiei eta ondareari",
+      "Zerga-erreforma oso progresibo bat, ondarearen eta mozkinen gaineko tasa altuagoekin"
+    ]
+  },
+  {
+    "id": "vivienda",
+    "nombre": "Etxebizitza",
+    "codigo": "ETX",
+    "pregunta": "Nola heldu beharko litzaioke etxebizitza eskuratzeko arazoari?",
+    "opciones": [
+      "Lurzorua liberalizatu, izapideak murriztu eta merkatuari jarduten utzi",
+      "Erosteko laguntzak eta segurtasun juridiko handiagoa jabeentzat",
+      "Eskaintza pribatu handiagoa eta etxebizitza babestua uztartu",
+      "Alokairuko parke publiko handi bat eta alokairuaren mugak eremu tentsionatuetan",
+      "Alokairuaren muga orokorrak eta bizitzeko ez den etxebizitza-erosketari mugak"
+    ]
+  },
+  {
+    "id": "sanidad-educacion",
+    "nombre": "Osasuna eta hezkuntza",
+    "codigo": "OSA",
+    "pregunta": "Zer eredu nahi duzu osasunerako eta hezkuntzarako?",
+    "opciones": [
+      "Gastua mugatu eta kudeaketa pribatua eta aukeratzeko askatasuna zabaldu",
+      "Gastuari eta lankidetza publiko-pribatuari eutsi",
+      "Gastu handiagoa, egungo kudeaketa-ereduari eutsiz",
+      "Gastu handiagoa eta kudeaketa publikoari lehentasuna",
+      "Gastua nabarmen handitu eta kudeaketa pribatua lehengoratu"
+    ]
+  },
+  {
+    "id": "trabajo-pensiones",
+    "nombre": "Lana eta pentsioak",
+    "codigo": "LAN",
+    "pregunta": "Zer egin lan-merkatuarekin eta pentsioekin?",
+    "opciones": [
+      "Lan-merkatua malgutu eta pentsioak aurrezki pribatuarekin osatu",
+      "Jasangarritasunerako doikuntzak: erretiroa atzeratu edo kalkulua berrikusi",
+      "Egungo lan- eta pentsio-erreformei eutsi",
+      "Gutxieneko soldata igo, lanaldia murriztu eta pentsioak KPIarekin eguneratu",
+      "32-35 orduko lanaldia, pentsioak KPIaren gainetik igo eta negoziazio kolektibo gehiago"
+    ]
+  },
+  {
+    "id": "clima-energia",
+    "nombre": "Klima eta energia",
+    "codigo": "KLI",
+    "pregunta": "Zer erritmotan egin beharko luke aurrera trantsizio energetikoak?",
+    "opciones": [
+      "Egungo klima-helburuak kendu",
+      "Trantsizioa moteldu eta epeak atzeratu",
+      "Europako helburuak bete, bizkortu gabe",
+      "Berriztagarriak eta elektrifikazioa bizkortu, laguntza publikoarekin",
+      "Trantsizio azkarra, erregai fosilen itxiera bizkortuarekin"
+    ]
+  },
+  {
+    "id": "inmigracion",
+    "nombre": "Immigrazioa",
+    "codigo": "IMM",
+    "pregunta": "Zer immigrazio-politika nahiago duzu?",
+    "opciones": [
+      "Erregularizazio zabala, legezko bideak eta harrerari lehentasuna",
+      "Integrazioa eta lan-immigrazio ordenatua erraztu",
+      "Egungo politikari eutsi",
+      "Mugen kontrol handiagoa eta sartzeko eta bizitzeko baldintza zorrotzagoak",
+      "Immigrazio oso mugatua eta egoera irregularrean daudenak kanporatzea"
+    ]
+  },
+  {
+    "id": "industria-id",
+    "nombre": "Industria eta I+G",
+    "codigo": "IND",
+    "pregunta": "Zer eginkizun izan beharko luke sektore publikoak industrian eta berrikuntzan?",
+    "opciones": [
+      "Bat ere ez: merkatuak erabaki dezala, eta diru-laguntza gutxiago",
+      "Baldintza orokorrak hobetu, hala nola zergak edo energia, sektore jakinen aldeko apusturik gabe",
+      "Sektore estrategikoei laguntza puntuala",
+      "Industria-politika aktiboa, I+Grako eta sektore estrategikoetarako funtsekin",
+      "I+Gn inbertsio publiko masiboa eta partaidetza publikoa enpresa estrategikoetan"
+    ]
+  },
+  {
+    "id": "derechos-civiles",
+    "nombre": "Eskubide zibilak",
+    "codigo": "ESK",
+    "pregunta": "Zer egin eskubide zibilen legeekin (adibidez, abortua, eutanasia edo genero-berdintasuna)?",
+    "opciones": [
+      "Berrikusi, murrizteko edo indargabetzeko",
+      "Eutsi, muga gehigarri batzuekin",
+      "Dauden bezala utzi",
+      "Zabaldu eta konstituzio-maila eman, adibidez abortua Konstituzioan jasoz",
+      "Modu handinahian zabaldu eta eskubide berriak aitortu"
+    ]
+  },
+  {
+    "id": "euskera",
+    "nombre": "Euskara",
+    "codigo": "EUS",
+    "pregunta": "Zer hizkuntza-politika nahiago duzu euskararentzat?",
+    "opciones": [
+      "Euskara-eskakizunak murriztu enplegu publikoan eta hezkuntzan",
+      "Eskakizunei eutsi, malgutasun handiagoz",
+      "Hizkuntza-eskakizunen eta hezkuntza-ereduen egungo sistemari eutsi",
+      "Euskara hezkuntzako komunikazio-hizkuntza gisa orokortu",
+      "Euskara hizkuntza nagusi eremu publiko guztietan"
+    ]
+  },
+  {
+    "id": "defensa",
+    "nombre": "Defentsa-gastua",
+    "codigo": "DEF",
+    "pregunta": "Zer egin beharko luke Espainiak defentsa-gastuarekin?",
+    "opciones": [
+      "Gastu militarra murriztu",
+      "Gastu militarra ez handitu eta diplomaziari lehentasuna eman",
+      "Egungo gastuari eutsi, BPGaren % 2 inguruan",
+      "Gastua pixkanaka handitu, Europako industriari eta I+Gri lotuta",
+      "Gastua % 2tik gora handitu, lehentasun gisa"
+    ]
+  }
+]

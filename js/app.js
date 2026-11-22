@@ -1,727 +1,606 @@
-/* Tu curva de valor electoral · Euskadi 29-N
-   Web estática sin dependencias. Los datos viven en /data y se cargan al abrir.
+/* Kurba · Tu curva de valor electoral (interfaz y flujo: Ander; integración con /data: Jorge).
+   Los datos se cargan de /data con js/datos.js; el cálculo está en js/cercania.js.
    Las respuestas del test solo existen en la memoria de esta pestaña: no se envían ni se guardan. */
-(function () {
-  'use strict';
+(function(){
+"use strict";
 
-  // ---------- Utilidades DOM ----------
-  const SVGNS = 'http://www.w3.org/2000/svg';
-  function add(el, children) {
-    for (const c of children.flat(Infinity)) {
-      if (c == null || c === false) continue;
-      el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
-    }
-    return el;
+function errorCarga(err){
+  if(window.console)console.error(err);
+  var go=document.getElementById("go");if(!go)return;
+  var box=document.createElement("div");box.className="error-carga small";box.setAttribute("role","alert");
+  box.textContent=location.protocol==="file:"
+    ?"Has abierto el archivo directamente. Para verlo en local, ejecuta en la carpeta del proyecto: python3 -m http.server 8000 y visita http://localhost:8000"
+    :"No se han podido cargar los datos. Recarga la página; si el problema sigue, avísanos.";
+  go.parentNode.insertBefore(box,go);
+}
+document.addEventListener("DOMContentLoaded",function(){
+  window.KurbaDatos.cargar().then(iniciar).catch(errorCarga);
+});
+
+function iniciar(D){
+var A=D.A,ED=D.ED,S=D.S,RES=D.RES,RESEU=D.RESEU,PEU=D.PEU,TX=D.TX,PNAME=D.PNAME,CODE=D.CODE,CODE_EU=D.CODE_EU,METHOD=D.METHOD,METHOD_EU=D.METHOD_EU,META=D.META;
+var C=window.Cercania,MINT=C.MIN_TEMAS;
+var AN=window.Analitica;AN.configurar(META.goatcounter);
+function ev(n,u){AN.evento(n,u);}
+var LANG="es";
+var TITULO=document.title;
+
+/* Colores de partido: salen de data/partidos.json («color» y, opcional, «color_oscuro»). */
+(function(){
+  var P=ED.eu.parties,el=document.createElement("style");
+  el.textContent=":root{"+P.map(function(p){return"--s"+p.slot+":"+p.color;}).join(";")+"}"+
+    "@media (prefers-color-scheme: dark){:root{"+P.map(function(p){return"--s"+p.slot+":"+p.colorOscuro;}).join(";")+"}}";
+  document.head.appendChild(el);
+})();
+
+function t(k){var v=TX[LANG][k];return v===undefined?TX.es[k]:v;}
+function an(a){return LANG==="eu"&&a.eu?a.eu.n:a.n;}
+function aq(a){return LANG==="eu"&&a.eu?a.eu.q:a.q;}
+function ao(a,v){return(LANG==="eu"&&a.eu?a.eu.o:a.o)[v-1];}
+function pn(p){return LANG==="eu"&&PNAME[p.id]?PNAME[p.id]:p.n;}
+function pct(a){return a===null?"–":LANG==="eu"?"% "+a:a+" %";}
+function code(k){return(LANG==="eu"?CODE_EU:CODE)[k];}
+function edName(){return LANG==="eu"?"Euskadi · A-29":E().name;}
+function applyStatic(){
+  [["t","textContent"],["th","innerHTML"]].forEach(function(m){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el[m[1]];el[m[1]]=t(k);});
+  });
+  [["ta","aria-label"],["talt","alt"]].forEach(function(m){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el.getAttribute(m[1]);el.setAttribute(m[1],t(k));});
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".eu-only"),function(el){el.hidden=LANG!=="eu";});
+}
+function setLang(l){
+  LANG=l;document.documentElement.lang=l;
+  $("es").setAttribute("aria-pressed",l==="es");$("eu").setAttribute("aria-pressed",l==="eu");
+  applyStatic();renderMethod();renderQuienes();
+  if(curScreen()==="s-q")renderQ();
+  recList("recs-start");
+  if(st.res){exploreMode(!!st.explore);recList("recs-res");renderKey();renderAdjust();update(true);}
+  if(curScreen()==="s-rec"&&curRec)openRec(curRec);
+  titulo();
+}
+
+/* ---------- contenido en euskera: fichas y guías ---------- */
+function pe(p){return LANG==="eu"?PEU[p.id]||null:null;}
+function rr(r,k){var e=LANG==="eu"?RESEU[r.id]:null;return e&&e[k]!==undefined?e[k]:r[k];}
+var curRec=null;
+
+var st={ed:"eu",q:0,ans:[],w:[],sel:null,tab:"cer"};
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function safeUrl(u){return /^https?:\/\//.test(u||"")?esc(u):"#";}
+var SCREENS=["s-start","s-q","s-res","s-rec","s-met","s-gl","s-priv","s-404"];
+function show(id){
+  SCREENS.forEach(function(s){$(s).hidden=s!==id;});window.scrollTo(0,0);
+  marcar(true);foco(id);
+}
+function curScreen(){for(var i=0;i<SCREENS.length;i++)if(!$(SCREENS[i]).hidden)return SCREENS[i];return "s-start";}
+function E(){return ED[st.ed];}
+function NT(){return E().attrs.length;}
+function attr(i){return A[E().attrs[i]];}
+function partido(id){return E().parties.filter(function(p){return p.id===id;})[0];}
+var CHEV='<svg class="ch" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+var EXT='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"/></svg>';
+
+function shape(t,x,y,r){
+  var a,i,pts=[];
+  if(t==="circle")return'<circle cx="'+x+'" cy="'+y+'" r="'+r+'"/>';
+  if(t==="square")return'<rect x="'+(x-r*.9)+'" y="'+(y-r*.9)+'" width="'+r*1.8+'" height="'+r*1.8+'"/>';
+  if(t==="cross"){var w=r*.42,l=r*1.1;return'<path d="M'+(x-w)+" "+(y-l)+"h"+2*w+"v"+(l-w)+"h"+(l-w)+"v"+2*w+"h"+(-(l-w))+"v"+(l-w)+"h"+(-2*w)+"v"+(-(l-w))+"h"+(-(l-w))+"v"+(-2*w)+"h"+(l-w)+'z"/>';}
+  var n=t==="penta"?5:t==="diamond"?4:3,rot=t==="tridown"?Math.PI/2:-Math.PI/2,rr=t==="diamond"?r*1.2:t==="penta"?r*1.1:r*1.25;
+  for(i=0;i<n;i++){a=rot+i*2*Math.PI/n;pts.push((x+rr*Math.cos(a)).toFixed(1)+","+(y+rr*Math.sin(a)).toFixed(1));}
+  return'<polygon points="'+pts.join(" ")+'"/>';
+}
+function sw(p,s){s=s||14;return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 14 14" aria-hidden="true" style="flex:none;fill:var(--s'+p.slot+')">'+shape(p.sh,7,7,4.6)+"</svg>";}
+var youSw='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="flex:none"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+
+/* ---------- idioma ---------- */
+var toastT;
+function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true;},3200);}
+$("es").addEventListener("click",function(){if(LANG!=="es")ev("idioma-es");setLang("es");});$("eu").addEventListener("click",function(){if(LANG!=="eu")ev("idioma-eu");setLang("eu");});
+
+/* ---------- guías y método ---------- */
+var prevScreen="s-start";
+function openRec(id){
+  var r=RES.filter(function(x){return x.id===id;})[0];if(!r)return false;
+  var c=curScreen();if(c!=="s-rec")prevScreen=c;curRec=id;
+  $("rec-t").textContent=rr(r,"t");
+  $("rec-b").innerHTML=rr(r,"b").join("");
+  $("rec-src").innerHTML=r.src.length?'<div class="stack" style="gap:8px"><h3>'+t("src_h")+'</h3><ul class="pts card">'+r.src.map(function(k){return'<li><a href="'+safeUrl(S[k].u)+'" target="_blank" rel="noopener">'+esc(S[k].t)+" ↗</a></li>";}).join("")+"</ul></div>":"";
+  $("rec-more").innerHTML=RES.filter(function(x){return x.id!==id;}).map(function(x){return'<button class="reclink" data-rec="'+x.id+'">'+esc(rr(x,"t"))+"</button>";}).join("");
+  show("s-rec");
+  return true;
+}
+function recList(el){
+  $(el).innerHTML=RES.map(function(x){return'<button class="reclink" data-rec="'+x.id+'"><span>'+esc(rr(x,"q"))+"</span><b>"+esc(rr(x,"t"))+" →</b></button>";}).join("");
+}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-rec]");if(b){e.preventDefault();ev("recurso-"+b.dataset.rec);openRec(b.dataset.rec);}});
+$("rec-back").addEventListener("click",function(){show(prevScreen);if(prevScreen==="s-res")setTab(st.tab);});
+function renderMethod(){
+  var h=(LANG==="eu"?METHOD_EU:METHOD).map(function(x){return"<p>"+esc(x)+"</p>";}).join("")+
+    (META.codebook?'<p><a href="'+esc(META.codebook)+'" target="_blank" rel="noopener">'+t("cb_link")+" ↗</a></p>":"")+
+    '<p><a href="#/metodologia">'+esc(t("met_full"))+" →</a></p>";
+  $("met-body").innerHTML=h;document.querySelector("#method-res .method").innerHTML=h;
+}
+renderMethod();
+$("met-full").replaceChildren.apply($("met-full"),window.KurbaPaginas.metodologia(D,C));
+$("priv-body").replaceChildren.apply($("priv-body"),window.KurbaPaginas.privacidad(D));
+function renderQuienes(){
+  var q=window.KurbaPaginas.quienes(D,LANG);
+  $("quienes").hidden=!q;
+  if(q)$("quienes-txt").replaceChildren.apply($("quienes-txt"),q);
+}
+renderQuienes();
+$("to-method").addEventListener("click",function(){show("s-met");});
+$("met-back").addEventListener("click",function(){show("s-start");});
+$("priv-back").addEventListener("click",function(){show("s-start");});
+$("to-guides").addEventListener("click",function(){show("s-gl");});
+$("gl-back").addEventListener("click",function(){show("s-start");});
+
+/* ---------- inicio ---------- */
+recList("recs-start");applyStatic();
+$("home").addEventListener("click",function(){show("s-start");});
+function exploreMode(on){st.explore=on;$("s-res").classList.toggle("explore",on);$("exbar").hidden=!on;$("tb-cer").hidden=on;
+  $("cur-h").textContent=t(on?"cur_h_ex":"cur_h");$("top-h").textContent=t(on?"top_h_ex":"top_h");}
+function entrarExplorar(){
+  var n=NT();
+  st.q=0;st.ans=new Array(n).fill(null);st.w=new Array(n).fill(null);st.dk=new Array(n).fill(false);st.order=null;
+  st.pord=shuffle(E().parties.map(function(p,i){return i;}));
+  st.res=true;hidden={};recList("recs-res");exploreMode(true);
+  st.sel=E().parties[st.pord[0]].id;st.cmpA=null;st.cmpB=null;
+  renderKey();renderAdjust();update(true);
+}
+function asegurarRes(){if(!st.res)entrarExplorar();}
+$("explore").addEventListener("click",function(){ev("curvas-sin-test");entrarExplorar();show("s-res");setTab("cur");});
+$("ex-go").addEventListener("click",function(){empezarTest();});
+function empezarTest(){
+  var n=NT();exploreMode(false);st.res=false;st.enCurso=true;ev("test-inicio");
+  st.q=0;st.ans=new Array(n).fill(null);st.w=new Array(n).fill(null);st.dk=new Array(n).fill(false);st.sel=null;
+  st.pord=shuffle(E().parties.map(function(p,i){return i;}));
+  st.order=shuffle(E().attrs.map(function(k,i){return i;}));st.opt=st.order.map(function(){return shuffle([1,2,3,4,5]);});
+  renderQ();show("s-q");
+}
+$("go").addEventListener("click",empezarTest);
+
+/* ---------- preguntas ---------- */
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function cur(){return st.order[st.q];}
+var CHECK='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function renderQ(){
+  var i=cur(),a=attr(i);
+  $("q-count").textContent=(st.q+1)+" / "+NT();
+  $("q-bar").style.width=((st.q+1)/NT()*100)+"%";
+  $("q-topic").textContent=an(a);
+  var hk=E().attrs[i]==="autogobierno"?t("qhelp"):"";
+  $("q-help").hidden=!hk;$("q-help").innerHTML=hk;
+  $("q-text").textContent=aq(a);
+  $("q-opts").innerHTML=st.opt[st.q].map(function(v){return'<button class="opt" data-v="'+v+'" aria-pressed="'+(st.ans[i]===v)+'"><span>'+esc(ao(a,v))+"</span>"+CHECK+"</button>";}).join("");
+  $("q-dk").setAttribute("aria-pressed",!!st.dk[i]);
+  Array.prototype.forEach.call($("q-imp").children,function(b){b.setAttribute("aria-pressed",st.w[i]!==null&&+b.dataset.w===st.w[i]);});
+  updNext();
+  if(curScreen()==="s-q")titulo();
+}
+function updNext(){
+  var i=cur(),ok=st.dk[i]||st.w[i]===0||(st.ans[i]!==null&&st.w[i]!==null);
+  $("q-next").disabled=!ok;
+  $("q-hint").textContent=!ok&&st.ans[i]!==null?t("need_imp"):"";
+  $("q-next").textContent=st.q===NT()-1?t("see"):t("next");
+}
+$("q-opts").addEventListener("click",function(e){
+  var b=e.target.closest(".opt");if(!b)return;
+  st.ans[cur()]=+b.dataset.v;st.dk[cur()]=false;
+  Array.prototype.forEach.call($("q-opts").children,function(x){x.setAttribute("aria-pressed",x===b);});
+  $("q-dk").setAttribute("aria-pressed",false);
+  updNext();
+});
+$("q-dk").addEventListener("click",function(){
+  var i=cur();st.dk[i]=!st.dk[i];
+  if(st.dk[i]){st.ans[i]=null;Array.prototype.forEach.call($("q-opts").children,function(x){x.setAttribute("aria-pressed",false);});}
+  $("q-dk").setAttribute("aria-pressed",st.dk[i]);
+  updNext();
+});
+$("q-imp").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  st.w[cur()]=+b.dataset.w;
+  Array.prototype.forEach.call($("q-imp").children,function(x){x.setAttribute("aria-pressed",x===b);});
+  updNext();
+});
+$("q-next").addEventListener("click",function(){
+  if(st.q<NT()-1){st.q++;renderQ();window.scrollTo(0,0);$("q-text").focus();}
+  else{
+    if(st.enCurso){st.enCurso=false;var k=counted();ev("test-fin");ev("test-temas-"+(k<10?"0":"")+k);if(k<MINT)ev("test-sin-porcentaje");}
+    show("s-res");startResults();
   }
-  function setAttrs(el, attrs) {
-    for (const [k, v] of Object.entries(attrs || {})) {
-      if (v == null || v === false) continue;
-      if (k === 'class') el.setAttribute('class', v);
-      else if (k === 'style' && typeof v === 'object') { for (const [sk, sv] of Object.entries(v)) { if (sk.startsWith('--')) el.style.setProperty(sk, sv); else el.style[sk] = sv; } }
-      else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2).toLowerCase(), v);
-      else el.setAttribute(k, v === true ? '' : v);
-    }
-    return el;
+});
+$("q-back").addEventListener("click",function(){
+  if(st.q>0){st.q--;renderQ();}else show("s-start");
+});
+
+/* ---------- cálculo (js/cercania.js) ---------- */
+function weight(i){return C.peso(st.ans,st.w,i);}
+function counted(){return C.temasContados(st.ans,st.w);}
+/* El orden de partida se baraja una vez por sesión: un empate no lo decide el orden de los datos. */
+function ranked(){return C.clasificar(E().parties,st.ans,st.w,st.pord);}
+function grp(R){return C.grupo(R);}
+function topTie(R){return C.empateEnCabeza(R);}
+function lst(a){return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" "+t("and")+" "+a[a.length-1];}
+function isEst(p,i){return p.est[i];}
+
+/* ---------- resultado: pestañas ---------- */
+var TABS=["cer","cur","fic","gui"],NOMBRE_TAB={cer:"cercania",cur:"curvas",fic:"fichas",gui:"guias"};
+function setTab(t){
+  st.tab=t;
+  TABS.forEach(function(k){$("t-"+k).hidden=k!==t;$("tb-"+k).setAttribute("aria-selected",k===t);$("tb-"+k).tabIndex=k===t?0:-1;});
+  if(t==="cur")draw();
+  marcar(true);
+}
+TABS.forEach(function(k,ix){
+  $("tb-"+k).addEventListener("click",function(){ev("pestana-"+NOMBRE_TAB[k]);setTab(k);window.scrollTo(0,0);});
+  $("tb-"+k).addEventListener("keydown",function(e){
+    var d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(!d)return;
+    var vis=TABS.filter(function(x){return!$("tb-"+x).hidden;}),j=vis.indexOf(k);
+    var n=vis[(j+d+vis.length)%vis.length];setTab(n);$("tb-"+n).focus();
+  });
+});
+$("to-curves").addEventListener("click",function(){ev("pestana-curvas");setTab("cur");window.scrollTo(0,0);});
+$("to-cmp").addEventListener("click",function(){abrirComparador();});
+function abrirComparador(){ev("comparar");setTab("fic");st.cmpVisto=true;marcar(true);$("cmp").scrollIntoView({block:"start"});}
+
+var hidden={};
+function startResults(){
+  st.res=true;hidden={};recList("recs-res");exploreMode(false);st.cmpA=null;st.cmpB=null;
+  var R=ranked();st.sel=R[0].a===null||topTie(R)?null:R[0].p.id;
+  R.forEach(function(r,k){hidden[r.p.id]=k>=3;});
+  renderKey();renderAdjust();update(true);setTab("cer");
+}
+function update(full){
+  var R=ranked(),valid=R[0].a!==null,G=grp(R),split=G.length>=2&&G.length<R.length;
+  $("r-ed").textContent=edName();
+  $("r-lead").textContent=valid?t("lead_ok"):t("lead_few").replace("{m}",MINT).replace("{n}",counted());
+  $("rank").innerHTML=R.map(function(r,k){
+    var tie=valid&&C.empatado(R,r);
+    var lab=split&&k===0?'<p class="glabel">'+t("g_top")+"</p>":split&&k===G.length?'<p class="glabel">'+t("g_rest")+"</p>":"";
+    return lab+'<button class="row" data-id="'+r.p.id+'">'+sw(r.p)+'<span class="nm">'+esc(pn(r.p))+(tie?"<small>"+t("tie")+"</small>":"")+'</span><span class="bar"><i style="width:'+(r.a||0)+"%;background:var(--s"+r.p.slot+')"></i></span><span class="pc">'+pct(r.a)+"</span></button>";
+  }).join("");
+  $("sep-card").hidden=!valid;$("shareimg").closest(".card").hidden=!valid;
+  orient(R);separa(R);chips();if(st.tab==="cur")draw();ficha(full);tablaAlt();
+  clearTimeout(update.t);update.t=setTimeout(shareImg,250);
+}
+function orient(R){
+  var P=E().parties,common=[],split=[],h=[];
+  E().attrs.forEach(function(k,i){
+    var vs=P.map(function(p){return p.s[i];}),spread=Math.max.apply(null,vs)-Math.min.apply(null,vs);
+    split.push({n:an(A[k]),s:spread+(weight(i)?weight(i)*.1:0)});
+    if(weight(i)){var near=P.filter(function(p){return Math.abs(p.s[i]-st.ans[i])<=1;}).length;if(near>=Math.ceil(P.length/2))common.push(an(A[k]));}
+  });
+  function f(k,x){return"<p>"+t(k).replace("{x}",esc(x))+"</p>";}
+  if(R[0].a!==null){
+    var close=grp(R).map(function(r){return pn(r.p);});
+    h.push(close.length>1?f("o_many",lst(close)):f("o_one",pn(R[0].p)));
   }
-  function h(tag, attrs, ...children) { return add(setAttrs(document.createElement(tag), attrs), children); }
-  function s(tag, attrs, ...children) { return add(setAttrs(document.createElementNS(SVGNS, tag), attrs), children); }
-  // Al volver a pintar un bloque se pierde el foco del teclado. Los controles llevan data-fk
-  // (una clave estable) y, tras pintar, el foco vuelve al control con la misma clave.
-  const focusKey = box => { const a = document.activeElement; return a && box.contains(a) ? a.getAttribute('data-fk') : null; };
-  function refocus(box, fk) { if (!fk) return; const el = box.querySelector('[data-fk="' + fk + '"]'); if (el) el.focus({ preventScroll: true }); }
-  function keepFocus(box, fn) { const fk = focusKey(box); fn(); refocus(box, fk); }
+  if(common.length)h.push(f("o_common",lst(common)));
+  split=split.sort(function(a,b){return b.s-a.s;}).slice(0,3).map(function(x){return x.n;});
+  h.push(f("o_split",lst(split)));
+  $("orient").innerHTML=h.join("");
+}
+function separa(R){
+  if(R[0].a===null){$("sep").innerHTML="";$("sep-lead").textContent="";return;}
+  var G=grp(R).slice(0,3);
+  if(G.length<2)G=R.slice(0,2);
+  var nl=lst(G.map(function(r){return pn(r.p);}));
+  var T=[];
+  E().attrs.forEach(function(k,i){
+    var vs=G.map(function(r){return r.p.s[i];}),sp=Math.max.apply(null,vs)-Math.min.apply(null,vs);
+    if(sp>0)T.push({i:i,sp:sp});
+  });
+  T.sort(function(a,b){return weight(b.i)-weight(a.i)||b.sp-a.sp||a.i-b.i;});
+  if(!T.length){$("sep-lead").textContent=t("sep_none").replace("{x}",nl).replace("{n}",NT());$("sep").innerHTML="";return;}
+  $("sep-lead").textContent=t("sep_lead").replace("{x}",nl);
+  var h=T.slice(0,4).map(function(x){
+    var i=x.i,a=attr(i),u=st.ans[i],w=weight(i);
+    var ds=G.map(function(r){return Math.abs(r.p.s[i]-u);}),mn=Math.min.apply(null,ds),all=ds.every(function(d){return d===mn;});
+    var rows=u===null?"":'<div class="sep-r">'+youSw+"<span><b>"+t("you")+"</b> · "+esc(ao(a,u))+"</span></div>";
+    rows+=G.map(function(r,k){return'<div class="sep-r">'+sw(r.p)+"<span><b>"+esc(pn(r.p))+"</b> · "+esc(ao(a,r.p.s[i]))+(w&&!all&&ds[k]===mn?'<span class="pill mid">'+t("closest")+"</span>":"")+"</span></div>";}).join("");
+    return'<div class="sep-t"><span class="sep-n">'+esc(an(a))+(w===2?" <span>"+t("much")+"</span>":w===0?" <span>"+t("nc")+"</span>":"")+"</span>"+rows+"</div>";
+  }).join("");
+  if(T.length>4)h+='<p class="small" style="padding-top:10px">'+t("sep_more").replace("{n}",T.length-4)+"</p>";
+  $("sep").innerHTML=h;
+}
+function selP(){return partido(st.sel);}
+function openFicha(id){st.sel=id;hidden[id]=false;update(true);setTab("fic");window.scrollTo(0,0);}
+$("rank").addEventListener("click",function(e){var b=e.target.closest(".row");if(b)openFicha(b.dataset.id);});
 
-  // ---------- Carga de datos ----------
-  function parseCSV(text) {
-    const rows = []; let row = [], field = '', q = false;
-    for (let i = 0; i < text.length; i++) {
-      const c = text[i];
-      if (q) {
-        if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
-        else if (c === '"') q = false;
-        else field += c;
-      } else if (c === '"') q = true;
-      else if (c === ',') { row.push(field); field = ''; }
-      else if (c === '\n' || c === '\r') {
-        if (c === '\r' && text[i + 1] === '\n') i++;
-        row.push(field); field = '';
-        if (row.length > 1 || row[0] !== '') rows.push(row);
-        row = [];
-      } else field += c;
-    }
-    if (field !== '' || row.length) { row.push(field); rows.push(row); }
-    const [head, ...body] = rows;
-    return body.map(r => Object.fromEntries(head.map((k, i) => [k.trim(), (r[i] || '').trim()])));
+/* ---------- curvas ---------- */
+function chips(){
+  var R=ranked();
+  $("chips").innerHTML='<span class="pchip you you-only">'+youSw+t("you")+"</span>"+R.map(function(r){var p=r.p;return'<button class="pchip'+(p.id===st.sel?" sel":"")+'" data-id="'+p.id+'" aria-pressed="'+!hidden[p.id]+'">'+sw(p)+esc(pn(p))+"</button>";}).join("");
+}
+$("chips").addEventListener("click",function(e){var b=e.target.closest(".pchip[data-id]");if(!b)return;hidden[b.dataset.id]=!hidden[b.dataset.id];chips();draw();});
+document.querySelector(".quick").addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;var q=b.dataset.q,R=ranked();
+  E().parties.forEach(function(p){hidden[p.id]=q==="none"?true:q==="all"?false:R.slice(0,3).every(function(r){return r.p.id!==p.id;});});
+  chips();draw();
+});
+function renderKey(){
+  $("key").innerHTML=E().attrs.map(function(k){return"<span><b>"+code(k)+"</b> "+esc(an(A[k]))+"</span>";}).join("");
+}
+/* Alternativa accesible al gráfico: las mismas posiciones en una tabla. */
+function tablaAlt(){
+  var attrs=E().attrs,P=E().parties;
+  var head="<tr><th scope=\"col\">"+esc(t("tbl_p"))+"</th>"+attrs.map(function(k){return'<th scope="col" class="c" title="'+esc(an(A[k]))+'">'+esc(code(k))+"</th>";}).join("")+"</tr>";
+  var you=st.explore?"":"<tr><th scope=\"row\">"+esc(t("you"))+"</th>"+attrs.map(function(k,i){return'<td class="c">'+(st.ans[i]===null?"—":st.ans[i])+"</td>";}).join("")+"</tr>";
+  var rows=P.map(function(p){return"<tr><th scope=\"row\">"+esc(pn(p))+"</th>"+attrs.map(function(k,i){return'<td class="c">'+p.s[i]+(isEst(p,i)?"*":"")+"</td>";}).join("")+"</tr>";}).join("");
+  $("tabla-alt").innerHTML='<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t("tbl_s"))+'"><table class="data-table"><thead>'+head+"</thead><tbody>"+you+rows+'</tbody></table></div><p class="small" style="margin-top:6px">'+esc(t("tbl_n"))+"</p>";
+}
+function renderAdjust(){
+  $("adjust").innerHTML=E().attrs.map(function(k,i){
+    var a=A[k],u=st.ans[i],v=u===null?3:u;
+    return'<div class="adj'+(weight(i)?"":" off")+'" id="adj'+i+'"><div class="ah"><label for="r'+i+'">'+esc(an(a))+'</label><span class="mini" role="group" aria-label="'+t("imp_of")+esc(an(a))+'">'+[[2,t("w2")],[1,t("w1")],[0,t("w0")]].map(function(x){return'<button data-i="'+i+'" data-w="'+x[0]+'" aria-pressed="'+(st.w[i]===x[0])+'">'+x[1]+"</button>";}).join("")+'</span></div><input type="range" id="r'+i+'" data-i="'+i+'" min="1" max="5" step="1" value="'+v+'"'+(u===null?' class="nul"':"")+' aria-valuetext="'+esc(u===null?t("noans_adj"):ao(a,u))+'"><span class="av" id="av'+i+'">'+esc(u===null?t("noans_adj"):ao(a,u))+"</span></div>";
+  }).join("");
+}
+function syncAdj(i){
+  var a=attr(i),u=st.ans[i],txt=u===null?t("noans_adj"):ao(a,u);
+  $("av"+i).textContent=txt;$("r"+i).setAttribute("aria-valuetext",txt);
+  $("r"+i).classList.toggle("nul",u===null);
+  $("adj"+i).classList.toggle("off",!weight(i));
+  Array.prototype.forEach.call($("adj"+i).querySelectorAll(".mini button"),function(b){b.setAttribute("aria-pressed",+b.dataset.w===st.w[i]);});
+}
+$("adjust").addEventListener("input",function(e){
+  if(e.target.type!=="range")return;var i=+e.target.dataset.i;
+  ev("ajustar-curva",true);
+  var wasNull=st.ans[i]===null;st.ans[i]=+e.target.value;st.dk[i]=false;
+  if(st.w[i]==null||(wasNull&&st.w[i]===0))st.w[i]=1;
+  syncAdj(i);update(false);
+});
+$("adjust").addEventListener("click",function(e){
+  var b=e.target.closest(".mini button");if(!b)return;var i=+b.dataset.i;
+  st.w[i]=+b.dataset.w;
+  syncAdj(i);update(false);
+});
+
+var geo=null;
+function draw(){
+  var wrap=$("wrap"),W=Math.max(280,wrap.clientWidth),svg=$("chart"),attrs=E().attrs,n=NT();
+  var mL=22,mR=4,mT=12,mB=30,H=Math.round(Math.min(300,Math.max(210,W*.62)));
+  var pw=W-mL-mR,ph=H-mT-mB,band=pw/n,o=[],v,i;
+  function X(i){return mL+(i+.5)*band;}
+  function Y(v){return mT+(5-v)/4*ph;}
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("height",H);
+  for(v=1;v<=5;v++)o.push('<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--grid)"/><text x="9" y="'+(Y(v)+4)+'" text-anchor="middle" fill="var(--ink-2)" font-size="11">'+v+"</text>");
+  attrs.forEach(function(k,i){o.push('<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="600"'+(weight(i)?"":' opacity=".45"')+">"+code(k)+"</text>");});
+  var P=E().parties,np=P.length;
+  var order=P.filter(function(p){return!hidden[p.id];}).sort(function(a,b){return(a.id===st.sel)-(b.id===st.sel);});
+  order.forEach(function(p){
+    var idx=P.indexOf(p),d=(idx-(np-1)/2)*1.6,isSel=p.id===st.sel,pts=[],mk=[],mh=[];
+    for(i=0;i<n;i++){var x=+(X(i)+d).toFixed(1),y=+Y(p.s[i]).toFixed(1);pts.push(x+","+y);(isEst(p,i)?mh:mk).push(shape(p.sh,x,y,isSel?5:4));}
+    o.push('<g opacity="'+(isSel?1:.65)+'"><polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="'+(isSel?3:1.75)+'" stroke-linejoin="round" stroke-linecap="round"/><g fill="var(--s'+p.slot+')" stroke="var(--surface)" stroke-width="1.5">'+mk.join("")+'</g><g fill="var(--surface)" stroke="var(--s'+p.slot+')" stroke-width="1.75">'+mh.join("")+"</g></g>");
+  });
+  /* La línea del usuario se corta en los temas sin respuesta: no se dibuja una posición que no dio. */
+  var seg=[],cs=[],ym=[];
+  for(i=0;i<n;i++){
+    if(st.ans[i]===null){if(cs.length)seg.push(cs);cs=[];continue;}
+    var ux=X(i).toFixed(1),uy=Y(st.ans[i]).toFixed(1);cs.push(ux+","+uy);
+    ym.push('<circle cx="'+ux+'" cy="'+uy+'" r="6" opacity="'+(weight(i)?1:.3)+'"'+(weight(i)===2?' stroke-width="3.5"':"")+"/>");
   }
-  async function getJSON(p) { const r = await fetch(p, { cache: 'no-cache' }); if (!r.ok) throw new Error(p); return r.json(); }
-  async function getCSV(p) { const r = await fetch(p, { cache: 'no-cache' }); if (!r.ok) throw new Error(p); return parseCSV(await r.text()); }
+  if(cs.length)seg.push(cs);
+  seg.forEach(function(s){if(s.length>1)o.push('<polyline points="'+s.join(" ")+'" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round"/>');});
+  o.push('<g fill="var(--surface)" stroke="var(--ink)" stroke-width="2">'+ym.join("")+"</g>");
+  for(i=0;i<n;i++)o.push('<rect class="hit" data-i="'+i+'" x="'+(X(i)-band/2)+'" y="0" width="'+band+'" height="'+H+'" fill="transparent"/>');
+  svg.innerHTML=o.join("");
+  geo={W:W,H:H,X:X,band:band};
+}
+function showTip(i){
+  var tip=$("tip"),a=attr(i),any=false,rows=E().parties.filter(function(p){return!hidden[p.id];}).map(function(p){return{p:p,v:p.s[i]};}).sort(function(x,y){return y.v-x.v;});
+  var h="<b>"+esc(an(a))+"</b>";
+  if(!st.explore)h+='<div class="tr">'+youSw+"<span>"+t("you")+(weight(i)?"":" "+t("nocount"))+"</span><span>"+(st.ans[i]===null?"—":st.ans[i])+"</span></div>";
+  rows.forEach(function(r){var e=isEst(r.p,i);any=any||e;h+='<div class="tr">'+sw(r.p)+"<span>"+esc(pn(r.p))+"</span><span>"+r.v+(e?"*":"")+"</span></div>";});
+  if(any)h+='<div class="tn">'+t("est_tip")+"</div>";
+  tip.innerHTML=h;tip.style.display="block";
+  var tw=210,x=geo.X(i)+geo.band/2+4;if(x+tw>geo.W)x=geo.X(i)-geo.band/2-tw-4;
+  tip.style.left=Math.max(0,x)+"px";tip.style.top="8px";
+}
+$("chart").addEventListener("pointermove",function(e){var t=e.target.closest(".hit");if(t)showTip(+t.dataset.i);});
+$("chart").addEventListener("click",function(e){var t=e.target.closest(".hit");if(t)showTip(+t.dataset.i);});
+$("chart").addEventListener("pointerleave",function(e){if(e.pointerType==="mouse")$("tip").style.display="none";});
+document.addEventListener("click",function(e){if(!e.target.closest("#wrap"))$("tip").style.display="none";});
+if(window.ResizeObserver){var lw=0;new ResizeObserver(function(){var w=$("wrap").clientWidth;if(w&&w!==lw){lw=w;if(!$("s-res").hidden&&st.tab==="cur")draw();}}).observe($("wrap"));}
 
-  const S = {
-    temas: [], partidos: [], meta: {}, cod: new Map(), propuestas: [],
-    visible: new Set(), temaSel: null,
-    quiz: null,          // { step, order: {temaId:[idx…]}, answers: {temaId: nivel|0}, weights: {temaId: w} }
-    resultsReady: false,
-  };
-  const key = (p, t) => p + '|' + t;
-  const celda = (p, t) => S.cod.get(key(p, t));
-  const partido = id => S.partidos.find(p => p.id === id);
-
-  async function load() {
-    const [temas, partidos, meta, cod, prop] = await Promise.all([
-      getJSON('data/temas.json'), getJSON('data/partidos.json'), getJSON('data/meta.json'),
-      getCSV('data/codificacion.csv'), getCSV('data/propuestas.csv').catch(() => []),
-    ]);
-    S.temas = temas;
-    S.partidos = partidos.codificados.slice().sort((a, b) => a.siglas.localeCompare(b.siglas, 'es', { sensitivity: 'base' }));
-    S.sinCurva = partidos.sin_curva || [];
-    S.meta = meta;
-    for (const r of cod) {
-      const nivel = parseInt(r.nivel, 10);
-      if (nivel >= 1 && nivel <= 5) S.cod.set(key(r.partido, r.tema), { ...r, nivel });
-    }
-    S.propuestas = prop;
-    // Evidencia real: casillas con cita textual y enlace. Todo lo que la web dice sobre
-    // «cuántas posiciones tienen cita» sale de aquí, no de un texto escrito a mano.
-    S.total = S.partidos.length * S.temas.length;
-    S.conCita = [...S.cod.values()].filter(c => c.cita && c.url).length;
-    S.validadas = [...S.cod.values()].filter(c => c.estado === 'validado').length;
-    const estado = document.getElementById('estado-datos');
-    if (estado) estado.textContent = `Hoy tienen cita y enlace ${S.conCita} de ${S.total}.` + (meta.congelacion ? ` El ${fmtDiaMes(meta.congelacion)} publicamos la versión revisada.` : '');
-    S.visible = new Set(S.partidos.map(p => p.id));
-    S.temaSel = S.temas[0].id;
+/* ---------- fichas ---------- */
+function src(k){var s=S[k];return' <a href="'+safeUrl(s.u)+'" title="'+esc(s.t)+'" target="_blank" rel="noopener">'+t("src")+" ↗</a>";}
+function prop(x,tx){return'<li><span class="tag">'+t("tag_"+x[2])+"</span> "+esc(tx||x[0])+src(x[1])+"</li>";}
+function ficha(full){
+  var R=ranked(),p=selP(),sid=p?p.id:null;
+  $("fsw").innerHTML=R.map(function(x){return'<button class="pchip'+(x.p.id===sid?" sel":"")+'" data-id="'+x.p.id+'" aria-pressed="'+(x.p.id===sid)+'" style="'+(x.p.id===sid?"":"background:transparent;color:var(--ink);text-decoration:none;font-weight:500")+'">'+sw(x.p)+esc(pn(x.p))+"</button>";}).join("");
+  $("f-body").hidden=!p;$("f-pick").hidden=!!p;
+  if(!p){renderCmp();return;}
+  var r=R.filter(function(x){return x.p.id===p.id;})[0],e=pe(p);
+  $("f-name").innerHTML=sw(p,20)+esc(pn(p));
+  $("f-pc").textContent=r.a===null?"–":t("f_pc").replace("{x}",pct(r.a));
+  $("others").innerHTML=R.filter(function(x){return x.p.id!==p.id;}).map(function(x){return'<button data-id="'+x.p.id+'">'+sw(x.p)+'<span class="on">'+esc(pn(x.p))+'</span><span class="op">'+pct(x.a)+"</span>"+CHEV+"</button>";}).join("");
+  if(full){
+    $("p-note").textContent=e&&e.note?e.note:p.note;
+    $("f-otros-w").hidden=!p.otros.length;
+    $("f-otros").innerHTML=p.otros.map(function(x,j){return prop(x,e&&e.otros[j]);}).join("");
+    var pg=p.prog,h=pg.docs.map(function(d,j){return'<a href="'+safeUrl(d.u)+'" target="_blank" rel="noopener"><span>'+esc(e&&e.docs&&e.docs[j]||d.t)+"</span>"+EXT+"</a>";}).join("");
+    h+="<p>"+esc(e&&e.prog?e.prog:pg.note)+"</p>";
+    h+=p.web?'<a href="'+safeUrl(p.web)+'" target="_blank" rel="noopener"><span>'+t("web")+"</span>"+EXT+"</a>":"<p>"+t("web_no")+"</p>";
+    $("f-prog").innerHTML=h;
+    $("f-ppl").innerHTML=p.ppl.map(function(x,j){var y=e&&e.ppl[j];return'<li><b>'+esc(x[0])+'</b><span class="role">'+esc(y?y[0]||x[1].replace("Congreso","Kongresua"):x[1])+'</span><span class="bio">'+esc(y&&y[1]?y[1]:x[2])+src(x[3])+"</span></li>";}).join("")+(p.lead?'<li><span class="role">'+esc(e&&e.lead||p.lead)+"</span></li>":"");
+    $("f-sen").innerHTML="<b>"+t("sen")+"</b> "+esc(e&&e.senado||p.senado)+(p.pres?"<br><b>"+t("pres")+"</b> "+esc(p.pres):"<br>"+t("nopres"));
   }
+  renderCmp();
+  var idx=E().attrs.map(function(k,i){return i;}).sort(function(x,y){return weight(y)-weight(x)||x-y;});
+  $("topics").innerHTML=idx.map(function(i){
+    var a=A[E().attrs[i]],u=st.ans[i],v=p.s[i],w=weight(i),pill,cls;
+    if(!w){pill=u===null?t("noans"):t("nocare");cls="off";}
+    else{var d=Math.abs(u-v);pill=d===0?t("p0"):d===1?t("p1"):t("p2");cls=d===0?"good":d===1?"mid":"bad";}
+    var est=isEst(p,i)?' <span class="est">'+t("est")+"</span>":"";
+    var pr=p.props[i].length?'<ul class="pts">'+p.props[i].map(function(x,j){return prop(x,e&&e.props[i]&&e.props[i][j]);}).join("")+"</ul>":'<p class="none">'+t("noprops")+"</p>";
+    if(st.explore)return'<div class="tcard"><div class="th"><span class="tn">'+esc(an(a))+'</span></div><div class="tv"><b>'+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+pr+"</div>";
+    return'<div class="tcard'+(w?"":" dim")+'"><div class="th"><span class="tn">'+esc(an(a))+(w===2?" <span>"+t("much")+"</span>":w===1?"":" <span>"+t("nc")+"</span>")+'</span><span class="pill '+cls+'">'+pill+'</span></div><div class="tv"><b>'+t("you")+'</b><span>'+(u===null?"—":esc(ao(a,u)))+"</span><b>"+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+pr+"</div>";
+  }).join("");
+}
+/* ---------- comparar dos partidos ---------- */
+function renderCmp(){
+  var P=E().parties,ord=(st.pord||P.map(function(p,i){return i;})).map(function(i){return P[i];});
+  if(!st.cmpA)st.cmpA=st.sel||ord[0].id;
+  if(!st.cmpB||st.cmpB===st.cmpA)st.cmpB=ord.filter(function(p){return p.id!==st.cmpA;})[0].id;
+  function opts(v,other){return ord.map(function(p){return'<option value="'+p.id+'"'+(p.id===v?" selected":"")+(p.id===other?" disabled":"")+">"+esc(pn(p))+"</option>";}).join("");}
+  $("cmp-a").innerHTML=opts(st.cmpA,st.cmpB);$("cmp-b").innerHTML=opts(st.cmpB,st.cmpA);
+  var a=partido(st.cmpA),b=partido(st.cmpB),n=NT(),same=0,i;
+  var W=Math.max(280,$("cmp").clientWidth-32),H=190,mL=22,mR=4,mT=12,mB=28,band=(W-mL-mR)/n,o=[];
+  function X(i){return mL+(i+.5)*band;} function Y(v){return mT+(5-v)/4*(H-mT-mB);}
+  for(var v=1;v<=5;v++)o.push('<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--grid)"/><text x="9" y="'+(Y(v)+4)+'" text-anchor="middle" fill="var(--ink-2)" font-size="11">'+v+"</text>");
+  E().attrs.forEach(function(k,i){o.push('<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="600">'+code(k)+"</text>");});
+  [a,b].forEach(function(p,k){var d=k?1.6:-1.6,pts=[],mk=[],mh=[];
+    for(i=0;i<n;i++){var x=+(X(i)+d).toFixed(1),y=+Y(p.s[i]).toFixed(1);pts.push(x+","+y);(isEst(p,i)?mh:mk).push(shape(p.sh,x,y,4.5));}
+    o.push('<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><g fill="var(--s'+p.slot+')" stroke="var(--surface)" stroke-width="1.5">'+mk.join("")+'</g><g fill="var(--surface)" stroke="var(--s'+p.slot+')" stroke-width="1.75">'+mh.join("")+"</g>");});
+  var svg=$("cmp-chart");svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("height",H);svg.innerHTML=o.join("");
+  var rows=E().attrs.map(function(k,i){
+    var at=A[k],d=Math.abs(a.s[i]-b.s[i]);if(!d)same++;
+    var pill=d===0?'<span class="pill good">'+t("cmp_eq")+"</span>":'<span class="pill '+(d===1?"mid":"bad")+'">'+(d===1?t("cmp_d1"):t("cmp_dn").replace("{n}",d))+"</span>";
+    function est(p){return isEst(p,i)?' <span class="est">'+t("est")+"</span>":"";}
+    return'<div class="tcard"><div class="th"><span class="tn">'+esc(an(at))+"</span>"+pill+'</div><div class="tv"><b>'+esc(pn(a))+"</b><span>"+esc(ao(at,a.s[i]))+est(a)+"</span><b>"+esc(pn(b))+"</b><span>"+esc(ao(at,b.s[i]))+est(b)+"</span></div></div>";
+  }).join("");
+  $("cmp-sum").innerHTML=sw(a)+" "+sw(b)+" "+esc(t("cmp_same").replace("{a}",pn(a)).replace("{b}",pn(b)).replace("{n}",same).replace("{t}",n));
+  $("cmp-rows").innerHTML=rows;
+}
+$("cmp-a").addEventListener("change",function(e){st.cmpA=e.target.value;st.cmpVisto=true;renderCmp();marcar(false);});
+$("cmp-b").addEventListener("change",function(e){st.cmpB=e.target.value;st.cmpVisto=true;renderCmp();marcar(false);});
+$("fsw").addEventListener("click",function(e){var b=e.target.closest("[data-id]");if(b){st.cmpVisto=false;openFicha(b.dataset.id);}});
+$("others").addEventListener("click",function(e){var b=e.target.closest("[data-id]");if(b){st.cmpVisto=false;openFicha(b.dataset.id);}});
 
-  // ---------- Gráfico de curvas ----------
-  // series: [{id, label, color, user?, valores: {temaId: {nivel, estado}}}]
-  function curveChart(opts) {
-    const box = h('div', { class: 'chart' });
-    let pendingFocus = opts.focusKey || null;
-    const draw = () => {
-      const W = Math.max(280, box.clientWidth || 800);
-      const fk = pendingFocus || focusKey(box); pendingFocus = null;
-      box.replaceChildren(drawSVG(W, opts));
-      refocus(box, fk);
-    };
-    let lastW = 0;
-    const ro = new ResizeObserver(entries => {
-      const w = Math.round(entries[0].contentRect.width);
-      if (w && Math.abs(w - lastW) > 4) { lastW = w; draw(); }
-    });
-    ro.observe(box);
-    box._redraw = draw;
-    requestAnimationFrame(draw);
-    return box;
+/* ---------- imagen para compartir ---------- */
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+/* Solo la curva de la persona: sin partidos ni porcentajes (decisión de lanzamiento, especificación §3.3). */
+function shareImg(){
+  var c=$("cv"),x=c.getContext("2d"),SZ=1080,attrs=E().attrs,n=NT(),i;
+  var bg="#F2F3F0",card="#FFFFFF",ink="#14161B",ink2="#646973",grid="#E4E6E0",acc="#FFC533";
+  x.fillStyle=bg;x.fillRect(0,0,SZ,SZ);
+  x.fillStyle=acc;x.beginPath();x.roundRect?x.roundRect(80,64,56,56,14):x.rect(80,64,56,56);x.fill();
+  x.strokeStyle=ink;x.lineWidth=5;x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(92,103);x.lineTo(103,84);x.lineTo(116,95);x.lineTo(126,77);x.stroke();
+  x.fillStyle=ink;x.font="700 40px 'Space Grotesk', Arial, sans-serif";x.textAlign="left";x.fillText("kurba",152,106);
+  x.fillStyle=ink2;x.font="600 26px Inter, Arial, sans-serif";x.fillText(edName().toUpperCase(),80,180);
+  x.fillStyle=ink;x.font="700 60px 'Space Grotesk', Arial, sans-serif";x.fillText(t("share_t"),80,248);
+  x.fillStyle=card;x.beginPath();x.roundRect?x.roundRect(60,290,960,620,32):x.rect(60,290,960,620);x.fill();
+  var L=130,Rr=1000,T=345,B=800,bw=(Rr-L)/n;
+  function X(i){return L+(i+.5)*bw;} function Y(v){return T+(5-v)/4*(B-T);}
+  x.strokeStyle=grid;x.lineWidth=2;x.fillStyle=ink2;x.font="500 22px Inter, Arial, sans-serif";x.textAlign="center";
+  for(var v=1;v<=5;v++){x.beginPath();x.moveTo(L,Y(v));x.lineTo(Rr,Y(v));x.stroke();x.fillText(String(v),98,Y(v)+8);}
+  x.fillStyle=ink;x.font="600 22px Inter, Arial, sans-serif";
+  attrs.forEach(function(k,i){x.globalAlpha=weight(i)?1:.45;x.fillText(code(k),X(i),B+56);x.globalAlpha=1;});
+  x.strokeStyle=ink;x.lineWidth=6;x.setLineDash([4,14]);x.beginPath();var pen=false;
+  for(i=0;i<n;i++){if(st.ans[i]===null){pen=false;continue;}if(pen)x.lineTo(X(i),Y(st.ans[i]));else x.moveTo(X(i),Y(st.ans[i]));pen=true;}
+  x.stroke();x.setLineDash([]);
+  for(i=0;i<n;i++){if(st.ans[i]===null)continue;x.beginPath();x.arc(X(i),Y(st.ans[i]),14,0,Math.PI*2);x.fillStyle=acc;x.globalAlpha=weight(i)?1:.35;x.fill();x.lineWidth=5;x.strokeStyle=ink;x.stroke();x.globalAlpha=1;}
+  var web=(location.host+location.pathname).replace(/\/(index\.html)?$/,"");
+  x.textAlign="left";x.fillStyle=ink2;x.font="400 26px Inter, Arial, sans-serif";x.fillText(t("share_f0"),80,990);
+  x.textAlign="right";x.fillStyle=ink;x.font="700 26px 'Space Grotesk', Arial, sans-serif";x.fillText(web,1000,990);
+  try{$("shareimg").src=c.toDataURL("image/png");}catch(e){}
+}
+$("copy").addEventListener("click",function(){ev("copiar-resumen");
+  var R=ranked(),num=grp(R).length<2,txt=t("share_t")+" · Kurba ("+edName()+"):\n"+R.slice(0,3).map(function(r,k){return(num?(k+1)+". ":"· ")+pn(r.p)+" "+pct(r.a);}).join("\n");
+  try{navigator.clipboard.writeText(txt).then(function(){$("copied").textContent=t("copied");},function(){$("copied").textContent=t("nocopy");});}
+  catch(e){$("copied").textContent=t("nocopy");}
+});
+$("r-edit").addEventListener("click",function(){ev("cambiar-respuestas");st.q=0;renderQ();show("s-q");});
+$("r-restart").addEventListener("click",function(){show("s-start");});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(!$("s-res").hidden)shareImg();});
+
+/* ---------- rutas: cada pantalla tiene su dirección (#/…) y el botón «atrás» funciona ---------- */
+var navegando=false,primera=true,ultimo=null,pendiente=false,pendPush=false;
+function rutaActual(){
+  var c=curScreen();
+  if(c==="s-start")return"#/";
+  if(c==="s-q")return"#/test";
+  if(c==="s-met")return location.hash.indexOf("#/metodologia")===0?location.hash:"#/metodologia";
+  if(c==="s-gl")return"#/guias";
+  if(c==="s-rec")return"#/guia/"+curRec;
+  if(c==="s-priv")return"#/privacidad";
+  if(c==="s-404")return location.hash;
+  if(st.tab==="cur")return"#/curvas";
+  if(st.tab==="gui")return"#/resultado/guias";
+  if(st.tab==="fic"){
+    if(st.cmpVisto)return"#/comparar/"+st.cmpA+"/"+st.cmpB;
+    return st.sel?"#/partido/"+st.sel:"#/fichas";
   }
-
-  function drawSVG(W, { temas, series, selected, onSelect, highlight, compact }) {
-    const n = temas.length;
-    const vertical = W < 600;
-    let H, pos, levelPos, M;
-    if (!vertical) {
-      const stepGuess = (W - 36) / n;
-      M = { l: 26, r: 10, t: 14, b: compact ? 14 : (stepGuess < 84 ? 70 : 34) };
-      H = compact ? 200 : (stepGuess < 84 ? 380 : 344);
-      const iw = W - M.l - M.r, ih = H - M.t - M.b, step = iw / n;
-      pos = i => M.l + step * (i + 0.5);
-      levelPos = lv => M.t + (5 - lv) / 4 * ih;
-      M.step = step;
-    } else {
-      M = { l: 104, r: 14, t: 24, b: 8 };
-      const rowH = compact ? 30 : 40;
-      H = M.t + n * rowH + M.b;
-      const iw = W - M.l - M.r;
-      pos = i => M.t + rowH * (i + 0.5);
-      levelPos = lv => M.l + (lv - 1) / 4 * iw;
-      M.step = rowH;
-    }
-    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: onSelect ? 'group' : 'img', 'aria-label': 'Gráfico de curvas: ' + (series.map(se => se.label).join(', ') || 'ningún partido seleccionado') + '. Cada punto es la opción, de 1 a 5, que mejor describe su propuesta en cada tema.' + (onSelect ? ' Las mismas posiciones están en la tabla que sigue al gráfico.' : '') });
-
-    // Bandas de tema (clicables)
-    temas.forEach((t, i) => {
-      const c = pos(i), half = M.step / 2;
-      const attrs = vertical
-        ? { x: 0, y: c - half, width: W, height: M.step }
-        : { x: c - half, y: 0, width: M.step, height: H };
-      const band = s('rect', { ...attrs, class: 'band' + (t.id === selected ? ' sel' : '') });
-      if (onSelect) {
-        setAttrs(band, { tabindex: 0, role: 'button', 'data-fk': 'band-' + t.id, 'aria-pressed': String(t.id === selected), 'aria-label': 'Ver detalle: ' + t.nombre, onclick: () => onSelect(t.id),
-          onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(t.id); } } });
-      } else band.style.cursor = 'default';
-      svg.appendChild(band);
-    });
-
-    // Rejilla de niveles
-    for (let lv = 1; lv <= 5; lv++) {
-      const p = levelPos(lv);
-      if (!vertical) {
-        svg.appendChild(s('line', { x1: M.l, x2: W - M.r, y1: p, y2: p, class: 'grid-line' }));
-        svg.appendChild(s('text', { x: M.l - 10, y: p + 4, 'text-anchor': 'end', class: 'axis-label' }, String(lv)));
-      } else {
-        svg.appendChild(s('line', { y1: M.t - 6, y2: H - M.b, x1: p, x2: p, class: 'grid-line' }));
-        svg.appendChild(s('text', { x: p, y: 12, 'text-anchor': 'middle', class: 'axis-label' }, String(lv)));
-      }
-    }
-
-    // Etiquetas de tema
-    if (!compact || vertical) {
-      temas.forEach((t, i) => {
-        const c = pos(i);
-        const cls = 'tema-label' + (t.id === selected ? ' sel' : '');
-        if (!vertical) {
-          const rotate = M.step < 84;
-          const y = H - M.b + 18;
-          const tx = s('text', { x: c, y, 'text-anchor': rotate ? 'end' : 'middle', class: cls, transform: rotate ? `rotate(-38 ${c} ${y})` : null }, t.corto);
-          svg.appendChild(tx);
-        } else {
-          svg.appendChild(s('text', { x: M.l - 10, y: c + 4, 'text-anchor': 'end', class: cls }, t.corto));
-        }
-      });
-    }
-
-    // Separación de puntos superpuestos (misma opción en el mismo tema)
-    const groups = new Map();
-    series.forEach(se => temas.forEach(t => {
-      const v = se.valores[t.id]; if (!v) return;
-      const k = t.id + ':' + v.nivel; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(se.id);
-    }));
-    const spread = Math.min(6, M.step * 0.5 / Math.max(1, series.length));
-    const offset = (tId, lv, sid) => {
-      const g = groups.get(tId + ':' + lv) || [sid]; const k = g.indexOf(sid);
-      return (k - (g.length - 1) / 2) * spread;
-    };
-    const pt = (i, t, se) => {
-      const v = se.valores[t.id]; if (!v) return null;
-      const a = pos(i) + offset(t.id, v.nivel, se.id), b = levelPos(v.nivel);
-      return vertical ? [b, a] : [a, b];
-    };
-
-    const order = series.slice().sort((a, b) => (a.user ? 1 : 0) - (b.user ? 1 : 0) || (a.id === highlight ? 1 : 0) - (b.id === highlight ? 1 : 0));
-    for (const se of order) {
-      const g = s('g', { class: 'serie' + (se.user ? ' user' : '') + (highlight && highlight !== se.id && !se.user ? ' dim' : '') });
-      let d = '', pen = false;
-      temas.forEach((t, i) => {
-        const p = pt(i, t, se);
-        if (!p) { pen = false; return; }
-        d += (pen ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); pen = true;
-      });
-      g.appendChild(s('path', { d, stroke: se.color }));
-      temas.forEach((t, i) => {
-        const p = pt(i, t, se); if (!p) return;
-        const v = se.valores[t.id];
-        const hollow = v.estado === 'estimado';
-        const title = s('title', null, `${se.label} · ${t.nombre}: ${t.opciones[v.nivel - 1]}${hollow ? ' (estimado)' : ''}`);
-        if (se.user) {
-          g.appendChild(s('rect', { x: p[0] - 6, y: p[1] - 6, width: 12, height: 12, rx: 2, fill: se.color, stroke: 'var(--bg)' }, title));
-        } else {
-          g.appendChild(s('circle', { cx: p[0], cy: p[1], r: 4.6, fill: hollow ? 'var(--panel)' : se.color, stroke: hollow ? se.color : 'var(--panel)' }, title));
-        }
-      });
-      svg.appendChild(g);
-    }
-    return svg;
-  }
-
-  function seriePartido(p) {
-    const valores = {};
-    for (const t of S.temas) { const c = celda(p.id, t.id); if (c) valores[t.id] = { nivel: c.nivel, estado: c.estado }; }
-    return { id: p.id, label: p.siglas, color: p.color, valores };
-  }
-  function serieUsuario() {
-    if (!S.quiz) return null;
-    const valores = {};
-    for (const t of S.temas) { const a = S.quiz.answers[t.id]; if (a) valores[t.id] = { nivel: a, estado: 'usuario' }; }
-    return { id: 'tu', label: 'Tú', color: 'var(--ink)', user: true, valores };
-  }
-
-  const legendNote = () => h('div', { class: 'chart-legend-note' },
-    h('span', null, h('i', { class: 'lg-dot' }), 'Provisional'),
-    h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado (sin fuente directa)'),
-    h('span', null, '1 y 5 son los extremos de cada tema: no significan izquierda o derecha, ni mejor o peor.'));
-
-  // Alternativa en tabla al gráfico: mismas posiciones, legibles sin ver el gráfico.
-  // La celda muestra el número y, para lectores de pantalla, el texto de la opción.
-  function tablaPosiciones(partidos) {
-    return h('details', { class: 'tabla-alt' },
-      h('summary', null, 'Ver las posiciones como tabla'),
-      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Posiciones de cada partido por tema' },
-        h('table', { class: 'data-table' },
-          h('caption', null, 'Opción asignada a cada partido en cada tema, de 1 a 5. El 1 y el 5 son los extremos de cada tema, no izquierda o derecha. «est.» indica una posición estimada.'),
-          h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Tema'), partidos.map(p => h('th', { scope: 'col' }, p.siglas)))),
-          h('tbody', null, S.temas.map(t => h('tr', null,
-            h('th', { scope: 'row', style: { textTransform: 'none', fontSize: '14px', color: 'var(--ink)', letterSpacing: 0 } }, t.nombre),
-            partidos.map(p => { const c = celda(p.id, t.id);
-              return h('td', { class: 'c' }, c ? [String(c.nivel), c.estado === 'estimado' ? ' est.' : null, h('span', { class: 'sr-only' }, ': ' + t.opciones[c.nivel - 1])] : '—'); })))))));
-  }
-
-  function estadoBadge(estado) {
-    const map = { provisional: 'Provisional', estimado: 'Estimado', validado: 'Validado' };
-    return h('span', { class: 'badge ' + (estado || '') }, map[estado] || estado || '—');
-  }
-
-  function partyChip(p, { pressed, onclick, small } = {}) {
-    return h(onclick ? 'button' : 'span', {
-      class: 'chip' + (onclick ? '' : ' chip-static'), type: onclick ? 'button' : null,
-      'aria-pressed': onclick ? String(!!pressed) : null, 'data-fk': onclick ? 'chip-' + p.id : null, onclick, style: small ? { fontSize: '13px' } : null,
-    }, h('i', { class: 'dot', style: { background: p.color } }), p.siglas);
-  }
-
-  // ---------- Detalle de un tema ----------
-  function temaDetalle(temaId, partidosIds, userNivel) {
-    const t = S.temas.find(x => x.id === temaId);
-    const list = h('ol', { class: 'scale' });
-    t.opciones.forEach((op, i) => {
-      const lv = i + 1;
-      const aqui = partidosIds.map(partido).filter(p => { const c = celda(p.id, t.id); return c && c.nivel === lv; });
-      list.appendChild(h('li', { class: userNivel === lv ? 'user' : null },
-        h('span', { class: 'n' }, String(lv)),
-        h('div', null,
-          h('div', { class: 'txt' }, op),
-          aqui.length || userNivel === lv
-            ? h('div', { class: 'who' },
-                userNivel === lv ? h('span', { class: 'chip chip-static', style: { fontSize: '13px', borderColor: 'var(--ink)' } }, '★ Tú') : null,
-                aqui.map(p => {
-                  const c = celda(p.id, t.id);
-                  const chip = partyChip(p, { small: true });
-                  if (c.estado === 'estimado') chip.appendChild(h('span', { class: 'muted' }, ' (estimado)'));
-                  return h('a', { href: '#/partido/' + p.id, style: { textDecoration: 'none' } }, chip);
-                }))
-            : h('div', { class: 'empty' }, 'Ningún partido en esta opción'))));
-    });
-    const notas = partidosIds.map(partido).map(p => ({ p, c: celda(p.id, t.id) })).filter(x => x.c && (x.c.nota || x.c.cita || x.c.fuente));
-    return h('div', { class: 'card tema-detail', id: 'detalle-' + t.id },
-      h('div', { class: 'muted small' }, 'Tema ' + (S.temas.indexOf(t) + 1) + ' de ' + S.temas.length),
-      h('h3', null, t.nombre),
-      h('p', { class: 'pregunta' }, t.pregunta),
-      t.aviso ? h('p', { class: 'aviso' }, t.aviso) : null,
-      list,
-      notas.length ? h('details', { class: 'why' },
-        h('summary', null, 'Por qué cada partido está donde está'),
-        h('ul', { class: 'why-list' }, notas.map(({ p, c }) => h('li', null,
-          h('strong', null, p.siglas + ': '),
-          c.cita ? h('q', null, c.cita) : c.nota,
-          c.fuente ? h('span', { class: 'muted' }, ' — ', c.url ? h('a', { href: c.url, target: '_blank', rel: 'noopener' }, c.fuente) : c.fuente) : null)))) : null,
-      h('p', { class: 'muted small', style: { marginBottom: 0 } }, 'Toca otro tema en el gráfico para cambiar.'));
-  }
-
-  // ---------- Vistas ----------
-  function viewInicio() {
-    const root = h('div');
-    root.appendChild(h('section', { class: 'hero', style: { marginTop: 0 } },
-      h('span', { class: 'kicker' }, 'Generales 29-N · Araba, Bizkaia y Gipuzkoa'),
-      h('h1', null, '¿Qué propone cada partido el 29-N? ', h('span', { class: 'mark' }, 'Compáralo en 3 minutos.')),
-      h('p', { class: 'lead' }, `${S.temas.length} temas y ${S.partidos.length} partidos, sin nuestra opinión. Mira sus propuestas y, si quieres, compáralas con lo que piensas tú.`),
-      h('div', { class: 'cta-row' },
-        h('a', { class: 'btn btn-accent', href: '#/test' }, `Empieza el test · ${S.temas.length} preguntas, 3 min`),
-        h('a', { class: 'btn', href: '#/comparar' }, 'Compara dos partidos'))));
-
-    // Curvas
-    const chartSlot = h('div');
-    const detailSlot = h('div');
-    const chips = h('div', { class: 'chips' });
-    const renderChips = () => keepFocus(chips, () => {
-      chips.replaceChildren(
-        ...S.partidos.map(p => partyChip(p, { pressed: S.visible.has(p.id), onclick: () => {
-          if (S.visible.has(p.id)) S.visible.delete(p.id); else S.visible.add(p.id);
-          renderChips(); renderChart(); renderDetail();
-        } })),
-        h('span', { class: 'chip-row-actions' },
-          h('button', { class: 'linklike', type: 'button', 'data-fk': 'todos', onclick: () => { S.visible = new Set(S.partidos.map(p => p.id)); renderChips(); renderChart(); renderDetail(); } }, 'Todos'),
-          h('button', { class: 'linklike', type: 'button', 'data-fk': 'ninguno', onclick: () => { S.visible.clear(); renderChips(); renderChart(); renderDetail(); } }, 'Ninguno')));
-    });
-    const visibles = () => S.partidos.filter(p => S.visible.has(p.id));
-    const renderChart = (fk) => {
-      const series = visibles().map(seriePartido);
-      const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
-      chartSlot.replaceChildren(curveChart({ temas: S.temas, series, selected: S.temaSel, focusKey: fk || focusKey(chartSlot), onSelect: id => { S.temaSel = id; renderChart('band-' + id); renderDetail(true); } }), legendNote());
-    };
-    const renderDetail = (scroll) => {
-      const u = S.resultsReady && S.quiz ? S.quiz.answers[S.temaSel] : null;
-      detailSlot.replaceChildren(temaDetalle(S.temaSel, visibles().map(p => p.id), u || null));
-      if (scroll && window.innerWidth < 900) detailSlot.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-    renderChips(); renderChart(); renderDetail();
-
-    root.appendChild(h('section', { id: 'curvas' },
-      h('div', { class: 'section-head' }, h('div', null,
-        h('h2', null, 'Las curvas de valor'),
-        h('p', null, 'Cada línea es un partido. En cada tema, su punto marca la opción que mejor describe su propuesta concreta. Toca un tema para ver las cinco opciones y quién está en cada una.'))),
-      chips,
-      h('div', { class: 'curvas-layout' }, h('div', { class: 'card' }, chartSlot, tablaPosiciones(S.partidos)), detailSlot)));
-
-    // Fichas
-    root.appendChild(h('section', { id: 'fichas' },
-      h('div', { class: 'section-head' }, h('div', null, h('h2', null, 'Fichas de partido'), h('p', null, 'Sus posiciones tema a tema y de dónde sale cada una.'))),
-      h('div', { class: 'grid' }, S.partidos.map(p => {
-        const ev = S.temas.filter(t => { const c = celda(p.id, t.id); return c && c.cita && c.url; }).length;
-        return h('a', { class: 'card party-card', href: '#/partido/' + p.id },
-          h('div', { class: 'top' }, h('i', { class: 'swatch', style: { background: p.color } }), h('span', { class: 'name' }, p.siglas)),
-          sparkline(p),
-          h('span', { class: 'sub' }, `${ev} de ${S.temas.length} temas con cita y enlace`));
-      })),
-      S.sinCurva.length ? h('p', { class: 'muted small' }, 'Otras candidaturas proclamadas (sin curva, por falta de programa evaluable): ' + S.sinCurva.join(', ') + '.') : null));
-
-    // Cómo lo hacemos
-    root.appendChild(h('section', null, h('div', { class: 'card' },
-      h('h2', null, 'Cómo lo hacemos'),
-      h('div', { class: 'grid', style: { marginTop: '14px' } },
-        miniPoint('1', 'Lo que proponen', 'Codificamos lo que cada partido propone para el Congreso y el Gobierno. La fuente principal es su programa del 29-N.'),
-        miniPoint('2', 'Cita y enlace, en marcha', `Cada posición llevará una cita textual y un enlace. Hoy la tienen ${S.conCita} de ${S.total}; el resto está marcado como provisional o estimado.`),
-        miniPoint('3', 'Segunda revisión, pendiente', (S.meta.congelacion ? `Antes del ${fmtDiaMes(S.meta.congelacion)}, dos` : 'Dos') + ` personas codificarán cada casilla por separado y publicaremos su grado de acuerdo. Hoy hay ${S.validadas} de ${S.total} validadas así.`)),
-      h('p', { style: { marginBottom: 0 } }, h('a', { href: '#/metodologia' }, 'Lee la metodología completa →')))));
-    return root;
-  }
-  const miniPoint = (n, t, d) => h('div', null, h('div', { class: 'scale' }, h('span', { class: 'n', style: { background: 'var(--accent)', color: 'var(--accent-ink)' } }, n)), h('h3', { style: { margin: '8px 0 4px' } }, t), h('p', { class: 'muted', style: { margin: 0 } }, d));
-
-  function sparkline(p) {
-    const W = 220, H = 44, n = S.temas.length;
-    const x = i => 4 + i * (W - 8) / (n - 1), y = lv => 4 + (5 - lv) / 4 * (H - 8);
-    let d = '';
-    S.temas.forEach((t, i) => { const c = celda(p.id, t.id); if (c) d += (d ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(c.nivel).toFixed(1); });
-    return s('svg', { class: 'spark', viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'none', 'aria-hidden': 'true' },
-      [1, 3, 5].map(lv => s('line', { x1: 0, x2: W, y1: y(lv), y2: y(lv), stroke: 'var(--line)' })),
-      s('path', { d, fill: 'none', stroke: p.color, 'stroke-width': 2.4, 'vector-effect': 'non-scaling-stroke', 'stroke-linejoin': 'round' }));
-  }
-
-  function viewPartido(id) {
-    const p = partido(id);
-    if (!p) return h('div', { class: 'error-box' }, h('h1', null, 'No encontramos ese partido'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
-    const root = h('div');
-    const series = [seriePartido(p)];
-    const u = S.resultsReady ? serieUsuario() : null; if (u) series.push(u);
-    root.appendChild(h('div', { class: 'party-head' },
-      h('i', { class: 'swatch', style: { background: p.color } }),
-      h('div', null, h('h1', null, p.siglas), p.nombre !== p.siglas ? h('p', { class: 'muted', lang: p.lang || null, style: { margin: '4px 0 0' } }, p.nombre) : null)));
-    root.appendChild(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' },
-      curveChart({ temas: S.temas, series, compact: false }),
-      u ? h('p', { class: 'muted small' }, 'La línea negra es tu curva, según tus respuestas al test.') : null,
-      legendNote())));
-
-    const props = S.propuestas.filter(x => x.partido === p.id);
-    root.appendChild(h('section', null,
-      h('h2', null, 'Tema a tema'),
-      h('div', { class: 'tema-list', style: { marginTop: '14px' } }, S.temas.map(t => {
-        const c = celda(p.id, t.id);
-        const pt = props.filter(x => x.tema === t.id);
-        return h('div', { class: 'card tema-item' },
-          h('div', { class: 'row' }, h('h3', null, t.nombre), c ? estadoBadge(c.estado) : null),
-          c ? h('div', { class: 'levelbar', style: { '--c': p.color }, role: 'img', 'aria-label': `Opción ${c.nivel} de 5` }, [1, 2, 3, 4, 5].map(lv => h('i', { class: lv === c.nivel ? 'on' : null }))) : null,
-          h('div', { class: 'opcion' }, c ? t.opciones[c.nivel - 1] : 'Sin codificar'),
-          c && (c.cita || c.nota) ? h('div', null, c.cita ? h('q', null, c.cita) : h('span', { class: 'muted' }, c.nota)) : null,
-          c && c.fuente ? h('div', { class: 'meta' }, 'Fuente: ', c.url ? h('a', { href: c.url, target: '_blank', rel: 'noopener' }, c.fuente) : c.fuente, c.fecha_consulta ? ' · consultada el ' + c.fecha_consulta : '') : null,
-          t.aviso ? h('div', { class: 'meta' }, t.aviso) : null,
-          h('details', null, h('summary', { class: 'small', style: { cursor: 'pointer', fontWeight: 700 } }, 'Propuestas concretas'),
-            pt.length ? h('ul', null, pt.map(x => h('li', null, h('span', { class: 'badge' }, x.etiqueta), ' ', x.texto, x.url ? h('span', { class: 'muted' }, ' — ', h('a', { href: x.url, target: '_blank', rel: 'noopener' }, x.fuente || 'fuente')) : null)))
-              : h('div', { class: 'placeholder', style: { marginTop: '8px' } }, 'Todavía no hemos localizado propuestas concretas de este partido en este tema.')));
-      }))));
-
-    const cl = p.cabezas_lista || {};
-    root.appendChild(h('section', null,
-      h('h2', null, 'Candidaturas en Euskadi'),
-      h('div', { class: 'grid', style: { marginTop: '14px' } },
-        ['araba', 'bizkaia', 'gipuzkoa'].map(k => h('div', { class: 'card' }, h('div', { class: 'muted small' }, 'Cabeza de lista al Congreso · ' + k[0].toUpperCase() + k.slice(1)), h('div', { style: { fontWeight: 700, marginTop: '4px' } }, cl[k] || 'Pendiente de verificar'))),
-        h('div', { class: 'card' }, h('div', { class: 'muted small' }, 'Responsable del partido en Euskadi'), h('div', { style: { fontWeight: 700, marginTop: '4px' } }, p.responsable_euskadi || 'Pendiente de verificar'))),
-      h('p', { class: 'small muted' }, p.programa ? h('a', { href: p.programa, target: '_blank', rel: 'noopener' }, 'Programa electoral del 29-N') : 'Programa del 29-N: enlace pendiente.', p.web ? [' · ', h('a', { href: p.web, target: '_blank', rel: 'noopener' }, 'Web oficial')] : '')));
-    root.appendChild(h('p', null, h('a', { class: 'btn', href: '#/comparar/' + p.id }, 'Comparar con otro partido')));
-    return root;
-  }
-
-  function viewComparar(a, b) {
-    const ids = S.partidos.map(p => p.id);
-    a = ids.includes(a) ? a : ids[0];
-    b = ids.includes(b) && b !== a ? b : ids.find(x => x !== a);
-    const root = h('div');
-    root.appendChild(h('h1', null, 'Compara dos partidos'));
-    root.appendChild(h('p', { class: 'lead' }, 'Elige dos y mira en qué temas proponen lo mismo y en cuáles no.'));
-    const mk = (val, other, onch) => h('select', { 'aria-label': 'Partido', onchange: e => onch(e.target.value) },
-      S.partidos.map(p => h('option', { value: p.id, selected: p.id === val ? true : null, disabled: p.id === other ? true : null }, p.siglas)));
-    root.appendChild(h('div', { class: 'compare-pickers', style: { marginTop: '20px' } },
-      mk(a, b, v => { location.hash = `#/comparar/${v}/${b}`; }), h('span', { class: 'muted' }, 'frente a'), mk(b, a, v => { location.hash = `#/comparar/${a}/${v}`; })));
-    const pa = partido(a), pb = partido(b);
-    const same = S.temas.filter(t => { const x = celda(a, t.id), y = celda(b, t.id); return x && y && x.nivel === y.nivel; }).length;
-    root.appendChild(h('div', { class: 'card' },
-      h('div', { class: 'chips' }, partyChip(pa), partyChip(pb)),
-      curveChart({ temas: S.temas, series: [seriePartido(pa), seriePartido(pb)] }), legendNote()));
-    root.appendChild(h('p', { style: { fontSize: '18px', marginTop: '20px' } }, h('strong', null, `Coinciden en ${same} de ${S.temas.length} temas.`)));
-    root.appendChild(h('div', { class: 'card', style: { padding: '6px 14px' } }, h('table', { class: 'cmp-table' },
-      h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, pa.siglas), h('th', null, pb.siglas), h('th', null, h('span', { class: 'sr-only' }, 'Diferencia')))),
-      h('tbody', null, S.temas.map(t => {
-        const x = celda(a, t.id), y = celda(b, t.id);
-        const eq = x && y && x.nivel === y.nivel;
-        const cellTxt = c => c ? [t.opciones[c.nivel - 1], c.estado === 'estimado' ? h('span', { class: 'muted' }, ' (estimado)') : null] : '—';
-        return h('tr', null, h('td', null, h('strong', null, t.nombre)), h('td', null, cellTxt(x)), h('td', null, cellTxt(y)),
-          h('td', { class: eq ? 'same' : 'diff' }, eq ? '= Coinciden' : (x && y ? `${Math.abs(x.nivel - y.nivel)} ${Math.abs(x.nivel - y.nivel) === 1 ? 'paso' : 'pasos'} de distancia` : '')));
-      })))));
-    return root;
-  }
-
-  // ---------- Test ----------
-  const PESOS = [{ v: 0.5, t: 'Poco' }, { v: 1, t: 'Bastante' }, { v: 2, t: 'Mucho' }];
-  function shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-  function nuevoQuiz() {
-    S.quiz = { step: 0, order: {}, answers: {}, weights: {} };
-    S.resultsReady = false;
-    for (const t of S.temas) { S.quiz.order[t.id] = shuffle([0, 1, 2, 3, 4]); S.quiz.weights[t.id] = 1; }
-    // Orden de los partidos empatados: se baraja una vez por test para que no decida el alfabeto.
-    S.quiz.desempate = shuffle(S.partidos.map(p => p.id));
-  }
-
-  // El cálculo está en js/cercania.js (módulo puro, con tests en tests/cercania.test.js).
-  function cercania() {
-    const q = S.quiz, pos = {};
-    for (const p of S.partidos) { pos[p.id] = {}; for (const t of S.temas) { const c = celda(p.id, t.id); if (c) pos[p.id][t.id] = c.nivel; } }
-    return Cercania.clasificar(Cercania.calcular(q.answers, q.weights, pos, S.temas.map(t => t.id)), q.desempate)
-      .map(r => ({ ...r, p: partido(r.id) }));
-  }
-
-  function viewTest() {
-    const root = h('div', { class: 'quiz' });
-    if (!S.quiz) {
-      root.append(
-        h('span', { class: 'q-kicker' }, 'Test · ' + S.temas.length + ' preguntas · unos 3 minutos'),
-        h('h1', { style: { marginTop: '8px' } }, 'Encuentra tu curva'),
-        h('p', { class: 'lead' }, 'En cada tema elige la opción que más se acerque a lo que piensas, y dinos cuánto te importa. Al final verás tu curva junto a la de cada partido.'),
-        h('ul', { class: 'prose', style: { color: 'var(--ink-2)' } },
-          h('li', null, 'Las opciones salen en orden aleatorio y sin números: no hay respuestas de izquierda o de derecha.'),
-          h('li', null, 'Puedes saltarte cualquier pregunta.'),
-          h('li', null, 'Tus respuestas no salen de tu dispositivo: no se envían ni se guardan. Al cerrar la pestaña desaparecen.'),
-          h('li', null, 'El resultado no es una recomendación de voto, sino una forma de ver qué propone cada partido.')),
-        h('div', { class: 'cta-row' }, h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar')));
-      return root;
-    }
-    if (S.resultsReady) return viewResultados();
-
-    const q = S.quiz, i = q.step, t = S.temas[i];
-    const sel = q.answers[t.id];
-    const go = d => { q.step = Math.min(S.temas.length, Math.max(0, i + d)); if (q.step >= S.temas.length) S.resultsReady = true; route({ focusHeading: true }); window.scrollTo({ top: 0 }); };
-    const pick = v => { q.answers[t.id] = v; route(); };
-    root.append(
-      h('div', { class: 'q-kicker' }, `Pregunta ${i + 1} de ${S.temas.length} · ${t.nombre}`),
-      h('div', { class: 'progress', role: 'progressbar', 'aria-label': 'Progreso del test', 'aria-valuemin': 0, 'aria-valuemax': S.temas.length, 'aria-valuenow': i }, h('i', { style: { width: (i / S.temas.length * 100) + '%' } })),
-      h('h1', { class: 'q-title' }, t.pregunta),
-      h('div', { class: 'options', role: 'radiogroup', 'aria-label': t.pregunta },
-        q.order[t.id].map(k => h('button', { class: 'option', type: 'button', role: 'radio', 'data-fk': 'opt-' + (k + 1), 'aria-checked': String(sel === k + 1), onclick: () => pick(k + 1) }, h('span', { class: 'radio' }), h('span', null, t.opciones[k]))),
-        h('button', { class: 'option skip-opt', type: 'button', role: 'radio', 'data-fk': 'opt-0', 'aria-checked': String(sel === 0), onclick: () => pick(0) }, h('span', { class: 'radio' }), h('span', null, 'No lo tengo claro / prefiero no contestar'))),
-      h('div', { class: 'importance' },
-        h('span', { class: 'label', id: 'imp-l' }, '¿Cuánto te importa este tema?'),
-        h('div', { class: 'seg', role: 'group', 'aria-labelledby': 'imp-l' }, PESOS.map(w => h('button', { type: 'button', 'data-fk': 'imp-' + w.v, 'aria-pressed': String(q.weights[t.id] === w.v), onclick: () => { q.weights[t.id] = w.v; route(); } }, w.t)))),
-      h('div', { class: 'q-nav' },
-        h('button', { class: 'btn btn-ghost', type: 'button', disabled: i === 0 ? true : null, onclick: () => go(-1) }, '← Anterior'),
-        h('button', { class: 'btn btn-primary', type: 'button', disabled: sel === undefined ? true : null, onclick: () => go(1) }, i === S.temas.length - 1 ? 'Ver mi curva' : 'Siguiente →')));
-    return root;
-  }
-
-  function viewResultados() {
-    const root = h('div');
-    const res = cercania();
-    const contestadas = S.temas.filter(t => S.quiz.answers[t.id]).length;
-    root.append(h('span', { class: 'q-kicker' }, 'Tu resultado'), h('h1', { style: { marginTop: '8px' } }, 'Tu curva frente a la de los partidos'));
-    if (!contestadas) {
-      root.append(h('p', { class: 'lead' }, 'No has elegido ninguna opción, así que no podemos dibujar tu curva.'), h('button', { class: 'btn btn-accent', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Repetir el test'));
-      return root;
-    }
-    root.append(h('p', { class: 'lead' }, `Has contestado ${contestadas} de ${S.temas.length} temas. La cercanía mide cuánto se parecen tus respuestas a las posiciones de cada partido, dando más peso a los temas que más te importan.`));
-
-    const suficientes = contestadas >= Cercania.MIN_RESPUESTAS;
-    const hayEmpate = res.some(r => r.empate);
-    const sel = new Set(suficientes ? Cercania.seleccionInicial(res, 3) : []);
-    const chipsBox = h('div', { class: 'chips' }), chartBox = h('div');
-    const draw = () => {
-      keepFocus(chipsBox, () => chipsBox.replaceChildren(...S.partidos.map(p => partyChip(p, { pressed: sel.has(p.id), onclick: () => { sel.has(p.id) ? sel.delete(p.id) : sel.add(p.id); draw(); } }))));
-      chartBox.replaceChildren(curveChart({ temas: S.temas, series: [...S.partidos.filter(p => sel.has(p.id)).map(seriePartido), serieUsuario()] }));
-    };
-    draw();
-    root.append(h('section', { style: { marginTop: '20px' } }, h('div', { class: 'card' }, chipsBox, chartBox,
-      h('div', { class: 'chart-legend-note' }, h('span', null, h('i', { class: 'lg-dot', style: { background: 'var(--ink)', borderRadius: '2px' } }), 'Tu curva'), h('span', null, suficientes ? 'Se muestran los más cercanos y los empatados con ellos: activa otros para compararte.' : 'Activa los partidos con los que quieras compararte.')))));
-
-    root.append(h('section', null, h('h2', null, 'Cercanía con cada partido'),
-      suficientes
-        ? h('div', { class: 'card results-list', style: { marginTop: '14px' } }, res.map(r => h('a', { href: '#/partido/' + r.p.id, class: 'result-row', style: { textDecoration: 'none' } },
-            h('span', { class: 'who' }, h('i', { class: 'dot', style: { width: '10px', height: '10px', borderRadius: '50%', background: r.p.color, display: 'inline-block' } }), r.p.siglas, r.empate ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'Empate') : null),
-            h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
-            h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%'))))
-        : h('p', { class: 'aviso', style: { marginTop: '14px' } }, `Has contestado ${contestadas} ${contestadas === 1 ? 'tema' : 'temas'}. Con menos de ${Cercania.MIN_RESPUESTAS} no calculamos la cercanía: el número diría muy poco. Arriba puedes comparar tu curva con la de cada partido, o volver al test y contestar más temas.`),
-      suficientes && hayEmpate ? h('p', { class: 'muted small' }, 'Los partidos con el mismo porcentaje están empatados: su orden es aleatorio y no indica preferencia.') : null,
-      suficientes ? h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.') : null,
-      h('p', { class: 'aviso' }, `Esto no te dice a quién votar. Solo compara ${S.temas.length} temas, y un partido es mucho más que eso. Antes de decidir, lee sus programas.`)));
-
-    const share = async () => {
-      const data = { title: 'Tu curva de valor electoral · Euskadi 29-N', text: 'He hecho el test: compara en una curva lo que propone cada partido en Euskadi para el 29-N.', url: location.href.split('#')[0] };
-      try { if (navigator.share) await navigator.share(data); else { await navigator.clipboard.writeText(data.url); btnShare.textContent = 'Enlace copiado'; } } catch (e) { /* cancelado */ }
-    };
-    const btnShare = h('button', { class: 'btn btn-accent', type: 'button', onclick: share }, 'Compartir el test');
-    root.append(h('div', { class: 'cta-row' }, btnShare,
-      h('button', { class: 'btn', type: 'button', onclick: () => { S.quiz.step = 0; S.resultsReady = false; route({ focusHeading: true }); } }, 'Revisar respuestas'),
-      h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { nuevoQuiz(); route({ focusHeading: true }); } }, 'Empezar de cero')));
-    return root;
-  }
-
-  // ---------- Metodología ----------
-  function viewMetodologia() {
-    const m = S.meta;
-    const P = (...c) => h('p', null, ...c);
-    const root = h('div', { class: 'prose' },
-      h('h1', null, 'Metodología y fuentes'),
-      h('p', { class: 'lead' }, 'Cómo decidimos dónde está cada partido en cada tema, para que cualquiera pueda comprobarlo.'),
-      h('p', { class: 'small muted' }, `Codificación ${m.version_codificacion} · actualizada el ${fmtFecha(m.actualizado)} · las posiciones se congelan el ${fmtFecha(m.congelacion)} salvo errores de hecho.`),
-      h('p', { class: 'aviso' }, h('strong', null, 'Estado hoy: '), `${S.conCita} de ${S.total} posiciones tienen cita y enlace, y ${S.validadas} están validadas por dos personas. Lo que sigue describe el método completo; todavía no está aplicado a todas las casillas.`),
-
-      h('h2', null, 'Qué medimos'),
-      P(`En cada uno de los ${S.temas.length} temas asignamos a cada partido una de cinco opciones. La opción elegida es la que mejor describe su propuesta más concreta sobre ese tema, no su retórica general.`),
-      h('ul', null,
-        h('li', null, 'Elección: generales del 29 de noviembre de 2026, circunscripciones de Araba, Bizkaia y Gipuzkoa.'),
-        h('li', null, `Partidos con curva (${S.partidos.length}): ${S.partidos.map(p => p.siglas).join(', ')}. Son las candidaturas que se presentan en las tres provincias y tienen un programa evaluable.`),
-        h('li', null, 'Codificamos lo que cada partido propone para el Congreso y el Gobierno de España, no su gestión en instituciones vascas, salvo en los temas vascos (autogobierno y euskera).'),
-        h('li', null, 'No valoramos credibilidad, cumplimiento de promesas pasadas ni a los candidatos.')),
-      P('La escala ordena opciones dentro de cada tema. El 1 y el 5 no significan izquierda o derecha, ni mejor o peor. En el test las opciones se muestran sin números y en orden aleatorio.'),
-
-      h('h2', null, 'Jerarquía de fuentes'),
-      P('Usamos la fuente de rango más alto disponible. Una inferior solo completa lo que la superior no dice.'),
-      h('ol', null,
-        h('li', null, 'Programa electoral del 29-N (documento oficial del partido).'),
-        h('li', null, 'Documentos programáticos oficiales de 2026.'),
-        h('li', null, 'Compromisos de campaña del candidato a la Presidencia o del cabeza de lista en Euskadi, recogidos por al menos un medio.'),
-        h('li', null, 'Votaciones nominales en el Congreso en la legislatura 2023-2026.'),
-        h('li', null, 'Declaraciones públicas de dirigentes desde 2024.')),
-      P('Si dos fuentes se contradicen, manda la de rango superior. Si son del mismo rango, la más reciente, y anotamos la contradicción. Los partidos estatales con federación vasca se codifican con su programa estatal, corregido por lo que su federación vasca diga expresamente sobre temas vascos.'),
-
-      h('h2', null, 'Estados de cada casilla'),
-      h('ul', null,
-        h('li', null, h('strong', null, 'Validado: '), 'dos personas lo codificaron por separado y coinciden, con cita y fuente.'),
-        h('li', null, h('strong', null, 'Provisional: '), 'codificado por una sola persona o sin cita todavía.'),
-        h('li', null, h('strong', null, 'Estimado: '), 'ninguna fuente de rango 1 a 4 se pronuncia. Se deduce por coherencia con posiciones afines del partido y nunca a más de un paso de su posición documentada más próxima.')),
-
-      h('h2', null, 'Doble codificación'),
-      h('ol', null,
-        h('li', null, 'Dos personas codifican cada casilla por separado, sin ver la otra codificación.'),
-        h('li', null, 'Si coinciden, la casilla queda validada.'),
-        h('li', null, 'Si difieren en un paso, discuten la evidencia y acuerdan; si no, decide una tercera persona.'),
-        h('li', null, 'Si difieren en dos o más, se revisa la definición de las opciones de ese tema y el cambio queda registrado.'),
-        h('li', null, 'Publicamos el porcentaje de acuerdo inicial por tema.')),
-      acuerdoTabla(),
-
-      h('h2', { id: 'correcciones' }, 'Correcciones'),
-      P('Cualquier persona o partido puede señalar un error aportando su fuente. Si la fuente es de rango igual o superior a la usada, recodificamos en 48 horas y anotamos el cambio con fecha.'),
-      m.repositorio ? P(h('a', { class: 'btn', href: m.repositorio + '/issues/new?template=correccion.yml', target: '_blank', rel: 'noopener' }, 'Pedir una corrección')) : null,
-      m.repositorio ? h('p', { class: 'small', style: { color: 'var(--ink-2)' } }, 'Se abre un formulario público en GitHub; necesitas una cuenta.') : null,
-      m.repositorio ? P(h('a', { href: m.repositorio + '/issues?q=label%3Acorrecci%C3%B3n', target: '_blank', rel: 'noopener' }, 'Ver las correcciones pedidas y cómo se resolvieron')) : null,
-      P(m.contacto_correcciones ? ['También puedes escribirnos a ', h('a', { href: 'mailto:' + m.contacto_correcciones }, m.contacto_correcciones), '.'] : h('span', { class: 'placeholder', style: { display: 'block' } }, 'Correo de contacto pendiente, para quien no use GitHub.')),
-
-      h('h2', null, 'Cómo se calcula la cercanía del test'),
-      P('En cada tema que contestas, medimos la distancia entre tu opción y la del partido (de 0 a 4 pasos) y la multiplicamos por la importancia que le das (poco ×0,5, bastante ×1, mucho ×2). La cercanía es 100 % menos la distancia total dividida por la máxima posible. Los temas que te saltas no cuentan. El cálculo se hace en tu navegador.'),
-      P(`Si contestas menos de ${Cercania.MIN_RESPUESTAS} temas no mostramos porcentajes. Cuando dos partidos obtienen el mismo porcentaje los mostramos como empate, en un orden aleatorio que no indica preferencia.`),
-      P('Este cálculo tiene una limitación conocida: un partido situado en opciones intermedias nunca puede quedar tan lejos de alguien como uno situado en los extremos, así que tiende a aparecer más arriba. Por eso el porcentaje es una ayuda para explorar y no una clasificación.'),
-
-      h('h2', null, 'Los temas y sus opciones'),
-      ...S.temas.map((t, i) => h('div', null,
-        h('h3', null, `${i + 1}. ${t.nombre}`),
-        h('p', null, h('em', null, t.pregunta)),
-        h('ol', null, t.opciones.map(o => h('li', null, o))),
-        t.aviso ? h('p', { class: 'aviso' }, t.aviso) : null)),
-
-      h('h2', null, 'Estado actual de la codificación'),
-      estadoTabla(),
-      h('p', null, 'Descarga los datos: ', h('a', { href: 'data/codificacion.csv', download: true }, 'codificacion.csv'), ' · ', h('a', { href: 'data/temas.json', download: true }, 'temas.json'), ' · ', h('a', { href: 'data/propuestas.csv', download: true }, 'propuestas.csv'), m.repositorio ? [' · ', h('a', { href: m.repositorio, target: '_blank', rel: 'noopener' }, 'Código en GitHub')] : null),
-
-      h('h2', null, 'Quiénes somos'),
-      h('div', { class: 'placeholder' }, 'Pendiente: quiénes hacéis el proyecto, por qué, y declaración de independencia y financiación.'));
-    return root;
-  }
-  function acuerdoTabla() {
-    const a = S.meta.acuerdo_por_tema || {};
-    if (!Object.keys(a).length) return h('p', { class: 'placeholder' }, 'El acuerdo por tema se publicará al terminar la segunda codificación.');
-    return h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Acuerdo inicial por tema' }, h('table', { class: 'data-table' }, h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', null, 'Acuerdo inicial'))),
-      h('tbody', null, S.temas.map(t => h('tr', null, h('td', null, t.nombre), h('td', { class: 'c' }, a[t.id] != null ? a[t.id] + ' %' : '—'))))));
-  }
-  function estadoTabla() {
-    const abbr = { provisional: 'P', estimado: 'E', validado: 'V' };
-    return h('div', null,
-      h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Estado de la codificación por partido y tema' }, h('table', { class: 'data-table' },
-        h('thead', null, h('tr', null, h('th', null, 'Partido'), S.temas.map(t => h('th', { title: t.nombre }, t.corto)))),
-        h('tbody', null, S.partidos.map(p => h('tr', null, h('td', null, h('strong', null, p.siglas)),
-          S.temas.map(t => { const c = celda(p.id, t.id); return h('td', { class: 'c', title: c ? c.estado : '' }, c ? `${c.nivel}${abbr[c.estado] ? ' ' + abbr[c.estado] : ''}` : '—'); })))))),
-      h('p', { class: 'small muted' }, 'Número: opción asignada (1 a 5). Letra: V validado, P provisional, E estimado.'));
-  }
-  function fmtDiaMes(iso) {
-    return new Date(iso + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
-  }
-  function fmtFecha(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso + 'T12:00:00');
-    return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-  }
-
-  function viewPrivacidad() {
-    return h('div', { class: 'prose' },
-      h('h1', null, 'Privacidad y aviso legal'),
-      h('h2', null, 'Tus datos'),
-      h('p', null, 'Esta web no usa cookies ni pide registrarte. Las respuestas del test se procesan solo en tu navegador: no se envían a ningún servidor ni se guardan, y desaparecen al cerrar la pestaña.'),
-      h('p', { class: 'placeholder' }, 'Pendiente: si se añade analítica (por ejemplo, Plausible, sin cookies), describir aquí qué se mide y quién lo trata.'),
-      h('h2', null, 'Independencia'),
-      h('p', null, 'Es una iniciativa ciudadana sin afiliación ni financiación de ningún partido, candidatura o institución. No es una recomendación de voto.'),
-      h('h2', null, 'Aviso legal'),
-      h('p', { class: 'placeholder' }, 'Pendiente: titular de la web (nombre y contacto), conforme a la LSSI. Revisar con asesoría si procede.'));
-  }
-
-  // ---------- Router ----------
-  const app = document.getElementById('app');
-  const TITULO = document.title;
-  function focusHeading() {
-    const el = app.querySelector('h1') || app;
-    el.setAttribute('tabindex', '-1');
-    el.focus({ preventScroll: true });
-  }
-  // opts.focusHeading: la vista es nueva (otra ruta u otra pregunta) y el foco va a su título.
-  // Sin esa opción se conserva el foco en el control que se acaba de usar.
-  function route(opts) {
-    opts = opts || {};
-    const fk = opts.focusHeading ? null : focusKey(app);
-    const parts = (location.hash.replace(/^#\/?/, '').split('#')[0] || '').split('/').filter(Boolean);
-    const [r, a, b] = parts;
-    let view, nav, titulo = '';
-    switch (r) {
-      case undefined: view = viewInicio(); nav = 'inicio'; break;
-      case 'test':
-        view = viewTest(); nav = 'test';
-        titulo = !S.quiz ? 'Haz el test' : S.resultsReady ? 'Tu resultado' : `Pregunta ${S.quiz.step + 1} de ${S.temas.length}`;
+  return"#/resultado";
+}
+/* Varias llamadas seguidas (pantalla + pestaña) dejan una sola entrada en el historial. */
+function marcar(push){
+  if(navegando)return;
+  pendPush=pendPush||push;
+  if(pendiente)return;pendiente=true;
+  Promise.resolve().then(function(){
+    pendiente=false;var p=pendPush;pendPush=false;
+    var h=rutaActual();
+    if(h!==location.hash&&!(h==="#/"&&!location.hash))history[p?"pushState":"replaceState"](null,"",h);
+    ultimo=location.hash;titulo();contarVista();
+  });
+}
+var ultimaVista=null;
+function contarVista(){var v=AN.normalizar(location.hash);if(v!==ultimaVista){ultimaVista=v;AN.vista(v);}}
+/* Quien cierra la pestaña a mitad del test: se cuenta en qué pregunta lo dejó, nada más. */
+window.addEventListener("pagehide",function(){if(st.enCurso&&curScreen()==="s-q"){st.enCurso=false;ev("test-abandono/pregunta-"+(st.q+1));}});
+function titulo(){
+  var c=curScreen(),x=null,el;
+  if(c==="s-res")x=st.tab==="fic"&&selP()&&!st.cmpVisto?pn(selP()):$("tb-"+st.tab).textContent;
+  else if(c==="s-q")x=$("q-count").textContent+" · "+$("q-topic").textContent;
+  else if(c==="s-rec")x=$("rec-t").textContent;
+  else if(c!=="s-start"){el=$(c).querySelector("h1");x=el?el.textContent:null;}
+  document.title=x?x+" · Kurba":TITULO;
+}
+function foco(id){
+  if(primera)return;
+  var el=id==="s-res"?$("tb-"+st.tab):$(id).querySelector("h1,h2");
+  if(!el)return;
+  if(id!=="s-res")el.setAttribute("tabindex","-1");
+  try{el.focus({preventScroll:true});}catch(e){el.focus();}
+}
+function aplicar(){
+  var parts=location.hash.replace(/^#\/?/,"").split("/").filter(Boolean),r=parts[0]||"",ok=true;
+  navegando=true;
+  try{
+    switch(r){
+      case"":show("s-start");break;
+      case"test":if(st.order&&!st.explore)show("s-q");else{navegando=false;empezarTest();navegando=true;}break;
+      case"resultado":
+        if(parts[1]==="guias"){asegurarRes();show("s-res");setTab("gui");}
+        else if(st.res&&!st.explore){show("s-res");setTab("cer");}
+        else{show("s-start");ok=false;}
         break;
-      case 'partido': view = viewPartido(a); nav = 'inicio'; titulo = (partido(a) || {}).siglas || 'Partido no encontrado'; break;
-      case 'comparar': view = viewComparar(a, b); nav = 'comparar'; titulo = 'Compara dos partidos'; break;
-      case 'metodologia': view = viewMetodologia(); nav = 'metodologia'; titulo = 'Metodología y fuentes'; break;
-      case 'privacidad': view = viewPrivacidad(); nav = null; titulo = 'Privacidad y aviso legal'; break;
-      default:
-        view = h('div', { class: 'error-box' }, h('h1', null, 'Página no encontrada'), h('p', null, h('a', { href: '#/' }, 'Volver al inicio')));
-        titulo = 'Página no encontrada';
+      case"curvas":asegurarRes();show("s-res");setTab("cur");break;
+      case"fichas":asegurarRes();st.cmpVisto=false;show("s-res");setTab("fic");break;
+      case"partido":
+        asegurarRes();
+        if(!partido(parts[1])){show("s-404");break;}
+        st.cmpVisto=false;st.sel=parts[1];hidden[parts[1]]=false;update(true);show("s-res");setTab("fic");break;
+      case"comparar":
+        asegurarRes();
+        if(partido(parts[1]))st.cmpA=parts[1];
+        if(partido(parts[2])&&parts[2]!==st.cmpA)st.cmpB=parts[2];else if(parts[2])st.cmpB=null;
+        st.cmpVisto=true;show("s-res");setTab("fic");renderCmp();
+        $("cmp").scrollIntoView({block:"start"});break;
+      case"guias":show("s-gl");break;
+      case"guia":if(!openRec(parts[1]))show("s-404");break;
+      case"metodologia":
+        show("s-met");
+        if(parts[1]==="correcciones"){var c=$("correcciones");c.scrollIntoView({block:"start"});if(!primera)c.focus({preventScroll:true});}
+        break;
+      case"privacidad":show("s-priv");break;
+      default:show("s-404");
     }
-    app.replaceChildren(view);
-    document.title = titulo ? titulo + ' · ' + TITULO : TITULO;
-    document.querySelectorAll('[data-nav]').forEach(el => {
-      if (el.dataset.nav === nav) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
-    });
-    const anchor = location.hash.split('#')[2];
-    const target = anchor ? document.getElementById(anchor) : null;
-    if (target) { target.scrollIntoView(); if (opts.focusHeading) { target.setAttribute('tabindex', '-1'); target.focus({ preventScroll: true }); } }
-    else if (opts.focusHeading) focusHeading();
-    else refocus(app, fk);
-  }
-  let lastRoute = '';
-  window.addEventListener('hashchange', () => {
-    const base = location.hash.split('#').slice(0, 2).join('#');
-    const cambia = base !== lastRoute;
-    route({ focusHeading: cambia || !!location.hash.split('#')[2] });
-    if (cambia) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
-  });
-  // «Saltar al contenido»: mueve el foco sin cambiar el hash (el router lo leería como una ruta).
-  const skip = document.querySelector('.skip');
-  if (skip) skip.addEventListener('click', e => { e.preventDefault(); focusHeading(); (app.querySelector('h1') || app).scrollIntoView({ block: 'center' }); });
+  }finally{navegando=false;}
+  if(!ok)history.replaceState(null,"","#/");
+  ultimo=location.hash;titulo();contarVista();
+}
+function alCambiar(){if(location.hash!==ultimo)aplicar();}
+window.addEventListener("hashchange",alCambiar);
+window.addEventListener("popstate",alCambiar);
 
-  const listo = () => document.documentElement.classList.remove('cargando');
-  load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); listo(); }).catch(err => {
-    listo();
-    console.error(err);
-    app.replaceChildren(h('div', { class: 'error-box' },
-      h('h2', null, 'No se han podido cargar los datos'),
-      h('p', null, location.protocol === 'file:'
-        ? 'Has abierto el archivo directamente. Para verlo en local, abre una terminal en la carpeta del proyecto y ejecuta: python3 -m http.server 8000 — luego visita http://localhost:8000'
-        : 'Recarga la página. Si el problema sigue, avísanos.')));
-  });
+aplicar();
+primera=false;
+document.documentElement.classList.remove("cargando-datos");
+}
 })();

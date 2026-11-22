@@ -1,12 +1,20 @@
 {
-  "titulo": "Tu curva de valor electoral",
+  "titulo": "Kurba · Tu curva de valor electoral",
   "edicion": "Euskadi · 29-N",
   "eleccion": "Elecciones generales del 29 de noviembre de 2026",
   "ambito": "Circunscripciones de Araba, Bizkaia y Gipuzkoa",
-  "version_codificacion": "v0 (provisional)",
-  "actualizado": "2026-11-15",
+  "version_codificacion": "v0.2 (provisional, criterio de «estimado» de Kurba)",
+  "actualizado": "2026-11-22",
   "congelacion": "2026-11-24",
   "contacto_correcciones": "",
   "repositorio": "https://github.com/transponder/curva-electoral-29n",
-  "acuerdo_por_tema": {}
+  "acuerdo_por_tema": {},
+  "codebook": "",
+  "quienes_somos": {
+    "es": "",
+    "eu": ""
+  },
+  "titular": "",
+  "analitica": "Contamos las visitas de forma anónima con GoatCounter, sin cookies ni identificadores: qué pantallas se abren, cuántas personas empiezan y terminan el test y a cuántos temas dan importancia, en qué pregunta lo dejan, qué pestañas y guías consultan, el idioma, y el país o la región, el sistema operativo, el navegador y el tamaño de pantalla aproximados. Nunca se envían tus respuestas, la importancia que das a cada tema ni qué partidos te salen más cercanos: las fichas de partido se cuentan todas juntas. GoatCounter no guarda tu dirección IP. Si tu navegador pide no ser rastreado (Do Not Track o Global Privacy Control), no se cuenta nada.",
+  "goatcounter": ""
 }

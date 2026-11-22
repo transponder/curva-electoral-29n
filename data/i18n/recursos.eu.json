@@ -1,0 +1,65 @@
+{
+  "votar": {
+    "titulo": "Data nagusiak: nola eta non bozkatu",
+    "pregunta": "Badakizu zein hauteslekutan eta mahaitan bozkatu behar duzun 29an?",
+    "cuerpo": [
+      "<p>Kanpaina ostiralean, 27an, amaitzen da. Larunbata, 28a, hausnarketa-eguna da, eta igandean, 29an, bozkatzen da, 9:00etatik 20:00etara.</p>",
+      "<p><b>Non bozkatzen duzun.</b> Etxera iristen den errolda-txartelak zure mahaia eta hauteslekua adierazten ditu, baina ez da beharrezkoa eramatea. INEren egoitza elektronikoan ere kontsulta dezakezu, Cl@ve-rekin, edo 900 343 232 doako telefonoan.</p>",
+      "<p><b>Zer eraman.</b> NANa, pasaportea edo gidabaimena, jatorrizkoak eta argazkiarekin. Iraungita egonda ere balio dute, baina ez dira fotokopiak onartzen. MiDNI aplikazioko NAN digitalak ere balio du.</p>",
+      "<p><b>Posta bidezko botoa eskatu bazenuen.</b> Entregatu Correosen bulego batean, azaroaren 26ra arte (osteguna), 14:00ak arte. Eskaera onartu bazizuten, ezin duzu zure mahaian bozkatu 29an, botoa bidaltzera iristen ez bazara ere.</p>"
+    ]
+  },
+  "congreso": {
+    "titulo": "Nola banatzen da zure botoa Kongresuan",
+    "pregunta": "Ba al dakizu zenbat diputatu aukeratzen dituen zure probintziak?",
+    "cuerpo": [
+      "<p>Kongresurako <b>zerrenda itxi</b> bat bozkatzen duzu: hautagaitza bat aukeratzen duzu, ez pertsona jakinak. Probintzia bakoitza barruti bat da. A-29rako, <b>Arabak 4 diputatu aukeratzen ditu, Bizkaiak 8 eta Gipuzkoak 6</b>.</p>",
+      "<p>Eserlekuak D'Hondt legearekin banatzen dira, probintziako baliozko botoen % 3 gainditzen duten hautagaitzen artean. Probintzia batek zenbat eta eserleku gutxiago banatu, orduan eta boto gehiago behar dira praktikan bat lortzeko; beraz, benetako banaketa gehiago urruntzen da boto-ehunekotik.</p>",
+      "<p>Hau ulertzeak inkestak eta emaitzak irakurtzeko balio du, ez zure ordez erabakitzeko: tresna honek jarrerak alderatzen ditu, ez du eserlekurik kalkulatzen.</p>"
+    ]
+  },
+  "senado": {
+    "titulo": "Nola bozkatzen da Senaturako",
+    "pregunta": "Ba al zenekien Senaturako alderdi desberdinetako pertsonak bozka ditzakezula?",
+    "cuerpo": [
+      "<p>Senatuko boto-papera sepia kolorekoa da, eta zure probintziako hautagai guztiak jasotzen ditu. Probintzia bakoitzak <b>4 senatari</b> aukeratzen ditu, eta zuk <b>3 izen arte</b> marka ditzakezu, hautagaitza berekoak edo desberdinetakoak. Boto gehien lortzen dituzten lau pertsonak ateratzen dira hautatuak.</p>",
+      "<p>Euskadin berezitasunak daude aurten: PSE-EE eta Frente Amplio elkarrekin doaz Senatura, «Senado de Progreso» izenarekin, Bizkaian eta Gipuzkoan; Frente Ampliok ez du Senaturako zerrenda propiorik aurkezten Araban, eta PPk ez du Senaturako hautagaitzarik aurkezten Gipuzkoan.</p>",
+      "<p>Alderdi bakoitzaren izenak haren fitxan daude, «Hautagaitzak Euskadin» atalean.</p>"
+    ]
+  },
+  "concierto": {
+    "titulo": "Kontzertu Ekonomikoa eta Kupoa",
+    "pregunta": "Ba al dakizu zergatik agertzen den Kontzertu Ekonomikoa kanpaina honetan?",
+    "cuerpo": [
+      "<p>Euskadin, foru-aldundiek biltzen dituzte ia zerga guztiak. Euskal erakundeek kopuru bat ordaintzen diote Estatuari, <b>Kupoa</b>, Estatuak Euskadin betetzen jarraitzen dituen eskumenengatik, hala nola defentsa edo kanpo-harremanak.</p>",
+      "<p>Kontzertua eta Kupoa Estatuaren eta Euskadiren arteko Batzorde Mistoan eguneratzen dira, eta aldaketak Kongresuan onartzen dira. Horregatik, diputatuek Madrilen bozkatzen dutenak zuzenean eragiten dio euskal finantzaketari.</p>",
+      "<p>Alderdiak ez datoz bat: eutsi, berrikusi ala zabaldu egin behar den. «Autogobernua» gaian aldera ditzakezu, fitxa bakoitzean.</p>"
+    ]
+  },
+  "estatuto": {
+    "titulo": "Gernikako Estatutua eta egiteke dauden transferentziak",
+    "pregunta": "Ba al dakizu Estatutuko zein eskumen dauden oraindik transferitu gabe?",
+    "cuerpo": [
+      "<p>Gernikako Estatutuak, 1979koak, Euskadiri zein eskumen dagozkion finkatzen du. Batzuk transferitu gabe daude oraindik: 2025ean Eusko Jaurlaritzak egiteke dauden hamahiru eskumeni buruzko proposamenak aurkeztu zituen, Estatutua osatzeko.</p>",
+      "<p>Transferentziak Espainiako Gobernuarekin negoziatzen dira; beraz, Kongresuaren osaerak haien erritmoan eragiten du. Aldi berean, Eusko Legebiltzarrean «estatus berri» posible bat negoziatzen ari dira.</p>",
+      "<p>Alderatu alderdi bakoitzak proposatzen duena haren fitxako «Autogobernua» gaian.</p>"
+    ]
+  },
+  "debates": {
+    "titulo": "Hauteskunde-eztabaidak",
+    "pregunta": "Geratzen diren eztabaidak ikusiko dituzu?",
+    "cuerpo": [
+      "<p>Azaroaren 20an: Pedro Sánchez eta Alberto Núñez Feijóoren aurrez aurrekoa ostegunean, 19an, izan zen RTVEn. Astelehenerako, 23rako, bi eztabaida iragarri dira: Atresmediaren lauko eztabaida, Feijóo, Abascal eta Colau baieztatuta dituela, eta RTVEren eztabaida bat zortzi talde parlamentarioren bozeramaileekin, abertzaleak barne. RTVEk lauko eztabaida bat proposatzen jarraitzen du ostegunerako, 26rako, eta PPk uko egin dio.</p>",
+      "<p>Gutxienez eztabaida bat ikusteak, edo hainbat hedabide desberdinen laburpen bat, lagungarria da alderdi bakoitzak dioena hemen ikusten duzunarekin erkatzeko.</p>"
+    ]
+  },
+  "leer": {
+    "titulo": "Nola erabili emaitza hau",
+    "pregunta": "Ba al dakizu zer neurtzen duen eta zer ez zure hurbiltasun-ehunekoak?",
+    "cuerpo": [
+      "<p>Ehunekoak neurtzen du zure erantzunak zenbat hurbiltzen diren alderdi bakoitzaren jarreretara hamaika gaitan, bakoitzari ematen diozun garrantziaren arabera haztatuta. Ez du neurtzen alderdi baten sinesgarritasuna, promesak betetzeko duen ibilbidea, ezta hautagaien balioa ere.</p>",
+      "<p>Alderdien jarrerak informazio publikotik abiatuta landu dira eta behin-behinekoak dira. Alderdi batek iritzirik ematen ez duenean, jarrera zenbatetsi gisa agertzen da.</p>",
+      "<p>Erabili abiapuntu gisa: berrikusi fitxetan zer proposatzen duen alderdi bakoitzak garrantzi handiena ematen diezun gaietan, eta erkatu beste iturri batzuekin.</p>"
+    ]
+  }
+}
