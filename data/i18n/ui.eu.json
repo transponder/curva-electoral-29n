@@ -140,7 +140,7 @@
     "n_who": "Nor gara",
     "a_menu": "Nagusia",
     "a_menubtn": "Menua",
-    "estado": "Behin-behineko datuak · {fecha_dia} eguneratuak",
+    "estado": "Behin-behineko datuak · {fecha_dia}",
     "who_h": "Nor gara",
     "who_more": "Gehiago gutaz eta harremana →",
     "ct_h": "Harremana",
@@ -183,7 +183,7 @@
     "Hurbiltasuna zure kurbaren eta alderdiarenaren arteko batez besteko distantzia da, gai bakoitzari ematen diozun garrantziaren arabera haztatua: «Handia» «Ertaina» halako bi da, eta «Batere ez» aukerak ez du zenbatzen.",
     "Jarrerak hauteskunde-programetatik, parlamentuko bozketetatik eta adierazpen publikoetatik abiatuta landu dira, alderdiei kontsultatu gabe. Alderdi batek gai bati buruz iritzirik ematen ez duenean, jarrera zenbatetsi gisa markatzen da.",
     "Fitxek egitura bera dute alderdi guztientzat: proposamenak gaika eta ematen diezun garrantziaren arabera ordenatuta, programa, Euskadiko hautagaitzak beren ibilbidearekin eta webgune ofiziala. Datu bakoitzak bere iturrirako esteka du. Alderdi baten proposamenik aurkitu ez badugu gai bati buruz, berariaz adierazten da.",
-    "1etik 5erako jarrerak kode-liburu publiko baten bidez esleitzen dira; liburu horrek maila bakoitza adierazle behagarrien bidez definitzen du.",
+    "1etik 5erako jarrera bakoitza gai bakoitzerako zehaztutako aukera bati dagokio; guztiak metodologia osoko «Los temas y sus opciones» atalean dituzu (gaztelaniaz).",
     "Jarrera ertainak dituzten alderdiek edozein kurbatatik hurbilago agertzeko joera dute. Hurbiltasun handiak ez du esan nahi garrantzi handiena ematen diozun horretan bat zatoztenik: berrikusi «Zerk bereizten ditu hurbilen dituzunak» atala.",
     "Ez da inkesta bat: ez da erantzunik jasotzen, ezta batzen ere."
   ]

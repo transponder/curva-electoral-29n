@@ -20,3 +20,17 @@ jobs:
           python-version: '3.12'
       - name: Validar data/
         run: python3 scripts/validar_datos.py
+
+  # Comprueba que los enlaces a fuentes siguen respondiendo. Solo avisa: no bloquea el PR,
+  # porque algunos medios rechazan a los robots aunque el enlace funcione en un navegador.
+  enlaces:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Comprobar enlaces de las fuentes
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --max-concurrency 4 --timeout 20 --max-retries 2 --accept '200..=299,403,429' 'data/*.csv' 'data/*.json' 'data/i18n/*.json' 'data/i18n/*.csv'
+          fail: true
+          jobSummary: true
