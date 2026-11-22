@@ -50,11 +50,13 @@ function fechaAct(){
   return LANG==="eu"?y+"ko "+mes+" "+d+"a":d+" de "+mes+" de "+y;
 }
 var CORREO=META.contacto_correcciones||"";
-function fechaCorta(){
+/* Sin año, para la etiqueta de estado: «22 de noviembre» / «azaroaren 22an». */
+function fechaDia(){
   var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(META.actualizado||"");if(!m)return"";
-  return LANG==="eu"?m[1]+"/"+m[2]+"/"+m[3]:m[3]+"/"+m[2]+"/"+m[1];
+  var mes=MESES[LANG][+m[2]-1],d=+m[3];
+  return LANG==="eu"?mes+" "+d+"an":d+" de "+mes;
 }
-function rellenar(x){return String(x).replace(/\{fecha\}/g,fechaAct()).replace(/\{fecha_corta\}/g,fechaCorta()).replace(/\{correo\}/g,CORREO);}
+function rellenar(x){return String(x).replace(/\{fecha\}/g,fechaAct()).replace(/\{fecha_dia\}/g,fechaDia()).replace(/\{correo\}/g,CORREO);}
 function applyStatic(){
   [["t","textContent"],["th","innerHTML"]].forEach(function(m){
     Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el[m[1]];el[m[1]]=rellenar(t(k));});
@@ -116,10 +118,10 @@ function toast(t){var el=$("toast");el.textContent=t;el.hidden=false;clearTimeou
 $("es").addEventListener("click",function(){if(LANG!=="es")ev("idioma-es");setLang("es");});$("eu").addEventListener("click",function(){if(LANG!=="eu")ev("idioma-eu");setLang("eu");});
 
 /* ---------- guías y método ---------- */
-var prevScreen="s-start";
+var prevScreen="s-gl";
 function openRec(id){
   var r=RES.filter(function(x){return x.id===id;})[0];if(!r)return false;
-  var c=curScreen();if(c!=="s-rec")prevScreen=c;curRec=id;
+  var c=curScreen();if(c!=="s-rec")prevScreen=c==="s-res"?"s-res":"s-gl";curRec=id;
   $("rec-t").textContent=rr(r,"t");
   $("rec-b").innerHTML=rr(r,"b").join("");
   $("rec-src").innerHTML=r.src.length?'<div class="stack" style="gap:8px"><h3>'+t("src_h")+'</h3><ul class="pts card">'+r.src.map(function(k){return'<li><a href="'+safeUrl(S[k].u)+'" target="_blank" rel="noopener">'+esc(S[k].t)+" ↗</a></li>";}).join("")+"</ul></div>":"";
@@ -166,11 +168,6 @@ function renderCorreo(){
   });
 }
 renderCorreo();
-$("to-method").addEventListener("click",function(){show("s-met");});
-$("met-back").addEventListener("click",function(){show("s-start");});
-$("priv-back").addEventListener("click",function(){show("s-start");});
-$("legal-back").addEventListener("click",function(){show("s-start");});
-$("about-back").addEventListener("click",function(){show("s-start");});
 
 /* ---------- menú principal ---------- */
 var MENU=$("menu"),MBTN=$("menubtn");
@@ -189,8 +186,6 @@ function marcarMenu(){
   /* Con el test hecho, «Test» lleva al resultado. */
   Array.prototype.forEach.call(document.querySelectorAll('a[data-nav="test"]'),function(a){a.setAttribute("href",st.res&&!st.explore?"#/resultado":"#/test");});
 }
-$("to-guides").addEventListener("click",function(){show("s-gl");});
-$("gl-back").addEventListener("click",function(){show("s-start");});
 
 /* ---------- inicio ---------- */
 recList("recs-start");applyStatic();
@@ -616,6 +611,7 @@ function foco(id){
   try{el.focus({preventScroll:true});}catch(e){el.focus();}
 }
 function aplicar(){
+  if(!esRuta(location.hash))history.replaceState(null,"","#/");
   var parts=location.hash.replace(/^#\/?/,"").split("/").filter(Boolean),r=parts[0]||"",ok=true;
   navegando=true;
   try{
@@ -658,7 +654,15 @@ function aplicar(){
   if(!ok)history.replaceState(null,"","#/");
   ultimo=location.hash;titulo();contarVista();
 }
-function alCambiar(){if(location.hash!==ultimo)aplicar();}
+/* Solo los hashes «#/…» son rutas; uno como «#contenido» es un ancla de la página y no se toca. */
+function esRuta(h){return !h||h==="#"||h.indexOf("#/")===0;}
+function alCambiar(){
+  if(!esRuta(location.hash)){history.replaceState(null,"",ultimo||"#/");return;}
+  if(location.hash!==ultimo)aplicar();
+}
+document.querySelector(".skip").addEventListener("click",function(e){
+  e.preventDefault();var m=$("contenido");try{m.focus({preventScroll:false});}catch(x){m.focus();}m.scrollIntoView({block:"start"});
+});
 window.addEventListener("hashchange",alCambiar);
 window.addEventListener("popstate",alCambiar);
 

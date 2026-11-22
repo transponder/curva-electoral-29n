@@ -29,12 +29,12 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/kurba.css">
-  <script src="js/cercania.js" defer></script>
-  <script src="js/analitica.js" defer></script>
-  <script src="js/datos.js" defer></script>
-  <script src="js/paginas.js" defer></script>
-  <script src="js/app.js" defer></script>
+  <link rel="stylesheet" href="css/kurba.css?v=7562b3f9">
+  <script src="js/cercania.js?v=081e1627" defer></script>
+  <script src="js/analitica.js?v=e846000b" defer></script>
+  <script src="js/datos.js?v=4ed34e4f" defer></script>
+  <script src="js/paginas.js?v=2be4157f" defer></script>
+  <script src="js/app.js?v=dcb30acd" defer></script>
 </head>
 <body>
 <a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
@@ -49,7 +49,7 @@
     <a href="#/curvas" data-nav="curvas" data-t="n_cur">Curvas</a>
     <a href="#/fichas" data-nav="fichas" data-t="n_fic">Partidos</a>
     <a href="#/guias" data-nav="guias" data-t="n_gui">Guías</a>
-    <a href="#/metodologia" data-nav="metodologia" data-t="n_met">Método</a>
+    <a href="#/metodologia" data-nav="metodologia" data-t="n_met">Metodología</a>
     <a href="#/quienes-somos" data-nav="quienes-somos" data-t="n_who">Quiénes somos</a>
   </nav>
   <div class="lang" role="group" aria-label="Idioma" data-ta="a_lang">
@@ -75,7 +75,7 @@
 <div class="start-txt stack">
   <div class="stack" style="gap:10px">
     <p class="kicker" data-t="k_start">Euskadi · Elecciones generales 29-N</p>
-    <a class="estado" href="#/metodologia" data-t="estado">Datos provisionales · actualizados el 22/11/2026</a>
+    <a class="estado" href="#/metodologia" data-t="estado">Datos provisionales · actualizados el 22 de noviembre</a>
     <h1 data-t="title">Tu curva de valor electoral</h1>
     <p class="lead" data-t="lead">Responde once preguntas sobre los temas que deciden unas elecciones. No te diremos a quién votar: verás en qué coincides con cada partido y en qué no, tema a tema.</p>
   </div>
@@ -86,7 +86,6 @@
   </div>
   <button class="btn acc" id="go" data-t="go">Empezar · 2 min</button>
   <div class="links"><button class="link" id="explore" data-t="explore">Ver las curvas sin hacer el test</button></div>
-  <div class="links"><button class="link" id="to-method" data-t="method">Método</button><button class="link" id="to-guides" data-t="guides_t">Guías rápidas para votar</button></div>
 </div>
 </div>
 <div class="start-cards">
@@ -142,8 +141,7 @@
 
 <!-- MÉTODO (desde inicio) -->
 <section id="s-met" class="stack" hidden>
-  <div class="qtop"><button class="iconbtn" id="met-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
-  <h1 style="font-size:28px" data-t="method">Método</h1>
+  <h1 style="font-size:28px" data-t="met_h">Metodología</h1>
   <div class="card stack small" id="met-body" style="gap:10px;font-size:14.5px"></div>
   <div class="prose" id="met-full"></div>
 </section>
@@ -157,7 +155,7 @@
   <div class="tabs" role="tablist" aria-label="Secciones del resultado" data-ta="a_tabs">
     <button role="tab" id="tb-cer" aria-controls="t-cer" aria-selected="true" data-t="tab1">Cercanía</button>
     <button role="tab" id="tb-cur" aria-controls="t-cur" aria-selected="false" data-t="tab2">Curvas</button>
-    <button role="tab" id="tb-fic" aria-controls="t-fic" aria-selected="false" data-t="tab3">Fichas</button>
+    <button role="tab" id="tb-fic" aria-controls="t-fic" aria-selected="false" data-t="tab3">Partidos</button>
     <button role="tab" id="tb-gui" aria-controls="t-gui" aria-selected="false" data-t="tab4">Guías</button>
   </div>
 
@@ -276,25 +274,21 @@
 
 <!-- GUÍAS (desde inicio) -->
 <section id="s-gl" class="stack" hidden>
-  <div class="qtop"><button class="iconbtn" id="gl-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
   <h1 style="font-size:28px" data-t="guides_t">Guías rápidas para votar</h1>
   <p class="small" style="font-size:14.5px" data-t="gl_s">Si alguna de estas preguntas te suena nueva, échale un vistazo: son dos minutos.</p>
   <div class="recs" id="recs-start"></div>
 </section>
 <!-- PRIVACIDAD -->
 <section id="s-priv" class="stack" hidden>
-  <div class="qtop"><button class="iconbtn" id="priv-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
   <div class="prose" id="priv-body"></div>
 </section>
 
 <!-- AVISO LEGAL -->
 <section id="s-legal" class="stack" hidden>
-  <div class="qtop"><button class="iconbtn" id="legal-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
   <div class="prose" id="legal-body"></div>
 </section>
 <!-- QUIÉNES SOMOS Y CONTACTO -->
 <section id="s-about" class="stack" hidden>
-  <div class="qtop"><button class="iconbtn" id="about-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
   <h1 style="font-size:28px" data-t="who_h">Quiénes somos</h1>
   <div class="prose" id="about-txt"></div>
   <div class="card stack" style="gap:12px">
@@ -327,10 +321,9 @@
 <footer class="pie">
  <div class="pie-in">
   <div class="pie-col pie-kurba">
-    <p class="pie-brand">kurba</p>
+    <a class="pie-brand" href="#/" aria-label="Kurba, ir al inicio" data-ta="a_home2"><svg width="28" height="28" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#FFC533"/><polyline points="7,25 14,13 22,20 29,9" fill="none" stroke="#14161B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="13" r="2.6" fill="#14161B"/><circle cx="22" cy="20" r="2.6" fill="#14161B"/></svg><b>kurba</b></a>
     <p data-t="f_what">Tu curva de valor electoral para las elecciones generales del 29-N en Araba, Bizkaia y Gipuzkoa.</p>
     <p data-t="f_indep">Iniciativa ciudadana independiente, sin afiliación ni financiación de ningún partido. No es una recomendación de voto.</p>
-    <a class="estado" href="#/metodologia" data-t="estado">Datos provisionales · actualizados el 22/11/2026</a>
   </div>
   <nav class="pie-col" aria-labelledby="pie-h1">
     <h2 class="pie-h" id="pie-h1" data-t="f_h1">Explora</h2>

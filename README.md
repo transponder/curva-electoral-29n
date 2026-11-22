@@ -65,6 +65,16 @@ La metodología completa está en la página `#/metodologia`, basada en el codeb
 
 `#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/quienes-somos` (y `#/contacto`) · `#/aviso-legal` · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
 
+## Versiones de CSS y JS (caché)
+
+Cloudflare guarda los CSS y JS en caché durante horas. Para que nadie vea el HTML nuevo con un CSS o JS antiguo, `index.html` los carga con una versión en la URL (`css/kurba.css?v=…`). Después de cambiar cualquier fichero de `css/` o `js/`, y antes de publicar, ejecuta:
+
+```bash
+python3 scripts/versionar.py
+```
+
+El workflow «Tests» falla si alguna versión no coincide con el contenido del fichero.
+
 ## Validar los datos antes de publicar
 
 Cada cambio en `data/` se comprueba automáticamente en GitHub (workflow «Validar datos»). Para comprobarlo en local:

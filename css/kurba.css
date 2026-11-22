@@ -24,7 +24,6 @@ main{max-width:560px;margin:0 auto;padding:16px 20px 56px}
 /* Escritorio: el test sigue en una columna estrecha; el resto de pantallas usa el ancho. */
 body:not([data-pantalla="s-q"]) main{max-width:1080px}
 body[data-pantalla="s-met"] main>section,body[data-pantalla="s-priv"] main>section,body[data-pantalla="s-legal"] main>section,body[data-pantalla="s-about"] main>section,body[data-pantalla="s-rec"] main>section,body[data-pantalla="s-gl"] main>section,body[data-pantalla="s-404"] main>section{max-width:720px;margin:0 auto}
-@media (max-width:959.98px){body:not([data-pantalla="s-q"]) main>section{max-width:560px;margin:0 auto}}
 [hidden]{display:none!important}
 h1{font-family:var(--f-display);font-weight:700;font-size:32px;line-height:1.08;letter-spacing:-.8px;margin:0;text-wrap:balance}
 h2{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.2;letter-spacing:-.4px;margin:0;text-wrap:pretty}
@@ -175,6 +174,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{o
 .est{font-size:12px;color:var(--ink-2);font-style:italic}
 .pts{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45}
 .pts a,.ppl a{font-size:13px;white-space:nowrap}
+#rec-src .pts a{white-space:normal;overflow-wrap:anywhere}
 .none{font-size:13.5px;font-style:italic;color:var(--ink-2)}
 .tag{display:inline-block;padding:0 6px;border:1px solid var(--line);border-radius:4px;font-size:11px;font-weight:600;color:var(--ink-2);vertical-align:1px;white-space:nowrap}
 .list{background:var(--surface);border-radius:18px;padding:0 16px;display:flex;flex-direction:column}
@@ -241,12 +241,14 @@ noscript .card{margin-top:16px}
 .pie-in{display:grid;grid-template-columns:1fr;gap:20px}
 .pie-col{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .pie-col a{color:var(--ink);min-height:40px;display:inline-flex;align-items:center}
-.pie-brand{font-family:var(--f-display);font-weight:700;font-size:20px;color:var(--ink);letter-spacing:-.4px}
+.pie-brand{display:inline-flex!important;align-items:center;gap:8px;color:var(--ink);text-decoration:none;margin-bottom:4px}
+.pie-brand b{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.4px}
 .pie-h{font-family:var(--f-body);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 2px}
 .pie p{margin:0;max-width:44ch}
 .pie-fin{margin-top:20px!important;padding-top:14px;border-top:1px solid var(--grid);max-width:none!important}
 .pie-fin a{color:var(--ink)}
 @media (min-width:640px){.pie-in{grid-template-columns:1fr 1fr}}
+@media (pointer:fine){.pie-col a{min-height:32px}}
 @media (min-width:960px){.pie-in{grid-template-columns:1.6fr 1fr 1fr 1fr;gap:28px}}
 /* etiqueta de estado de los datos (sustituye a «Beta» en el logo) */
 .estado{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1.5px solid var(--line);border-radius:999px;font-size:12.5px;font-weight:600;color:var(--ink-2)!important;text-decoration:none;min-height:0!important}
