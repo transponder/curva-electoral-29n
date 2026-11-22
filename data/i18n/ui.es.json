@@ -50,7 +50,6 @@
     "much": "· importancia alta",
     "nc": "· no cuenta",
     "share_t": "Mi curva de valor electoral",
-    "share_f": "Línea punteada: mi curva. Línea de color: {x}. Posiciones elaboradas con información pública.",
     "tie": "empate",
     "g_top": "Tus más cercanos",
     "g_rest": "El resto",
@@ -59,12 +58,14 @@
     "need_imp": "Elige también la importancia para continuar.",
     "cb_link": "Abrir el libro de códigos",
     "est_tip": "* estimado",
-    "share_f2": "Línea punteada: mi curva. Líneas de color: {x}. Posiciones elaboradas con información pública.",
     "copied": "Copiado.",
     "nocopy": "Tu navegador no permite copiar desde aquí.",
     "met_full": "Metodología completa, fuentes y correcciones",
     "tbl_p": "Partido",
-    "tbl_n": "Opción de 1 a 5 en cada tema. * posición estimada, sin propuesta localizada."
+    "tbl_n": "Opción de 1 a 5 en cada tema. * posición estimada, sin propuesta localizada.",
+    "share_f0": "Línea punteada: mi curva.",
+    "sh_s": "Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva: ni partidos ni porcentajes.",
+    "a_img": "Imagen con tu curva de valor, sin partidos ni porcentajes"
   },
   "metodo": [
     "Cada tema tiene una escala de 1 a 5 con una posición concreta en cada nivel. Tu respuesta y la posición de cada partido se sitúan en esa misma escala.",

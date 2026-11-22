@@ -68,7 +68,6 @@
     "much": "· garrantzi handia",
     "nc": "· ez du zenbatzen",
     "share_t": "Nire hauteskunde balio-kurba",
-    "share_f": "Lerro puntukatua: nire kurba. Koloretako lerroa: {x}. Jarrerak informazio publikoarekin landuak.",
     "tie": "berdinketa",
     "g_top": "Hurbilen dituzunak",
     "g_rest": "Gainerakoak",
@@ -77,7 +76,6 @@
     "need_imp": "Aukeratu garrantzia ere jarraitzeko.",
     "cb_link": "Kode-liburua ireki",
     "est_tip": "* zenbatetsia",
-    "share_f2": "Lerro puntukatua: nire kurba. Koloretako lerroak: {x}. Jarrerak informazio publikoarekin landuak.",
     "dk": "Ez daukat argi",
     "f_pick": "Berdinketa dago lehen postuan. Aukeratu alderdi bat haren fitxa ikusteko.",
     "est_note": "Markatzaile hutsa: jarrera zenbatetsia, proposamenik aurkitu gabe.",
@@ -87,7 +85,7 @@
     "title": "Zure hauteskunde balio-kurba",
     "lead": "Erantzun hauteskundeak erabakitzen dituzten gaiei buruzko hamaika galdera. Ez dizugu esango nori eman botoa: alderdi bakoitzarekin zertan zatozen bat eta zertan ez ikusiko duzu, gaiz gai.",
     "b1": "Zure erantzunak ez dira zure gailutik ateratzen",
-    "b2": "Ez da inkesta bat: ez da ezer jasotzen, ezta batzen ere",
+    "b2": "Ez da inkesta bat: ez da erantzunik jasotzen, ezta batzen ere",
     "b3": "Hamaika gai, zazpi hautagaitza, datu bakoitza bere iturriarekin",
     "method": "Metodoa",
     "guides_t": "Bozkatzeko gida azkarrak",
@@ -105,7 +103,6 @@
     "ori_h": "Orientatzeko",
     "to_cur": "Kurbak ikusi",
     "sh_h": "Partekatu zure kurba",
-    "sh_s": "Eduki irudia sakatuta gordetzeko edo partekatzeko. Zure kurba eta hurbilen dituzun hiru alderdiak baino ez ditu jasotzen.",
     "copy": "Laburpena kopiatu",
     "edit": "Erantzunak aldatu",
     "restart": "Berriro hasi",
@@ -134,7 +131,7 @@
     "a_pick": "Alderdia aukeratu",
     "a_rest": "Gainerako alderdien fitxak",
     "a_chart": "Zure kurba alderdienen gainean",
-    "a_img": "Zure balio-kurba eta hurbilen dituzun hiru alderdiak dituen irudia"
+    "share_f0": "Lerro puntukatua: nire kurba."
   },
   "metodo": [
     "Gai bakoitzak 1etik 5erako eskala bat du, eta maila bakoitzak jarrera zehatz bat. Zure erantzuna eta alderdi bakoitzaren jarrera eskala berean kokatzen dira.",

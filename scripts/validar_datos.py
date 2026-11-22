@@ -139,6 +139,9 @@ def pendientes_de_publicar(carpeta, avisos):
     for campo, que in (("contacto_correcciones", "correo de correcciones"), ("titular", "titular de la web (aviso legal, LSSI)")):
         if not (meta.get(campo) or "").strip():
             avisos.append(f"meta.json: falta «{campo}» ({que}) — pendiente antes de publicar")
+    gc = (meta.get("goatcounter") or "").strip()
+    if not gc:
+        avisos.append("meta.json: falta «goatcounter» (código de GoatCounter): la analítica está apagada")
     q = meta.get("quienes_somos") or {}
     if not (q.get("es") or "").strip():
         avisos.append("meta.json: falta «quienes_somos.es» — pendiente antes de publicar")
@@ -284,6 +287,10 @@ def validar(carpeta):
     validar_euskera(carpeta / "i18n", temas, propuestas, err)
     validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos)
     pendientes_de_publicar(carpeta, avisos)
+    meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
+    gc = (meta.get("goatcounter") or "").strip()
+    if gc and not re.match(r"^https://[a-z0-9-]+\.goatcounter\.com/count$", gc):
+        err("meta.json: «goatcounter» debe ser https://<código>.goatcounter.com/count")
 
     total = len(ids_partido) * len(ids_tema)
     con_cita = sum(1 for r in filas if (r.get("cita") or "").strip() and (r.get("url") or "").strip())

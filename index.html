@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; font-src 'self'; connect-src 'self' https://*.goatcounter.com; base-uri 'self'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Kurba · Tu curva de valor electoral · Euskadi 29-N</title>
   <meta name="description" content="Responde 11 preguntas y compara tu curva con la de los 7 partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N. Cada dato con su fuente. Iniciativa independiente: no te dice a quién votar.">
@@ -31,6 +31,7 @@
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/kurba.css">
   <script src="js/cercania.js" defer></script>
+  <script src="js/analitica.js" defer></script>
   <script src="js/datos.js" defer></script>
   <script src="js/paginas.js" defer></script>
   <script src="js/app.js" defer></script>
@@ -67,7 +68,7 @@
   </div>
   <div class="bul">
     <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span data-t="b1">Tus respuestas no salen de tu dispositivo</span></div>
-    <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/></svg><span data-t="b2">No es una encuesta: no se recoge ni se agrega nada</span></div>
+    <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/></svg><span data-t="b2">No es una encuesta: no se recoge ni se agrega ninguna respuesta</span></div>
     <div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9"/></svg><span data-t="b3">Once temas, siete candidaturas, cada dato con su fuente</span></div>
   </div>
   <button class="btn acc" id="go" data-t="go">Empezar · 2 min</button>
@@ -167,8 +168,8 @@
     <button class="btn" id="to-cmp" data-t="to_cmp">Comparar dos partidos</button>
     <div class="card stack" style="gap:10px">
       <h3 data-t="sh_h">Comparte tu curva</h3>
-      <p class="small" data-t="sh_s">Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva y tus tres partidos más cercanos.</p>
-      <img id="shareimg" alt="Imagen con tu curva de valor y tus tres partidos más cercanos" data-talt="a_img">
+      <p class="small" data-t="sh_s">Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva: ni partidos ni porcentajes.</p>
+      <img id="shareimg" alt="Imagen con tu curva de valor, sin partidos ni porcentajes" data-talt="a_img">
       <div class="actions"><button class="ghost" id="copy" data-t="copy">Copiar resumen</button><span class="small" id="copied" role="status"></span></div>
     </div>
     <div class="actions">
