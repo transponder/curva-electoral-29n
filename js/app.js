@@ -1,4 +1,4 @@
-/* Kurba · Tu curva de valor electoral (interfaz y flujo: Ander; integración con /data: Jorge).
+/* Kurba · Tu curva de valor electoral.
    Los datos se cargan de /data con js/datos.js; el cálculo está en js/cercania.js.
    Las respuestas del test solo existen en la memoria de esta pestaña: no se envían ni se guardan. */
 (function(){
@@ -41,9 +41,23 @@ function pn(p){return LANG==="eu"&&PNAME[p.id]?PNAME[p.id]:p.n;}
 function pct(a){return a===null?"–":LANG==="eu"?"% "+a:a+" %";}
 function code(k){return(LANG==="eu"?CODE_EU:CODE)[k];}
 function edName(){return LANG==="eu"?"Euskadi · A-29":E().name;}
+/* Fecha de actualización (data/meta.json) en el idioma de la interfaz. */
+var MESES={es:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],
+  eu:["urtarrilaren","otsailaren","martxoaren","apirilaren","maiatzaren","ekainaren","uztailaren","abuztuaren","irailaren","urriaren","azaroaren","abenduaren"]};
+function fechaAct(){
+  var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(META.actualizado||"");if(!m)return"";
+  var y=m[1],mes=MESES[LANG][+m[2]-1],d=+m[3];
+  return LANG==="eu"?y+"ko "+mes+" "+d+"a":d+" de "+mes+" de "+y;
+}
+var CORREO=META.contacto_correcciones||"";
+function fechaCorta(){
+  var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(META.actualizado||"");if(!m)return"";
+  return LANG==="eu"?m[1]+"/"+m[2]+"/"+m[3]:m[3]+"/"+m[2]+"/"+m[1];
+}
+function rellenar(x){return String(x).replace(/\{fecha\}/g,fechaAct()).replace(/\{fecha_corta\}/g,fechaCorta()).replace(/\{correo\}/g,CORREO);}
 function applyStatic(){
   [["t","textContent"],["th","innerHTML"]].forEach(function(m){
-    Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el[m[1]];el[m[1]]=t(k);});
+    Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el[m[1]];el[m[1]]=rellenar(t(k));});
   });
   [["ta","aria-label"],["talt","alt"]].forEach(function(m){
     Array.prototype.forEach.call(document.querySelectorAll("[data-"+m[0]+"]"),function(el){var k=el.getAttribute("data-"+m[0]);if(!(k in TX.es))TX.es[k]=el.getAttribute(m[1]);el.setAttribute(m[1],t(k));});
@@ -53,7 +67,7 @@ function applyStatic(){
 function setLang(l){
   LANG=l;document.documentElement.lang=l;
   $("es").setAttribute("aria-pressed",l==="es");$("eu").setAttribute("aria-pressed",l==="eu");
-  applyStatic();renderMethod();renderQuienes();
+  applyStatic();renderMethod();renderPaginas();renderQuienes();renderCorreo();
   if(curScreen()==="s-q")renderQ();
   recList("recs-start");
   if(st.res){exploreMode(!!st.explore);recList("recs-res");renderKey();renderAdjust();update(true);}
@@ -70,9 +84,10 @@ var st={ed:"eu",q:0,ans:[],w:[],sel:null,tab:"cer"};
 function $(id){return document.getElementById(id);}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function safeUrl(u){return /^https?:\/\//.test(u||"")?esc(u):"#";}
-var SCREENS=["s-start","s-q","s-res","s-rec","s-met","s-gl","s-priv","s-404"];
+var SCREENS=["s-start","s-q","s-res","s-rec","s-met","s-gl","s-priv","s-legal","s-about","s-404"];
 function show(id){
   SCREENS.forEach(function(s){$(s).hidden=s!==id;});window.scrollTo(0,0);
+  document.body.setAttribute("data-pantalla",id);
   marcar(true);foco(id);
 }
 function curScreen(){for(var i=0;i<SCREENS.length;i++)if(!$(SCREENS[i]).hidden)return SCREENS[i];return "s-start";}
@@ -124,17 +139,56 @@ function renderMethod(){
   $("met-body").innerHTML=h;document.querySelector("#method-res .method").innerHTML=h;
 }
 renderMethod();
-$("met-full").replaceChildren.apply($("met-full"),window.KurbaPaginas.metodologia(D,C));
-$("priv-body").replaceChildren.apply($("priv-body"),window.KurbaPaginas.privacidad(D));
+/* Las páginas de texto devuelven listas con huecos (null) y sublistas: se aplanan antes de pintarlas. */
+function nodos(x){var o=[];(function f(y){if(y==null||y===false)return;if(Array.isArray(y))y.forEach(f);else o.push(y);})(x);return o;}
+function pintar(id,x){var el=$(id);el.replaceChildren.apply(el,nodos(x));}
+function renderPaginas(){
+  var KP=window.KurbaPaginas;
+  pintar("met-full",KP.metodologia(D,C,LANG));
+  pintar("priv-body",KP.privacidad(D,LANG));
+  pintar("legal-body",KP.avisoLegal(D,LANG));
+}
+renderPaginas();
 function renderQuienes(){
   var q=window.KurbaPaginas.quienes(D,LANG);
   $("quienes").hidden=!q;
-  if(q)$("quienes-txt").replaceChildren.apply($("quienes-txt"),q);
+  if(!q)return;
+  /* En la portada, los dos primeros párrafos; el texto completo, en «Quiénes somos». */
+  pintar("quienes-txt",q.slice(0,2));
+  pintar("about-txt",window.KurbaPaginas.quienes(D,LANG));
 }
 renderQuienes();
+/* Enlaces de correo: el de corrección llega con el mensaje ya preparado, en el idioma de la interfaz. */
+var CUERPO={es:"Partido:\nTema:\nQué está mal:\nFuente (enlace):\nFecha de la fuente:\n",eu:"Alderdia:\nGaia:\nZer dago gaizki:\nIturria (esteka):\nIturriaren data:\n"};
+function renderCorreo(){
+  Array.prototype.forEach.call(document.querySelectorAll(".js-mail"),function(a){
+    a.href="mailto:"+CORREO+(a.dataset.mail==="correccion"?"?subject="+encodeURIComponent(LANG==="eu"?"Zuzenketa Kurba":"Corrección Kurba")+"&body="+encodeURIComponent(CUERPO[LANG]):"");
+  });
+}
+renderCorreo();
 $("to-method").addEventListener("click",function(){show("s-met");});
 $("met-back").addEventListener("click",function(){show("s-start");});
 $("priv-back").addEventListener("click",function(){show("s-start");});
+$("legal-back").addEventListener("click",function(){show("s-start");});
+$("about-back").addEventListener("click",function(){show("s-start");});
+
+/* ---------- menú principal ---------- */
+var MENU=$("menu"),MBTN=$("menubtn");
+function menu(abrir){MBTN.setAttribute("aria-expanded",abrir);$("top").classList.toggle("abierto",abrir);}
+MBTN.addEventListener("click",function(){menu(MBTN.getAttribute("aria-expanded")!=="true");});
+MENU.addEventListener("click",function(e){if(e.target.closest("a"))menu(false);});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&MBTN.getAttribute("aria-expanded")==="true"){menu(false);MBTN.focus();}});
+if(window.matchMedia){var mqMenu=window.matchMedia("(min-width: 760px)");var cerrarMenu=function(){if(mqMenu.matches)menu(false);};if(mqMenu.addEventListener)mqMenu.addEventListener("change",cerrarMenu);else if(mqMenu.addListener)mqMenu.addListener(cerrarMenu);}
+var SECCION={test:"test",resultado:"test",curvas:"curvas",fichas:"fichas",partido:"fichas",comparar:"fichas",guias:"guias",guia:"guias",metodologia:"metodologia","quienes-somos":"quienes-somos",contacto:"quienes-somos"};
+function marcarMenu(){
+  var parts=location.hash.replace(/^#\/?/,"").split("/"),sec=SECCION[parts[0]]||null;
+  if(parts[0]==="resultado"&&parts[1]==="guias")sec="guias";
+  Array.prototype.forEach.call(MENU.querySelectorAll("a"),function(a){
+    if(a.dataset.nav===sec)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
+  });
+  /* Con el test hecho, «Test» lleva al resultado. */
+  Array.prototype.forEach.call(document.querySelectorAll('a[data-nav="test"]'),function(a){a.setAttribute("href",st.res&&!st.explore?"#/resultado":"#/test");});
+}
 $("to-guides").addEventListener("click",function(){show("s-gl");});
 $("gl-back").addEventListener("click",function(){show("s-start");});
 
@@ -362,7 +416,7 @@ $("adjust").addEventListener("click",function(e){
 var geo=null;
 function draw(){
   var wrap=$("wrap"),W=Math.max(280,wrap.clientWidth),svg=$("chart"),attrs=E().attrs,n=NT();
-  var mL=22,mR=4,mT=12,mB=30,H=Math.round(Math.min(300,Math.max(210,W*.62)));
+  var mL=22,mR=4,mT=12,mB=30,H=Math.round(Math.min(W>700?400:300,Math.max(210,W*.62)));
   var pw=W-mL-mR,ph=H-mT-mB,band=pw/n,o=[],v,i;
   function X(i){return mL+(i+.5)*band;}
   function Y(v){return mT+(5-v)/4*ph;}
@@ -518,6 +572,8 @@ function rutaActual(){
   if(c==="s-gl")return"#/guias";
   if(c==="s-rec")return"#/guia/"+curRec;
   if(c==="s-priv")return"#/privacidad";
+  if(c==="s-legal")return"#/aviso-legal";
+  if(c==="s-about")return location.hash==="#/contacto"?"#/contacto":"#/quienes-somos";
   if(c==="s-404")return location.hash;
   if(st.tab==="cur")return"#/curvas";
   if(st.tab==="gui")return"#/resultado/guias";
@@ -550,6 +606,7 @@ function titulo(){
   else if(c==="s-rec")x=$("rec-t").textContent;
   else if(c!=="s-start"){el=$(c).querySelector("h1");x=el?el.textContent:null;}
   document.title=x?x+" · Kurba":TITULO;
+  marcarMenu();
 }
 function foco(id){
   if(primera)return;
@@ -589,6 +646,12 @@ function aplicar(){
         if(parts[1]==="correcciones"){var c=$("correcciones");c.scrollIntoView({block:"start"});if(!primera)c.focus({preventScroll:true});}
         break;
       case"privacidad":show("s-priv");break;
+      case"aviso-legal":show("s-legal");break;
+      case"quienes-somos":show("s-about");break;
+      case"contacto":
+        show("s-about");
+        var ct=$("contacto");ct.scrollIntoView({block:"start"});if(!primera)ct.focus({preventScroll:true});
+        break;
       default:show("s-404");
     }
   }finally{navegando=false;}

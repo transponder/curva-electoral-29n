@@ -21,14 +21,14 @@ css/kurba.css         Estilos (diseño de UX de Kurba)
 js/datos.js           Carga data/ y construye los objetos que usa la interfaz
 js/app.js             Interfaz, flujo y rutas, sin dependencias
 js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
-js/paginas.js         Metodología completa, privacidad y «Quiénes somos»
+js/paginas.js         Metodología completa, aviso legal, privacidad y «Quiénes somos»
 data/temas.json       11 temas: pregunta, 5 opciones y código de 3 letras para el gráfico
 data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas, programa y otros compromisos, con fuente
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
 data/propuestas.csv   Propuestas concretas por partido y tema (fichas), con fuente
 data/recursos.json    Guías para votar (fechas, Congreso, Senado, Concierto…), con fuentes
 data/i18n/            Euskera: temas, propuestas (mismo orden), partidos, guías e interfaz; ui.es.json tiene los textos en castellano
-data/meta.json        Versión, fechas, correo de correcciones, «Quiénes somos», titular de la web
+data/meta.json        Versión, fechas, correo de correcciones, «Quiénes somos», titular y licencia de los datos
 assets/               Favicon, imagen para compartir y tipografías (Inter y Space Grotesk, licencia OFL)
 ```
 
@@ -63,7 +63,7 @@ La metodología completa está en la página `#/metodologia`, basada en el codeb
 
 ## Rutas
 
-`#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
+`#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/quienes-somos` (y `#/contacto`) · `#/aviso-legal` · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
 
 ## Validar los datos antes de publicar
 
