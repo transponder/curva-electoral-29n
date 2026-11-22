@@ -21,16 +21,21 @@ jobs:
       - name: Validar data/
         run: python3 scripts/validar_datos.py
 
-  # Comprueba que los enlaces a fuentes siguen respondiendo. Solo avisa: no bloquea el PR,
-  # porque algunos medios rechazan a los robots aunque el enlace funcione en un navegador.
+  # Comprueba que los enlaces a fuentes siguen respondiendo. Solo avisa: el job termina en verde
+  # y, si hay enlaces rotos, deja un aviso y el detalle en el resumen del job.
+  # Se aceptan 403, 406 y 429 porque algunos medios (Deia, Noticias de Navarra…) los devuelven
+  # a los robots aunque el enlace funcione en un navegador.
   enlaces:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Comprobar enlaces de las fuentes
+        id: lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --max-concurrency 4 --timeout 20 --max-retries 2 --accept '200..=299,403,429' 'data/*.csv' 'data/*.json' 'data/i18n/*.json' 'data/i18n/*.csv'
-          fail: true
+          args: --no-progress --max-concurrency 4 --timeout 20 --max-retries 2 --accept '200..=299,403,406,429' 'data/*.csv' 'data/*.json' 'data/i18n/*.json' 'data/i18n/*.csv'
+          fail: false
           jobSummary: true
+      - name: Avisar de enlaces rotos
+        if: steps.lychee.outputs.exit_code != 0
+        run: echo "::warning title=Enlaces a fuentes rotos::Hay enlaces en data/ que no responden. El detalle está en el resumen de este job."
