@@ -80,6 +80,13 @@
       if (nivel >= 1 && nivel <= 5) S.cod.set(key(r.partido, r.tema), { ...r, nivel });
     }
     S.propuestas = prop;
+    // Evidencia real: casillas con cita textual y enlace. Todo lo que la web dice sobre
+    // «cuántas posiciones tienen cita» sale de aquí, no de un texto escrito a mano.
+    S.total = S.partidos.length * S.temas.length;
+    S.conCita = [...S.cod.values()].filter(c => c.cita && c.url).length;
+    S.validadas = [...S.cod.values()].filter(c => c.estado === 'validado').length;
+    const estado = document.getElementById('estado-datos');
+    if (estado) estado.textContent = `Hoy tienen cita y enlace ${S.conCita} de ${S.total}.` + (meta.congelacion ? ` El ${fmtDiaMes(meta.congelacion)} publicamos la versión revisada.` : '');
     S.visible = new Set(S.partidos.map(p => p.id));
     S.temaSel = S.temas[0].id;
   }
@@ -227,8 +234,8 @@
   }
 
   const legendNote = () => h('div', { class: 'chart-legend-note' },
-    h('span', null, h('i', { class: 'lg-dot' }), 'Con evidencia (provisional)'),
-    h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado'),
+    h('span', null, h('i', { class: 'lg-dot' }), 'Provisional'),
+    h('span', null, h('i', { class: 'lg-dot hollow' }), 'Estimado (sin fuente directa)'),
     h('span', null, '1 y 5 son los extremos de cada tema: no significan izquierda o derecha, ni mejor o peor.'));
 
   // Alternativa en tabla al gráfico: mismas posiciones, legibles sin ver el gráfico.
@@ -301,10 +308,10 @@
     const root = h('div');
     root.appendChild(h('section', { class: 'hero', style: { marginTop: 0 } },
       h('span', { class: 'kicker' }, 'Generales 29-N · Araba, Bizkaia y Gipuzkoa'),
-      h('h1', null, '¿Qué propone cada partido? ', h('span', { class: 'mark' }, 'Míralo en una curva.')),
-      h('p', { class: 'lead' }, `${S.temas.length} temas, ${S.partidos.length} partidos. Compara sus propuestas de un vistazo, contesta ${S.temas.length} preguntas y descubre qué partidos están más cerca de lo que tú piensas.`),
+      h('h1', null, '¿Qué propone cada partido el 29-N? ', h('span', { class: 'mark' }, 'Compáralo en 3 minutos.')),
+      h('p', { class: 'lead' }, `${S.temas.length} temas y ${S.partidos.length} partidos, sin nuestra opinión. Mira sus propuestas y, si quieres, compáralas con lo que piensas tú.`),
       h('div', { class: 'cta-row' },
-        h('a', { class: 'btn btn-accent', href: '#/test' }, 'Haz el test (2 min)'),
+        h('a', { class: 'btn btn-accent', href: '#/test' }, `Empieza el test · ${S.temas.length} preguntas, 3 min`),
         h('a', { class: 'btn', href: '#/comparar' }, 'Compara dos partidos'))));
 
     // Curvas
@@ -343,13 +350,13 @@
 
     // Fichas
     root.appendChild(h('section', { id: 'fichas' },
-      h('div', { class: 'section-head' }, h('div', null, h('h2', null, 'Fichas de partido'), h('p', null, 'Sus posiciones tema a tema, con la evidencia y las fuentes.'))),
+      h('div', { class: 'section-head' }, h('div', null, h('h2', null, 'Fichas de partido'), h('p', null, 'Sus posiciones tema a tema y de dónde sale cada una.'))),
       h('div', { class: 'grid' }, S.partidos.map(p => {
-        const ev = S.temas.filter(t => { const c = celda(p.id, t.id); return c && c.estado !== 'estimado' && (c.cita || c.fuente || c.nota); }).length;
+        const ev = S.temas.filter(t => { const c = celda(p.id, t.id); return c && c.cita && c.url; }).length;
         return h('a', { class: 'card party-card', href: '#/partido/' + p.id },
           h('div', { class: 'top' }, h('i', { class: 'swatch', style: { background: p.color } }), h('span', { class: 'name' }, p.siglas)),
           sparkline(p),
-          h('span', { class: 'sub' }, `${ev} de ${S.temas.length} temas con nota de evidencia`));
+          h('span', { class: 'sub' }, `${ev} de ${S.temas.length} temas con cita y enlace`));
       })),
       S.sinCurva.length ? h('p', { class: 'muted small' }, 'Otras candidaturas proclamadas (sin curva, por falta de programa evaluable): ' + S.sinCurva.join(', ') + '.') : null));
 
@@ -357,9 +364,9 @@
     root.appendChild(h('section', null, h('div', { class: 'card' },
       h('h2', null, 'Cómo lo hacemos'),
       h('div', { class: 'grid', style: { marginTop: '14px' } },
-        miniPoint('1', 'Lo que proponen', 'Codificamos lo que cada partido propone para el Congreso y el Gobierno, a partir de su programa del 29-N y otras fuentes oficiales.'),
-        miniPoint('2', 'Con cita y fuente', 'Cada posición lleva una cita textual y un enlace. Sin cita, la casilla es provisional o estimada, y lo decimos.'),
-        miniPoint('3', 'Dos personas, por separado', 'Dos personas codifican cada casilla sin ver la otra. Publicamos su grado de acuerdo.')),
+        miniPoint('1', 'Lo que proponen', 'Codificamos lo que cada partido propone para el Congreso y el Gobierno. La fuente principal es su programa del 29-N.'),
+        miniPoint('2', 'Cita y enlace, en marcha', `Cada posición llevará una cita textual y un enlace. Hoy la tienen ${S.conCita} de ${S.total}; el resto está marcado como provisional o estimado.`),
+        miniPoint('3', 'Segunda revisión, pendiente', (S.meta.congelacion ? `Antes del ${fmtDiaMes(S.meta.congelacion)}, dos` : 'Dos') + ` personas codificarán cada casilla por separado y publicaremos su grado de acuerdo. Hoy hay ${S.validadas} de ${S.total} validadas así.`)),
       h('p', { style: { marginBottom: 0 } }, h('a', { href: '#/metodologia' }, 'Lee la metodología completa →')))));
     return root;
   }
@@ -475,7 +482,7 @@
     const root = h('div', { class: 'quiz' });
     if (!S.quiz) {
       root.append(
-        h('span', { class: 'q-kicker' }, 'Test · ' + S.temas.length + ' preguntas · 2 minutos'),
+        h('span', { class: 'q-kicker' }, 'Test · ' + S.temas.length + ' preguntas · unos 3 minutos'),
         h('h1', { style: { marginTop: '8px' } }, 'Encuentra tu curva'),
         h('p', { class: 'lead' }, 'En cada tema elige la opción que más se acerque a lo que piensas, y dinos cuánto te importa. Al final verás tu curva junto a la de cada partido.'),
         h('ul', { class: 'prose', style: { color: 'var(--ink-2)' } },
@@ -535,7 +542,7 @@
         h('span', { class: 'track' }, h('span', { class: 'fill', style: { display: 'block', width: (r.pct ?? 0) + '%', background: r.p.color } })),
         h('span', { class: 'pct' }, r.pct == null ? '—' : r.pct + '%')))),
       h('p', { class: 'muted small' }, 'Cálculo: en cada tema contestado, la distancia entre tu opción y la del partido (de 0 a 4 pasos), multiplicada por la importancia que le diste (poco ×0,5 · bastante ×1 · mucho ×2). 100 % significa que coincidís en todos los temas que contestaste. Las posiciones son provisionales.'),
-      h('p', { class: 'aviso' }, 'Esto no es una recomendación de voto. Mira las fichas para ver qué propone cada partido y de dónde sale cada posición.')));
+      h('p', { class: 'aviso' }, `Esto no te dice a quién votar. Solo compara ${S.temas.length} temas, y un partido es mucho más que eso. Antes de decidir, lee sus programas.`)));
 
     const share = async () => {
       const data = { title: 'Tu curva de valor electoral · Euskadi 29-N', text: 'He hecho el test: compara en una curva lo que propone cada partido en Euskadi para el 29-N.', url: location.href.split('#')[0] };
@@ -556,6 +563,7 @@
       h('h1', null, 'Metodología y fuentes'),
       h('p', { class: 'lead' }, 'Cómo decidimos dónde está cada partido en cada tema, para que cualquiera pueda comprobarlo.'),
       h('p', { class: 'small muted' }, `Codificación ${m.version_codificacion} · actualizada el ${fmtFecha(m.actualizado)} · las posiciones se congelan el ${fmtFecha(m.congelacion)} salvo errores de hecho.`),
+      h('p', { class: 'aviso' }, h('strong', null, 'Estado hoy: '), `${S.conCita} de ${S.total} posiciones tienen cita y enlace, y ${S.validadas} están validadas por dos personas. Lo que sigue describe el método completo; todavía no está aplicado a todas las casillas.`),
 
       h('h2', null, 'Qué medimos'),
       P(`En cada uno de los ${S.temas.length} temas asignamos a cada partido una de cinco opciones. La opción elegida es la que mejor describe su propuesta más concreta sobre ese tema, no su retórica general.`),
@@ -630,6 +638,9 @@
         h('tbody', null, S.partidos.map(p => h('tr', null, h('td', null, h('strong', null, p.siglas)),
           S.temas.map(t => { const c = celda(p.id, t.id); return h('td', { class: 'c', title: c ? c.estado : '' }, c ? `${c.nivel}${abbr[c.estado] ? ' ' + abbr[c.estado] : ''}` : '—'); })))))),
       h('p', { class: 'small muted' }, 'Número: opción asignada (1 a 5). Letra: V validado, P provisional, E estimado.'));
+  }
+  function fmtDiaMes(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
   }
   function fmtFecha(iso) {
     if (!iso) return '—';
