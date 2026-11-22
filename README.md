@@ -1,4 +1,4 @@
-# Kurba · Tu curva de valor electoral · Euskadi 29-N
+# Kurba · Tu curva de valor electoral · Elecciones Generales 29-N
 
 Web estática e informativa para las elecciones generales del 29 de noviembre de 2026 en Araba, Bizkaia y Gipuzkoa. Muestra en una «curva de valor» qué propone cada partido en 11 temas e incluye un test para que cada persona compare su curva con la de los partidos.
 
