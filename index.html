@@ -11,6 +11,8 @@
   <meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)">
   <link rel="canonical" href="https://www.kurba29n.com/">
   <link rel="alternate" hreflang="es" href="https://www.kurba29n.com/">
+  <link rel="alternate" hreflang="eu" href="https://www.kurba29n.com/?lang=eu">
+  <link rel="alternate" hreflang="x-default" href="https://www.kurba29n.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Kurba">
   <meta property="og:locale" content="es_ES">
@@ -27,14 +29,17 @@
   <meta name="twitter:description" content="11 temas, 7 candidaturas, cada dato con su fuente. Mira en qué coincides con cada partido. 2 minutos.">
   <meta name="twitter:image" content="https://www.kurba29n.com/assets/og-image.png">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.kurba29n.com/#organizacion","name":"Kurba","url":"https://www.kurba29n.com/","logo":{"@type":"ImageObject","url":"https://www.kurba29n.com/assets/icon-512.png","width":512,"height":512},"email":"contacto@kurba29n.com","nonprofitStatus":"Nonprofit","description":"Iniciativa ciudadana independiente y sin ánimo de lucro, sin afiliación ni financiación de ningún partido, que muestra qué propone cada candidatura en Euskadi a las elecciones generales del 29 de noviembre de 2026, tema a tema y con su fuente."},{"@type":"WebSite","@id":"https://www.kurba29n.com/#web","url":"https://www.kurba29n.com/","name":"Kurba · Tu curva de valor electoral","inLanguage":["es","eu"],"publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"WebApplication","@id":"https://www.kurba29n.com/#herramienta","name":"Kurba · Tu curva de valor electoral","url":"https://www.kurba29n.com/","applicationCategory":"ReferenceApplication","operatingSystem":"Web","inLanguage":["es","eu"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Responde 11 preguntas y compara tu curva con la de los 7 partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N. No es una recomendación de voto: las respuestas no salen de tu dispositivo.","publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"Dataset","@id":"https://www.kurba29n.com/#datos","name":"Posiciones y propuestas de los partidos en Euskadi · elecciones generales del 29-N de 2026","description":"Posición de 7 candidaturas en 11 temas (escala de 1 a 5) y propuestas concretas con su fuente, para las circunscripciones de Araba, Bizkaia y Gipuzkoa.","url":"https://www.kurba29n.com/metodologia/","license":"https://creativecommons.org/licenses/by/4.0/","isAccessibleForFree":true,"creator":{"@id":"https://www.kurba29n.com/#organizacion"},"inLanguage":"es","temporalCoverage":"2026-11","spatialCoverage":{"@type":"Place","name":"Araba, Bizkaia y Gipuzkoa"},"distribution":[{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/codificacion.csv","name":"Posiciones por partido y tema"},{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/propuestas.csv","name":"Propuestas con fuente"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://www.kurba29n.com/data/temas.json","name":"Temas y opciones"}]}]}</script>
   <link rel="preload" href="assets/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/kurba.css?v=79901383">
+  <link rel="stylesheet" href="css/kurba.css?v=174e59ca">
   <script src="js/cercania.js?v=081e1627" defer></script>
   <script src="js/analitica.js?v=e846000b" defer></script>
   <script src="js/datos.js?v=4ed34e4f" defer></script>
   <script src="js/paginas.js?v=2be4157f" defer></script>
-  <script src="js/app.js?v=cf7525fb" defer></script>
+  <script src="js/app.js?v=11a59573" defer></script>
 </head>
 <body>
 <a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
@@ -64,14 +69,19 @@
 <!-- INICIO -->
 <section id="s-start" class="stack">
 <div class="start-top">
-  <div class="hero" aria-hidden="true">
-    <svg viewBox="0 0 310 118" preserveAspectRatio="none">
+  <figure class="hero" id="hero">
+    <svg id="hero-svg" viewBox="0 0 310 118" preserveAspectRatio="none" aria-hidden="true">
       <line x1="0" y1="14" x2="310" y2="14" stroke="#2C3038"/><line x1="0" y1="59" x2="310" y2="59" stroke="#2C3038"/><line x1="0" y1="104" x2="310" y2="104" stroke="#2C3038"/>
       <polyline points="15,36 55,70 95,36 135,14 175,70 215,70 255,82 295,92" fill="none" stroke="#8A909C" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
       <polyline points="15,92 55,36 95,70 135,70 175,36 215,14 255,92 295,36" fill="none" stroke="#8A909C" stroke-width="2" stroke-dasharray="5 5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
       <polyline points="15,70 55,36 95,12 135,36 175,70 215,36 255,98 295,70" fill="none" stroke="#FFC533" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     </svg>
-  </div>
+    <figcaption class="cifras" id="cifras" hidden>
+      <div><b id="c-part">7</b><span data-t="c_part">partidos</span></div>
+      <div><b id="c-temas">11</b><span data-t="c_temas">temas</span></div>
+      <div><b id="c-props">65</b><span data-t="c_props">propuestas con fuente</span></div>
+    </figcaption>
+  </figure>
 <div class="start-txt stack">
   <div class="stack" style="gap:10px">
     <p class="kicker" data-t="k_start">Euskadi · Elecciones generales 29-N</p>

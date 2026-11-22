@@ -29,7 +29,10 @@ data/propuestas.csv   Propuestas concretas por partido y tema (fichas), con fuen
 data/recursos.json    Guías para votar (fechas, Congreso, Senado, Concierto…), con fuentes
 data/i18n/            Euskera: temas, propuestas (mismo orden), partidos, guías e interfaz; ui.es.json tiene los textos en castellano
 data/meta.json        Versión, fechas, correo de correcciones, «Quiénes somos», titular y licencia de los datos
-assets/               Favicon, imagen para compartir y tipografías (Inter y Space Grotesk, licencia OFL)
+assets/               Favicon, iconos de la app, imagen para compartir y tipografías (Inter y Space Grotesk, licencia OFL)
+manifest.webmanifest  Manifiesto web (nombre, colores e iconos)
+scripts/generar_paginas.js  Genera las páginas indexables y sitemap.xml desde data/
+js/estatica.js        Recuento anónimo de visitas en las páginas generadas
 ```
 
 ## Cómo actualizar la codificación
@@ -67,13 +70,14 @@ La metodología completa está en la página `#/metodologia`, basada en el codeb
 
 ## Versiones de CSS y JS (caché)
 
-Cloudflare guarda los CSS y JS en caché durante horas. Para que nadie vea el HTML nuevo con un CSS o JS antiguo, `index.html` los carga con una versión en la URL (`css/kurba.css?v=…`). Después de cambiar cualquier fichero de `css/` o `js/`, y antes de publicar, ejecuta:
+Cloudflare guarda los CSS y JS en caché durante horas. Para que nadie vea el HTML nuevo con un CSS o JS antiguo, `index.html` los carga con una versión en la URL (`css/kurba.css?v=…`). Después de cambiar cualquier fichero de `css/`, `js/` o `data/`, y antes de publicar, ejecuta:
 
 ```bash
 python3 scripts/versionar.py
+node scripts/generar_paginas.js
 ```
 
-El workflow «Tests» falla si alguna versión no coincide con el contenido del fichero.
+El primero pone la versión de cada CSS y JS en `index.html`. El segundo regenera las páginas HTML indexables (`/metodologia/`, `/aviso-legal/`, `/privacidad/`, `/quienes-somos/`, `/partido/<id>/`) y `sitemap.xml` a partir de `data/`, con los mismos textos que la aplicación. No se editan a mano. El workflow «Tests» falla si alguno de los dos no está al día.
 
 ## Validar los datos antes de publicar
 
