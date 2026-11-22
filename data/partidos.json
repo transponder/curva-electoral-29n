@@ -11,8 +11,17 @@
       "nota": "Coalición soberanista de izquierdas. Apoyó la investidura de Pedro Sánchez en 2023.",
       "web": "https://ehbildu.eus",
       "candidatura_presidencia": "",
-      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
-      "programa_docs": [],
+      "programa_nota": "Programa publicado el 16 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
+      "programa_docs": [
+        {
+          "titulo": "Programa electoral «Posible egin» (PDF, castellano, 30 páginas)",
+          "url": "https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf"
+        },
+        {
+          "titulo": "Programa electoral «Posible egin» (PDF, euskera)",
+          "url": "https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-EUS.pdf"
+        }
+      ],
       "personas": [
         {
           "nombre": "Oskar Matute",
@@ -64,8 +73,13 @@
       "nota": "Coalición de Sumar Mugimendua, Ezker Anitza-IU, Berdeak y otras organizaciones. Su candidata a la Presidencia es Ada Colau.",
       "web": "https://frenteamplio.info",
       "candidatura_presidencia": "Ada Colau",
-      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
-      "programa_docs": [],
+      "programa_nota": "Programa presentado el 16 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
+      "programa_docs": [
+        {
+          "titulo": "Programa electoral «Un programa como una casa» (PDF, 151 páginas)",
+          "url": "https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf"
+        }
+      ],
       "personas": [
         {
           "nombre": "Lander Martínez",
@@ -116,8 +130,17 @@
       "nota": "Partido nacionalista vasco. Preside el Gobierno Vasco y apoyó la investidura de Pedro Sánchez en 2023.",
       "web": "https://www.eaj-pnv.eus",
       "candidatura_presidencia": "",
-      "programa_nota": "Presentó su programa el 9 de noviembre. A 13 de noviembre de 2026 no hemos localizado el documento completo; las propuestas proceden de su presentación pública.",
-      "programa_docs": [],
+      "programa_nota": "Programa presentado el 9 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
+      "programa_docs": [
+        {
+          "titulo": "Programa electoral «Defendemos Euskadi» (PDF, castellano, 43 páginas)",
+          "url": "https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n"
+        },
+        {
+          "titulo": "Programa electoral «Euskadi zaindu» (PDF, euskera)",
+          "url": "https://www.eaj-pnv.eus/eu/adjuntos-agiriak/21765/pdf/hauteskunde-programa-a29"
+        }
+      ],
       "personas": [
         {
           "nombre": "Idoia Sagastizabal",
@@ -169,8 +192,13 @@
       "nota": "Concurre por separado del Frente Amplio. Su candidata a la Presidencia es Irene Montero.",
       "web": "https://podemos.info",
       "candidatura_presidencia": "Irene Montero",
-      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
-      "programa_docs": [],
+      "programa_nota": "Programa publicado en noviembre de 2026 en pazcasaytrabajo.es, su web de campaña. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo una de campaña.",
+      "programa_docs": [
+        {
+          "titulo": "Programa electoral «Paz, casa y trabajo» (PDF, 141 páginas)",
+          "url": "https://pazcasaytrabajo.es/programa-electoral/programa-electoral-paz-casa-y-trabajo.pdf"
+        }
+      ],
       "personas": [
         {
           "nombre": "José Manuel de Pablos",
@@ -215,15 +243,15 @@
       "nota": "Candidatura del PP en Euskadi. Su candidato a la Presidencia es Alberto Núñez Feijóo.",
       "web": "https://www.pp.es",
       "candidatura_presidencia": "Alberto Núñez Feijóo",
-      "programa_nota": "Programa presentado el 10 de noviembre. El enlace lleva al texto íntegro publicado por un medio; falta el enlace oficial del partido.",
+      "programa_nota": "Programa presentado el 10 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo una anterior al 29-N. No hemos localizado el «Contrato con España» en la web del PP.",
       "programa_docs": [
         {
-          "titulo": "«Contrato con España» (PDF, 19 de octubre)",
-          "url": "https://www.eldebate.com/uploads/files/2026/10/19/CONTRATO%20CON%20ESPANA%20.pdf"
+          "titulo": "Programa electoral «La reconstrucción nacional», 249 medidas (PDF, 82 páginas)",
+          "url": "https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf"
         },
         {
-          "titulo": "Programa «La reconstrucción nacional», 249 medidas (texto íntegro en Artículo14, 10 de noviembre)",
-          "url": "https://www.articulo14.es/politica/consulte-el-programa-integro-del-partido-popular-20261110.html"
+          "titulo": "«Contrato con España» (PDF, 19 de octubre; copia publicada por El Debate)",
+          "url": "https://www.eldebate.com/uploads/files/2026/10/19/CONTRATO%20CON%20ESPANA%20.pdf"
         }
       ],
       "personas": [
@@ -277,8 +305,13 @@
       "nota": "Federación vasca del PSOE. Su candidato a la Presidencia es Pedro Sánchez.",
       "web": "https://www.socialistasvascos.com",
       "candidatura_presidencia": "Pedro Sánchez",
-      "programa_nota": "Comparte el programa estatal del PSOE, sin publicar a 13 de noviembre de 2026. Las propuestas proceden de compromisos anunciados por el PSOE.",
-      "programa_docs": [],
+      "programa_nota": "Comparte el programa estatal del PSOE, presentado el 15 de noviembre de 2026; no hemos localizado un programa propio del PSE-EE. Cada propuesta enlaza a la página del programa en la que aparece, salvo las de campaña y las anteriores al 29-N.",
+      "programa_docs": [
+        {
+          "titulo": "Programa electoral del PSOE para el 29-N (PDF, 114 páginas)",
+          "url": "https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf"
+        }
+      ],
       "personas": [
         {
           "nombre": "Patxi López",
@@ -336,11 +369,15 @@
       "nota": "Su candidato a la Presidencia es Santiago Abascal. Tiene un escaño en el Parlamento Vasco, por Álava.",
       "web": "https://www.voxespana.es",
       "candidatura_presidencia": "Santiago Abascal",
-      "programa_nota": "Sin programa general del 29-N publicado a 13 de noviembre de 2026. El documento enlazado es su plan de desregulación de junio.",
+      "programa_nota": "Programa publicado el 12 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece; dos proceden de su plan de desregulación de junio.",
       "programa_docs": [
         {
-          "titulo": "Programa de desregulación de Vox (PDF, junio de 2026)",
-          "url": "https://www.elindependiente.com/wp-content/uploads/2026/06/Programa-de-desregularizaci%C3%B3n-de-Vox.pdf"
+          "titulo": "Programa electoral «Es sentido común» (PDF, 66 páginas)",
+          "url": "https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf"
+        },
+        {
+          "titulo": "Programa de desregulación (PDF, junio de 2026)",
+          "url": "https://www.voxespana.es/wp-content/uploads/2026/06/Programa-2026-envio.pdf"
         }
       ],
       "personas": [

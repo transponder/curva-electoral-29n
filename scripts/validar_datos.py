@@ -22,6 +22,15 @@ FECHA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 MAX_FRASES_CITA = 2
 FORMAS = {"circle", "square", "triup", "diamond", "tridown", "penta", "cross"}
 COLOR = re.compile(r"^#[0-9A-Fa-f]{6}$")
+# Fuentes descartadas en la revisión de noviembre de 2026: agregadores, medios sin relación con
+# la elección o copias de terceros de notas de agencia. Se sustituyen por el programa oficial o
+# por un medio de referencia (EITB, Deia, El Correo, EFE, Europa Press…).
+DOMINIOS_DESCARTADOS = {"brainsre.news", "diarioestrategia.cl", "vivirediciones.es"}
+
+
+def dominio_descartado(url):
+    host = re.sub(r"^https?://", "", url or "").split("/")[0].lower()
+    return next((d for d in DOMINIOS_DESCARTADOS if host == d or host.endswith("." + d)), None)
 
 
 def n_frases(texto):
@@ -187,6 +196,8 @@ def validar(carpeta):
         for d in p.get("programa_docs", []):
             if not d.get("titulo") or not str(d.get("url", "")).startswith("https://"):
                 err(f"partidos.json: cada documento de «programa_docs» de «{p.get('id')}» necesita «titulo» y una «url» https://")
+            if dominio_descartado(d.get("url")):
+                err(f"partidos.json: «programa_docs» de «{p.get('id')}»: {dominio_descartado(d['url'])} es una fuente descartada")
         for lista, campos in (("personas", ("nombre", "cargo", "fuente", "url")), ("otros", ("texto", "etiqueta", "fuente", "url"))):
             for n, x in enumerate(p.get(lista, []), start=1):
                 for campo in campos:
@@ -194,6 +205,8 @@ def validar(carpeta):
                         err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}» no tiene «{campo}»")
                 if x.get("url") and not x["url"].startswith("https://"):
                     err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: la url debe empezar por https://")
+                if dominio_descartado(x.get("url")):
+                    err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: {dominio_descartado(x['url'])} es una fuente descartada")
                 if lista == "otros" and x.get("etiqueta") and x["etiqueta"] not in ETIQUETAS:
                     err(f"partidos.json: «otros» n.º {n} de «{p.get('id')}»: etiqueta debe ser Programa, Campaña o Antes del 29-N")
 
@@ -231,6 +244,12 @@ def validar(carpeta):
             err(f"{donde}: la cita tiene más de {MAX_FRASES_CITA} frases")
         if r["url"] and not r["fuente"]:
             err(f"{donde}: hay «url» pero falta el nombre de la «fuente»")
+        if r["url"] and not r["fecha_consulta"]:
+            err(f"{donde}: hay «url» pero falta la «fecha_consulta»")
+        if dominio_descartado(r["url"]):
+            err(f"{donde}: {dominio_descartado(r['url'])} es una fuente descartada; usa el programa oficial o un medio de referencia")
+        if r["estado"] == "provisional" and not r["url"]:
+            avisos.append(f"{donde}: casilla «provisional» sin «fuente» ni «url»; cópialas de su propuesta en propuestas.csv")
 
         # Regla central: nada se da por definitivo sin evidencia comprobable.
         if r["estado"] == "validado":
@@ -284,6 +303,10 @@ def validar(carpeta):
                     # Toda propuesta que se muestra lleva su origen y un enlace.
                     if not (r["fuente"] or "").strip() or not (r["url"] or "").strip():
                         err(f"{donde}: una propuesta necesita «fuente» y «url»")
+                    if not FECHA.match((r["fecha_consulta"] or "").strip()):
+                        err(f"{donde}: «fecha_consulta» es obligatoria, con el formato AAAA-MM-DD")
+                    if dominio_descartado(r["url"]):
+                        err(f"{donde}: {dominio_descartado(r['url'])} es una fuente descartada; usa el programa oficial o un medio de referencia")
                     propuestas.append((r["partido"], r["tema"], r["etiqueta"]))
 
     validar_euskera(carpeta / "i18n", temas, propuestas, err)
@@ -297,8 +320,11 @@ def validar(carpeta):
     total = len(ids_partido) * len(ids_tema)
     con_cita = sum(1 for r in filas if (r.get("cita") or "").strip() and (r.get("url") or "").strip())
     resumen = {e: sum(1 for r in filas if (r.get("estado") or "").strip() == e) for e in sorted(ESTADOS)}
+    prov = [r for r in filas if (r.get("estado") or "").strip() == "provisional"]
     print(f"Casillas: {len(vistas)} de {total} · con cita y url: {con_cita} · " +
           " · ".join(f"{e}: {n}" for e, n in resumen.items()))
+    print(f"Provisionales: {len(prov)} · con fuente y url: {sum(1 for r in prov if (r.get('url') or '').strip())} · "
+          f"con cita: {sum(1 for r in prov if (r.get('cita') or '').strip())}")
     return errores, avisos
 
 

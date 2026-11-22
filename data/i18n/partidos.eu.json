@@ -2,8 +2,11 @@
   "eh-bildu": {
     "siglas": "EH Bildu",
     "nota": "Ezkerreko koalizio subiranista. 2023an Pedro Sánchezen inbestidura babestu zuen.",
-    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
-    "programa_docs": [],
+    "programa_nota": "Programa 2026ko azaroaren 16an argitaratu zen. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du, A-29 aurrekoak izan ezik.",
+    "programa_docs": [
+      "«Posible egin» hauteskunde-programa (PDFa, gaztelaniaz, 30 orrialde)",
+      "«Posible egin» hauteskunde-programa (PDFa, euskaraz)"
+    ],
     "personas": [
       {
         "cargo": null,
@@ -31,8 +34,10 @@
   "frente-amplio": {
     "siglas": "Frente Amplio",
     "nota": "Sumar Mugimendua, Ezker Anitza-IU, Berdeak eta beste erakunde batzuen koalizioa. Presidentetzarako hautagaia Ada Colau da.",
-    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
-    "programa_docs": [],
+    "programa_nota": "Programa 2026ko azaroaren 16an aurkeztu zen. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du, A-29 aurrekoak izan ezik.",
+    "programa_docs": [
+      "«Un programa como una casa» hauteskunde-programa (PDFa, 151 orrialde)"
+    ],
     "personas": [
       {
         "cargo": null,
@@ -57,8 +62,11 @@
   "pnv": {
     "siglas": "EAJ-PNV",
     "nota": "Euskal alderdi abertzalea. Eusko Jaurlaritzako lehendakaritza du, eta 2023an Pedro Sánchezen inbestidura babestu zuen.",
-    "programa_nota": "Azaroaren 9an aurkeztu zuen programa. 2026ko azaroaren 13an ez dugu dokumentu osoa aurkitu; proposamenak aurkezpen publikotik hartu dira.",
-    "programa_docs": [],
+    "programa_nota": "Programa 2026ko azaroaren 9an aurkeztu zen. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du, A-29 aurrekoak izan ezik.",
+    "programa_docs": [
+      "«Defendemos Euskadi» hauteskunde-programa (PDFa, gaztelaniaz, 43 orrialde)",
+      "«Euskadi zaindu» hauteskunde-programa (PDFa, euskaraz)"
+    ],
     "personas": [
       {
         "cargo": null,
@@ -86,8 +94,10 @@
   "podemos": {
     "siglas": "Podemos Ahal Dugu",
     "nota": "Frente Ampliotik bereiz aurkezten da. Presidentetzarako hautagaia Irene Montero da.",
-    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
-    "programa_docs": [],
+    "programa_nota": "Programa 2026ko azaroan argitaratu zen pazcasaytrabajo.es kanpaina-webgunean. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du, kanpainako bat izan ezik.",
+    "programa_docs": [
+      "«Paz, casa y trabajo» hauteskunde-programa (PDFa, 141 orrialde)"
+    ],
     "personas": [
       {
         "cargo": null,
@@ -111,10 +121,10 @@
   "pp": {
     "siglas": "PP",
     "nota": "PPren hautagaitza Euskadin. Presidentetzarako hautagaia Alberto Núñez Feijóo da.",
-    "programa_nota": "Programa azaroaren 10ean aurkeztu zen. Estekak hedabide batek argitaratutako testu osora darama; alderdiaren esteka ofiziala falta da.",
+    "programa_nota": "Programa 2026ko azaroaren 10ean aurkeztu zen. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du, A-29 aurreko bat izan ezik. Ez dugu «Contrato con España» PPren webgunean aurkitu.",
     "programa_docs": [
-      "«Contrato con España» (PDF, urriaren 19a)",
-      "«La reconstrucción nacional» programa, 249 neurri (testu osoa Artículo14n, azaroaren 10a)"
+      "«La reconstrucción nacional» hauteskunde-programa, 249 neurri (PDFa, 82 orrialde)",
+      "«Contrato con España» (PDFa, urriaren 19a; El Debatek argitaratutako kopia)"
     ],
     "personas": [
       {
@@ -143,8 +153,10 @@
   "pse-ee": {
     "siglas": "PSE-EE",
     "nota": "PSOEren euskal federazioa. Presidentetzarako hautagaia Pedro Sánchez da.",
-    "programa_nota": "PSOEren Estatuko programa partekatzen du; 2026ko azaroaren 13an argitaratu gabe dago. Proposamenak PSOEk iragarritako konpromisoetatik hartu dira.",
-    "programa_docs": [],
+    "programa_nota": "PSOEren Estatuko programa partekatzen du, 2026ko azaroaren 15ean aurkeztua; ez dugu PSE-EEren programa propiorik aurkitu. Proposamen bakoitzak programan agertzen den orrialdera eramaten du, kanpainakoak eta A-29 aurrekoak izan ezik.",
+    "programa_docs": [
+      "PSOEren A-29ko hauteskunde-programa (PDFa, 114 orrialde)"
+    ],
     "personas": [
       {
         "cargo": null,
@@ -173,9 +185,10 @@
   "vox": {
     "siglas": "Vox",
     "nota": "Presidentetzarako hautagaia Santiago Abascal da. Eserleku bat du Eusko Legebiltzarrean, Arabatik.",
-    "programa_nota": "2026ko azaroaren 13an, A-29ko programa orokorra argitaratu gabe dago. Estekatutako dokumentua ekaineko desarautze-plana da.",
+    "programa_nota": "Programa 2026ko azaroaren 12an argitaratu zen. Fitxako proposamen bakoitzak programan agertzen den orrialdera eramaten du; bi ekaineko desarautze-planetik datoz.",
     "programa_docs": [
-      "Voxen desarautze-programa (PDF, 2026ko ekaina)"
+      "«Es sentido común» hauteskunde-programa (PDFa, 66 orrialde)",
+      "Desarautze-programa (PDFa, 2026ko ekaina)"
     ],
     "personas": [
       {
