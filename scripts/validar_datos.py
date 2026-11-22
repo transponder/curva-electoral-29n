@@ -133,20 +133,22 @@ def validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos):
         avisos.append(f"i18n/ui.eu.json: {len(faltan)} textos sin traducir (salen en castellano): {', '.join(faltan)}")
 
 
-def pendientes_de_publicar(carpeta, avisos):
-    """Lo que hay que rellenar antes de hacer pública la web (aviso, no error)."""
+def pendientes_de_publicar(carpeta, err, avisos):
+    """Lo que tiene que estar relleno para publicar: sin esto la web enseña textos «pendiente»."""
     meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
-    for campo, que in (("contacto_correcciones", "correo de correcciones"), ("titular", "titular de la web (aviso legal, LSSI)")):
+    for campo, que in (("contacto_correcciones", "correo de correcciones"), ("titular", "titular de la web (aviso legal)")):
         if not (meta.get(campo) or "").strip():
-            avisos.append(f"meta.json: falta «{campo}» ({que}) — pendiente antes de publicar")
+            err(f"meta.json: falta «{campo}» ({que}): la web lo mostraría como pendiente")
+    correo = (meta.get("contacto_correcciones") or "").strip()
+    if correo and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[a-z]{2,}", correo):
+        err(f"meta.json: «contacto_correcciones» no parece un correo: {correo}")
     gc = (meta.get("goatcounter") or "").strip()
     if not gc:
         avisos.append("meta.json: falta «goatcounter» (código de GoatCounter): la analítica está apagada")
     q = meta.get("quienes_somos") or {}
-    if not (q.get("es") or "").strip():
-        avisos.append("meta.json: falta «quienes_somos.es» — pendiente antes de publicar")
-    elif not (q.get("eu") or "").strip():
-        avisos.append("meta.json: falta «quienes_somos.eu» (sale en castellano)")
+    for lengua in ("es", "eu"):
+        if not (q.get(lengua) or "").strip():
+            err(f"meta.json: falta «quienes_somos.{lengua}»")
 
 
 def validar(carpeta):
@@ -286,7 +288,7 @@ def validar(carpeta):
 
     validar_euskera(carpeta / "i18n", temas, propuestas, err)
     validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos)
-    pendientes_de_publicar(carpeta, avisos)
+    pendientes_de_publicar(carpeta, err, avisos)
     meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
     gc = (meta.get("goatcounter") or "").strip()
     if gc and not re.match(r"^https://[a-z0-9-]+\.goatcounter\.com/count$", gc):

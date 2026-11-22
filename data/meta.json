@@ -6,15 +6,16 @@
   "version_codificacion": "v0.2 (provisional, criterio de «estimado» de Kurba)",
   "actualizado": "2026-11-22",
   "congelacion": "2026-11-24",
-  "contacto_correcciones": "",
-  "repositorio": "https://github.com/transponder/curva-electoral-29n",
+  "contacto_correcciones": "contacto@kurba29n.com",
+  "repositorio": "",
   "acuerdo_por_tema": {},
   "codebook": "",
   "quienes_somos": {
-    "es": "",
-    "eu": ""
+    "es": "Somos dos estudiantes universitarios del País Vasco. Nos preocupa que cada vez menos gente participe en las elecciones y que el ruido alrededor de la política tape lo que de verdad propone cada partido.\n\nCon Kurba queremos ayudar a interpretar mejor la información que ya existe, verificada, objetiva y sin sesgo, para que cualquier persona pueda informarse de forma rápida y directa antes de votar.\n\nNo es una actividad económica: no tenemos publicidad ni financiación de nadie, y no recogemos datos personales de quien usa la web. Tus respuestas del test no salen de tu dispositivo.\n\n¿Has visto un error o quieres proponer una corrección? Escríbenos a contacto@kurba29n.com.",
+    "eu": "Euskadiko bi unibertsitate-ikasle gara. Kezkatzen gaitu gero eta jende gutxiagok parte hartzeak hauteskundeetan, eta politikaren inguruko zaratak alderdi bakoitzak benetan proposatzen duena estaltzeak.\n\nKurbarekin, dagoeneko badagoen informazioa hobeto ulertzen lagundu nahi dugu, egiaztatua, objektiboa eta alborapenik gabea, edonork modu azkar eta zuzenean informatu ahal izan dezan bozkatu aurretik.\n\nEz da jarduera ekonomikoa: ez dugu publizitaterik ezta inoren finantzaketarik ere, eta ez dugu webgunea erabiltzen duenaren datu pertsonalik biltzen. Testeko zure erantzunak ez dira zure gailutik ateratzen.\n\nAkatsen bat ikusi duzu edo zuzenketa bat proposatu nahi duzu? Idatzi iezaguzu: contacto@kurba29n.com."
   },
-  "titular": "",
+  "titular": "Kurba es una iniciativa ciudadana sin ánimo de lucro de dos estudiantes universitarios del País Vasco. No realiza ninguna actividad económica: no vende nada, no tiene publicidad ni recibe financiación de nadie. Contacto: contacto@kurba29n.com.",
   "analitica": "Contamos las visitas de forma anónima con GoatCounter, sin cookies ni identificadores: qué pantallas se abren, cuántas personas empiezan y terminan el test y a cuántos temas dan importancia, en qué pregunta lo dejan, qué pestañas y guías consultan, el idioma, y el país o la región, el sistema operativo, el navegador y el tamaño de pantalla aproximados. Nunca se envían tus respuestas, la importancia que das a cada tema ni qué partidos te salen más cercanos: las fichas de partido se cuentan todas juntas. GoatCounter no guarda tu dirección IP. Si tu navegador pide no ser rastreado (Do Not Track o Global Privacy Control), no se cuenta nada.",
-  "goatcounter": ""
+  "goatcounter": "",
+  "licencia_datos": "CC BY 4.0"
 }

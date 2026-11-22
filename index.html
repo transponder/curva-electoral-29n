@@ -38,21 +38,32 @@
 </head>
 <body>
 <a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
-<main id="contenido" tabindex="-1">
-
-<header class="top">
+<header class="top" id="top">
+ <div class="top-in">
   <button class="brand" id="home" aria-label="Kurba, volver al inicio" data-ta="a_home">
     <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#FFC533"/><polyline points="7,25 14,13 22,20 29,9" fill="none" stroke="#14161B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="13" r="2.6" fill="#14161B"/><circle cx="22" cy="20" r="2.6" fill="#14161B"/></svg>
-    <b>kurba</b><span class="beta" data-t="beta">Beta</span>
+    <b>kurba</b>
   </button>
+  <nav class="menu" id="menu" aria-label="Principal" data-ta="a_menu">
+    <a href="#/test" data-nav="test" data-t="n_test">Test</a>
+    <a href="#/curvas" data-nav="curvas" data-t="n_cur">Curvas</a>
+    <a href="#/fichas" data-nav="fichas" data-t="n_fic">Partidos</a>
+    <a href="#/guias" data-nav="guias" data-t="n_gui">Guías</a>
+    <a href="#/metodologia" data-nav="metodologia" data-t="n_met">Método</a>
+    <a href="#/quienes-somos" data-nav="quienes-somos" data-t="n_who">Quiénes somos</a>
+  </nav>
   <div class="lang" role="group" aria-label="Idioma" data-ta="a_lang">
     <button aria-pressed="true" lang="es" id="es">ES</button>
     <button aria-pressed="false" lang="eu" id="eu">EU</button>
   </div>
+  <button class="iconbtn menubtn" id="menubtn" aria-expanded="false" aria-controls="menu" aria-label="Menú" data-ta="a_menubtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="m-open" d="M4 7h16M4 12h16M4 17h16"/><path class="m-close" d="M6 6l12 12M18 6L6 18"/></svg></button>
+ </div>
 </header>
+<main id="contenido" tabindex="-1">
 
 <!-- INICIO -->
 <section id="s-start" class="stack">
+<div class="start-top">
   <div class="hero" aria-hidden="true">
     <svg viewBox="0 0 310 118" preserveAspectRatio="none">
       <line x1="0" y1="14" x2="310" y2="14" stroke="#2C3038"/><line x1="0" y1="59" x2="310" y2="59" stroke="#2C3038"/><line x1="0" y1="104" x2="310" y2="104" stroke="#2C3038"/>
@@ -61,8 +72,10 @@
       <polyline points="15,70 55,36 95,12 135,36 175,70 215,36 255,98 295,70" fill="none" stroke="#FFC533" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
     </svg>
   </div>
+<div class="start-txt stack">
   <div class="stack" style="gap:10px">
     <p class="kicker" data-t="k_start">Euskadi · Elecciones generales 29-N</p>
+    <a class="estado" href="#/metodologia" data-t="estado">Datos provisionales · actualizados el 22/11/2026</a>
     <h1 data-t="title">Tu curva de valor electoral</h1>
     <p class="lead" data-t="lead">Responde once preguntas sobre los temas que deciden unas elecciones. No te diremos a quién votar: verás en qué coincides con cada partido y en qué no, tema a tema.</p>
   </div>
@@ -74,6 +87,9 @@
   <button class="btn acc" id="go" data-t="go">Empezar · 2 min</button>
   <div class="links"><button class="link" id="explore" data-t="explore">Ver las curvas sin hacer el test</button></div>
   <div class="links"><button class="link" id="to-method" data-t="method">Método</button><button class="link" id="to-guides" data-t="guides_t">Guías rápidas para votar</button></div>
+</div>
+</div>
+<div class="start-cards">
   <div class="card stack" style="gap:14px">
     <h3 data-t="how_h">Cómo lo hacemos</h3>
     <div class="how">
@@ -85,7 +101,9 @@
   <div class="card stack" style="gap:10px" id="quienes" hidden>
     <h3 data-t="who_h">Quiénes somos</h3>
     <div class="stack small" style="gap:8px;font-size:14.5px" id="quienes-txt"></div>
+    <a href="#/quienes-somos" class="small" data-t="who_more">Más sobre nosotros y contacto →</a>
   </div>
+</div>
   <p class="small" data-t="disc">Las posiciones de los partidos se han elaborado a partir de sus programas electorales e información pública. No han sido validadas por los partidos. En este piloto son provisionales.</p>
 </section>
 
@@ -150,7 +168,7 @@
       <h1 style="font-size:28px" data-t="res_h">Tu resultado</h1>
       <p class="lead" id="r-lead" style="font-size:15px"></p>
     </div>
-    <div class="card stack" style="gap:4px">
+    <div class="card stack" id="rank-card" style="gap:4px">
       <h3 data-t="rank_h">Cercanía con cada partido</h3>
       <p class="small" style="margin-bottom:6px" data-t="rank_s">Lo habitual es coincidir en parte con varios. Toca uno para ver su ficha.</p>
       <div class="rank" id="rank"></div>
@@ -160,19 +178,19 @@
       <p class="small" id="sep-lead"></p>
       <div class="sep" id="sep"></div>
     </div>
-    <div class="card dark stack" style="gap:10px">
+    <div class="card dark stack" id="ori-card" style="gap:10px">
       <h3 data-t="ori_h">Para orientarte</h3>
       <div class="orient" id="orient"></div>
     </div>
     <button class="btn acc" id="to-curves" data-t="to_cur">Ver las curvas</button>
     <button class="btn" id="to-cmp" data-t="to_cmp">Comparar dos partidos</button>
-    <div class="card stack" style="gap:10px">
+    <div class="card stack" id="sh-card" style="gap:10px">
       <h3 data-t="sh_h">Comparte tu curva</h3>
       <p class="small" data-t="sh_s">Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva: ni partidos ni porcentajes.</p>
       <img id="shareimg" alt="Imagen con tu curva de valor, sin partidos ni porcentajes" data-talt="a_img">
       <div class="actions"><button class="ghost" id="copy" data-t="copy">Copiar resumen</button><span class="small" id="copied" role="status"></span></div>
     </div>
-    <div class="actions">
+    <div class="actions" id="r-acts">
       <button class="ghost" id="r-edit" data-t="edit">Cambiar respuestas</button>
       <button class="ghost" id="r-restart" data-t="restart">Empezar de nuevo</button>
     </div>
@@ -211,7 +229,7 @@
     <div class="stack" style="gap:10px">
       <h3 id="top-h" data-t="top_h">Tema a tema, de lo que más a lo que menos te importa</h3>
       <div class="stack" style="gap:10px" id="topics"></div>
-      <p class="small" data-th="legend">Información pública recopilada a 11 de noviembre de 2026. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
+      <p class="small" data-th="legend">Información pública actualizada a 22 de noviembre de 2026. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
     </div>
     <div class="stack" style="gap:10px" id="f-otros-w">
       <h3 data-t="otros_h">Otros compromisos</h3>
@@ -269,6 +287,28 @@
   <div class="prose" id="priv-body"></div>
 </section>
 
+<!-- AVISO LEGAL -->
+<section id="s-legal" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="legal-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <div class="prose" id="legal-body"></div>
+</section>
+<!-- QUIÉNES SOMOS Y CONTACTO -->
+<section id="s-about" class="stack" hidden>
+  <div class="qtop"><button class="iconbtn" id="about-back" aria-label="Volver" data-ta="a_ret"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button></div>
+  <h1 style="font-size:28px" data-t="who_h">Quiénes somos</h1>
+  <div class="prose" id="about-txt"></div>
+  <div class="card stack" style="gap:12px">
+    <h2 id="contacto" tabindex="-1" data-t="ct_h">Contacto</h2>
+    <p class="small" style="font-size:14.5px" data-t="ct_s">¿Has visto un error, echas en falta una propuesta o quieres decirnos algo? Escríbenos. Para una corrección, lo que más nos ayuda es el partido, el tema y el enlace a la fuente.</p>
+    <a class="btn acc js-mail" data-mail="correccion" data-t="ct_btn" href="mailto:contacto@kurba29n.com">Proponer una corrección</a>
+    <p class="small" style="font-size:14.5px"><span data-t="ct_or">O escribe directamente a</span> <a class="js-mail" data-t="ct_mail" href="mailto:contacto@kurba29n.com">contacto@kurba29n.com</a></p>
+    <ul class="pts">
+      <li data-t="ct_1">Si la fuente es de rango igual o superior a la que usamos, corregimos en 48 horas y anotamos el cambio con fecha.</li>
+      <li data-t="ct_2">Solo usamos tu correo para responderte. Lo borramos al resolver tu mensaje.</li>
+    </ul>
+  </div>
+  <div class="links"><a href="#/metodologia" data-t="f_met">Metodología y fuentes</a><a href="#/aviso-legal" data-t="f_legal">Aviso legal</a><a href="#/privacidad" data-t="f_priv">Privacidad</a></div>
+</section>
 <!-- NO ENCONTRADA -->
 <section id="s-404" class="stack" hidden>
   <h1 style="font-size:28px" data-t="nf_h">Página no encontrada</h1>
@@ -285,14 +325,35 @@
 </main>
 
 <footer class="pie">
-  <nav aria-label="Pie" data-ta="a_pie">
+ <div class="pie-in">
+  <div class="pie-col pie-kurba">
+    <p class="pie-brand">kurba</p>
+    <p data-t="f_what">Tu curva de valor electoral para las elecciones generales del 29-N en Araba, Bizkaia y Gipuzkoa.</p>
+    <p data-t="f_indep">Iniciativa ciudadana independiente, sin afiliación ni financiación de ningún partido. No es una recomendación de voto.</p>
+    <a class="estado" href="#/metodologia" data-t="estado">Datos provisionales · actualizados el 22/11/2026</a>
+  </div>
+  <nav class="pie-col" aria-labelledby="pie-h1">
+    <h2 class="pie-h" id="pie-h1" data-t="f_h1">Explora</h2>
+    <a href="#/test" data-nav="test" data-t="n_test">Test</a>
+    <a href="#/curvas" data-t="n_cur">Curvas</a>
+    <a href="#/fichas" data-t="n_fic">Partidos</a>
+    <a href="#/guias" data-t="n_gui">Guías</a>
+  </nav>
+  <nav class="pie-col" aria-labelledby="pie-h2">
+    <h2 class="pie-h" id="pie-h2" data-t="f_h2">Transparencia</h2>
     <a href="#/metodologia" data-t="f_met">Metodología y fuentes</a>
     <a href="#/metodologia/correcciones" data-t="f_err">Señalar un error</a>
-    <a href="#/privacidad" data-t="f_priv">Privacidad y aviso legal</a>
     <a href="data/codificacion.csv" download data-t="f_data">Descargar datos</a>
   </nav>
-  <p data-t="beta_pie">Beta: las posiciones son provisionales hasta completar la segunda codificación.</p>
-  <p data-t="f_indep">Iniciativa ciudadana independiente, sin afiliación ni financiación de ningún partido. No es una recomendación de voto.</p>
+  <nav class="pie-col" aria-labelledby="pie-h3">
+    <h2 class="pie-h" id="pie-h3" data-t="f_h3">Sobre Kurba</h2>
+    <a href="#/quienes-somos" data-t="n_who">Quiénes somos</a>
+    <a href="#/contacto" data-t="f_ct">Contacto</a>
+    <a href="#/aviso-legal" data-t="f_legal">Aviso legal</a>
+    <a href="#/privacidad" data-t="f_priv">Privacidad</a>
+  </nav>
+ </div>
+ <p class="pie-fin"><span data-t="f_upd">Actualizado el 22 de noviembre de 2026</span> · <a href="#/aviso-legal" data-t="f_lic">Datos con licencia CC BY 4.0</a></p>
 </footer>
 <div id="toast" role="status" hidden></div>
 <canvas id="cv" width="1080" height="1080" hidden></canvas>
