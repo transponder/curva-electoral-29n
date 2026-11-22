@@ -33,6 +33,7 @@ assets/               Favicon, iconos de la app, imagen para compartir y tipogra
 manifest.webmanifest  Manifiesto web (nombre, colores e iconos)
 scripts/generar_paginas.js  Genera las páginas indexables y sitemap.xml desde data/
 js/estatica.js        Recuento anónimo de visitas en las páginas generadas
+revision/             Hoja de citas de las casillas provisionales y estado de la revisión de fuentes
 ```
 
 ## Cómo actualizar la codificación
@@ -50,7 +51,14 @@ Edita `data/codificacion.csv` (se puede abrir en Excel o Google Sheets y exporta
 | `codificadores` | quién la ha codificado |
 | `nota` | justificación breve si aún no hay cita |
 
-Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`. Cada propuesta necesita `fuente` y `url`.
+Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`. Cada propuesta necesita `fuente`, `url` y `fecha_consulta`.
+
+### Fuentes
+
+- Primero el programa oficial del 29-N, enlazado en la web del partido. Si la propuesta sale del programa, la `fuente` indica la página («Programa electoral del PP (29-N), pág. 53») y la `url` termina en `#page=53`, para que el PDF se abra por esa página. Es la página del PDF, la que muestra el visor.
+- Si no está en el programa, un medio de referencia (EITB, Deia, El Correo, EFE, Europa Press…), en castellano o en euskera, no una traducción.
+- `validar_datos.py` rechaza los dominios descartados (`DOMINIOS_DESCARTADOS`: brainsre.news, diarioestrategia.cl, vivirediciones.es).
+- Cada casilla `provisional` lleva la `fuente`, la `url` y la `fecha_consulta` de su propuesta principal. La `cita` la pega una persona a partir del original. La hoja de trabajo está en `revision/citas-provisionales.csv`, y el estado de la revisión de fuentes en `revision/README.md`.
 
 ### Euskera
 
@@ -87,7 +95,7 @@ Cada cambio en `data/` se comprueba automáticamente en GitHub (workflow «Valid
 python3 scripts/validar_datos.py
 ```
 
-La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y dos nombres en `codificadores` (separados por `;`). Una casilla `estimado` necesita una `nota`.
+La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y dos nombres en `codificadores` (separados por `;`). Una casilla `estimado` necesita una `nota`. Una `url` sin `fecha_consulta`, o un enlace a un dominio descartado, también es un error. Al final, la validación cuenta cuántas provisionales tienen ya fuente y cuántas tienen cita.
 ## Tests y sensibilidad del cálculo
 
 El cálculo de cercanía está en `js/cercania.js`, separado de la interfaz. Para comprobarlo:

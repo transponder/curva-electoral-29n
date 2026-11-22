@@ -1,78 +1,78 @@
 partido,tema,nivel,estado,cita,fuente,url,fecha_consulta,codificadores,nota
-pnv,autogobierno,4,provisional,,,,,v0,
+pnv,autogobierno,4,provisional,,"Programa electoral del PNV (29-N), pág. 38",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=38,2026-11-22,v0,
 pnv,fiscalidad,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pnv,vivienda,3,provisional,,,,,v0,
-pnv,sanidad-educacion,3,provisional,,,,,v0,
-pnv,trabajo-pensiones,4,provisional,,,,,v0,Reforzar pensiones mínimas y un salario mínimo vasco por encima del estatal.
-pnv,clima-energia,4,provisional,,,,,v0,"Bajar el impuesto eléctrico al 0,5 % y acelerar la inversión en redes."
+pnv,vivienda,3,provisional,,"Programa electoral del PNV (29-N), pág. 8",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=8,2026-11-22,v0,
+pnv,sanidad-educacion,3,provisional,,"Programa electoral del PNV (29-N), pág. 32",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=32,2026-11-22,v0,
+pnv,trabajo-pensiones,4,provisional,,"Programa electoral del PNV (29-N), pág. 31",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=31,2026-11-22,v0,Reforzar pensiones mínimas y un salario mínimo vasco por encima del estatal.
+pnv,clima-energia,4,provisional,,"Programa electoral del PNV (29-N), pág. 16",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=16,2026-11-22,v0,"Bajar el impuesto eléctrico al 0,5 % y acelerar la inversión en redes."
 pnv,inmigracion,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pnv,industria-id,4,provisional,,,,,v0,Alinear ayudas a la innovación y exigir inversiones comprometidas.
+pnv,industria-id,4,provisional,,"Programa electoral del PNV (29-N), pág. 14",https://www.eaj-pnv.eus/es/adjuntos-documentos/21765/pdf/programa-electoral-29n#page=14,2026-11-22,v0,Alinear ayudas a la innovación y exigir inversiones comprometidas.
 pnv,derechos-civiles,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pnv,euskera,4,provisional,,,,,v0,
-pnv,defensa,4,provisional,,Onda Vasca,,,v0,Inversión centrada en I+D y producción europea.
-eh-bildu,autogobierno,5,provisional,,,,,v0,
+pnv,euskera,4,provisional,,EITB: el PNV ultima su propuesta para blindar por ley el euskera en el empleo público,https://eitb.eus/es/noticias/politica/detalle/9991487/el-pnv-ultima-su-propuesta-para-blindar-por-ley-exigencia-del-euskera-en-acceso-al-empleo-publico,2026-11-22,v0,
+pnv,defensa,4,provisional,,Onda Vasca: el PNV exige concreción en el aumento del gasto en defensa,https://www.ondavasca.com/el-pnv-exige-concrecion-en-el-aumento-del-gasto-en-defensa-y-aboga-por-una-mayor-independencia-industrial-europea/,2026-11-22,v0,Inversión centrada en I+D y producción europea.
+eh-bildu,autogobierno,5,provisional,,"Programa electoral de EH Bildu (29-N), pág. 23",https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf#page=23,2026-11-22,v0,
 eh-bildu,fiscalidad,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-eh-bildu,vivienda,5,provisional,,,,,v0,
-eh-bildu,sanidad-educacion,5,provisional,,,,,v0,
+eh-bildu,vivienda,5,provisional,,"Programa electoral de EH Bildu (29-N), pág. 5",https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf#page=5,2026-11-22,v0,
+eh-bildu,sanidad-educacion,5,provisional,,"Programa electoral de EH Bildu (29-N), pág. 11",https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf#page=11,2026-11-22,v0,
 eh-bildu,trabajo-pensiones,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 eh-bildu,clima-energia,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 eh-bildu,inmigracion,1,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 eh-bildu,industria-id,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 eh-bildu,derechos-civiles,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-eh-bildu,euskera,5,provisional,,,,,v0,
-eh-bildu,defensa,1,provisional,,Noticias de Navarra,,,v0,Rechaza subir el gasto y pidió debatir la salida de la OTAN.
+eh-bildu,euskera,5,provisional,,"Programa electoral de EH Bildu (29-N), pág. 12",https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf#page=12,2026-11-22,v0,
+eh-bildu,defensa,1,provisional,,"Programa electoral de EH Bildu (29-N), pág. 28",https://posibleegin.ehbildu.eus/wp-content/uploads/2026/11/PROGRAMA-CAS.pdf#page=28,2026-11-22,v0,Rechaza el aumento del gasto en defensa que exige la OTAN y la pertenencia a la OTAN.
 pse-ee,autogobierno,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pse-ee,fiscalidad,4,provisional,,,,,v0,Subidas a SOCIMI de vivienda y pisos turísticos; evidencia limitada a vivienda.
-pse-ee,vivienda,4,provisional,,,,,v0,
-pse-ee,sanidad-educacion,4,provisional,,,,,v0,
-pse-ee,trabajo-pensiones,4,provisional,,Deia,,,v0,"Salario mínimo anual, pensiones blindadas y jornada de 36 horas en 2030."
+pse-ee,fiscalidad,4,provisional,,"Programa electoral del PSOE (29-N), pág. 31",https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf#page=31,2026-11-22,v0,"Impuesto a fondos y grandes propietarios por viviendas vacías, turísticas o caras; evidencia limitada a vivienda."
+pse-ee,vivienda,4,provisional,,"Programa electoral del PSOE (29-N), pág. 27",https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf#page=27,2026-11-22,v0,
+pse-ee,sanidad-educacion,4,provisional,,"Programa electoral del PSOE (29-N), pág. 49",https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf#page=49,2026-11-22,v0,
+pse-ee,trabajo-pensiones,4,provisional,,"Programa electoral del PSOE (29-N), pág. 40",https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf#page=40,2026-11-22,v0,"Pensiones blindadas con el IPC, salario mínimo anual y jornada de 37,5 horas."
 pse-ee,clima-energia,3,estimado,,,,,v0,No consta ningún compromiso para el 29-N que acelere el plan vigente.
 pse-ee,inmigracion,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 pse-ee,industria-id,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pse-ee,derechos-civiles,4,provisional,,,,,v0,
+pse-ee,derechos-civiles,4,provisional,,"Programa electoral del PSOE (29-N), pág. 81",https://www.psoe.es/media-content/2026/11/PROGRAMAPSOE29N26.pdf#page=81,2026-11-22,v0,
 pse-ee,euskera,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pse-ee,defensa,3,provisional,,Onda Vasca,,,v0,"Gasto en el 2,1 % del PIB."
+pse-ee,defensa,3,provisional,,"Onda Vasca: la postura de Sánchez de mantener el gasto en defensa en el 2,1 %",https://www.ondavasca.com/eh-bildu-cree-que-enfadar-a-trump-nunca-es-mala-noticia-y-pide-compromisos-para-evitar-el-rearme/,2026-11-22,v0,"Gasto en el 2,1 % del PIB."
 pp,autogobierno,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pp,fiscalidad,2,provisional,,,,,v0,
-pp,vivienda,2,provisional,,,,,v0,
-pp,sanidad-educacion,3,provisional,,Europa Press,,,v0,Al menos 4.500 médicos más en primaria sin cambiar el modelo de gestión.
+pp,fiscalidad,2,provisional,,"Programa electoral del PP (29-N), pág. 60",https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf#page=60,2026-11-22,v0,
+pp,vivienda,2,provisional,,"Programa electoral del PP (29-N), pág. 53",https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf#page=53,2026-11-22,v0,
+pp,sanidad-educacion,3,provisional,,"Programa electoral del PP (29-N), págs. 68-69",https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf#page=68,2026-11-22,v0,Al menos 4.500 médicos más en primaria sin cambiar el modelo de gestión.
 pp,trabajo-pensiones,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 pp,clima-energia,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pp,inmigracion,4,provisional,,,,,v0,
+pp,inmigracion,4,provisional,,"Programa electoral del PP (29-N), pág. 22",https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf#page=22,2026-11-22,v0,
 pp,industria-id,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 pp,derechos-civiles,2,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 pp,euskera,1,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-pp,defensa,5,provisional,,EFE,,,v0,Más del 2 % del PIB sin concretar porcentaje.
-vox,autogobierno,1,provisional,,,,,v0,
-vox,fiscalidad,1,provisional,,,,,v0,
-vox,vivienda,1,provisional,,,,,v0,
-vox,sanidad-educacion,2,provisional,,,,,v0,
-vox,trabajo-pensiones,1,provisional,,,,,v0,Suprimir el registro horario (indicador del nivel 1).
-vox,clima-energia,1,provisional,,,,,v0,
-vox,inmigracion,5,provisional,,,,,v0,
-vox,industria-id,2,provisional,,Programa de desregulación de Vox (junio 2026),,,v0,Mejora de condiciones generales sin apuestas sectoriales.
-vox,derechos-civiles,1,provisional,,,,,v0,
+pp,defensa,5,provisional,,"Programa electoral del PP (29-N), pág. 26",https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf#page=26,2026-11-22,v0,"Ley de programación de la defensa e inversión plurianual, sin porcentaje del PIB."
+vox,autogobierno,1,provisional,,Deia: el Congreso rechaza el intento de Vox de alterar el Concierto (2025),https://www.deia.eus/politica/2025/04/08/congreso-da-espalda-vox-alterar-9498593.html,2026-11-22,v0,
+vox,fiscalidad,1,provisional,,"Programa electoral de Vox (29-N), pág. 9",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=9,2026-11-22,v0,
+vox,vivienda,1,provisional,,"Programa electoral de Vox (29-N), págs. 23-24",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=24,2026-11-22,v0,
+vox,sanidad-educacion,2,provisional,,"Programa electoral de Vox (29-N), pág. 37",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=37,2026-11-22,v0,
+vox,trabajo-pensiones,1,provisional,,El Independiente: el plan de desregulación de Vox,https://www.elindependiente.com/espana/2026/06/27/plan-desregularizacion-vox-milei-elecciones-2027/,2026-11-22,v0,Suprimir el registro horario (indicador del nivel 1).
+vox,clima-energia,1,provisional,,"Programa electoral de Vox (29-N), págs. 11-12",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=11,2026-11-22,v0,
+vox,inmigracion,5,provisional,,"Programa electoral de Vox (29-N), págs. 15 y 19",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=19,2026-11-22,v0,
+vox,industria-id,2,provisional,,"Programa electoral de Vox (29-N), pág. 28",https://www.voxespana.es/wp-content/uploads/2026/11/Programa-completo-A5-1.pdf#page=28,2026-11-22,v0,"Mejora de condiciones generales (impuestos, energía, desregulación) sin apuestas sectoriales."
+vox,derechos-civiles,1,provisional,,El Independiente: el plan de desregulación de Vox,https://www.elindependiente.com/espana/2026/06/27/plan-desregularizacion-vox-milei-elecciones-2027/,2026-11-22,v0,
 vox,euskera,1,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-vox,defensa,5,provisional,,The Objective; EFE,,,v0,"Más del 2 % del PIB, destinado a fronteras."
+vox,defensa,5,provisional,,"The Objective: Abascal apoya subir el gasto en defensa, pero pide que se destine a proteger Ceuta y Melilla",https://theobjective.com/espana/politica/2025-03-26/abascal-gasto-defensa-ceuta-melilla/,2026-11-22,v0,"Más del 2 % del PIB, destinado a fronteras."
 frente-amplio,autogobierno,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-frente-amplio,fiscalidad,5,provisional,,,,,v0,
-frente-amplio,vivienda,5,provisional,,,,,v0,
-frente-amplio,sanidad-educacion,4,provisional,,Ministerio de Sanidad,,,v0,La ley de su ministra prioriza la gestión pública sin cifra de aumento del gasto.
+frente-amplio,fiscalidad,5,provisional,,"Programa electoral del Frente Amplio (29-N), pág. 45",https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf#page=45,2026-11-22,v0,
+frente-amplio,vivienda,5,provisional,,"Programa electoral del Frente Amplio (29-N), pág. 10",https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf#page=10,2026-11-22,v0,
+frente-amplio,sanidad-educacion,4,provisional,,Ministerio de Sanidad: aprobado el Proyecto de Ley de Gestión Pública e Integridad del SNS,https://www.sanidad.gob.es/gabinete/notasPrensa.do?id=6906,2026-11-22,v0,"La ley de su ministra prioriza la gestión pública, sin cifra de aumento del gasto."
 frente-amplio,trabajo-pensiones,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 frente-amplio,clima-energia,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 frente-amplio,inmigracion,1,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 frente-amplio,industria-id,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 frente-amplio,derechos-civiles,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 frente-amplio,euskera,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-frente-amplio,defensa,2,provisional,,Moncloa.com,,,v0,Política de paz sin propuesta concreta.
+frente-amplio,defensa,2,provisional,,"Programa electoral del Frente Amplio (29-N), pág. 130",https://frenteamplio.info/pdf/ProgramaFrenteAmplio.pdf#page=130,2026-11-22,v0,Rechaza el objetivo del 5 % de la OTAN y propone reducir las partidas militares.
 podemos,autogobierno,4,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 podemos,fiscalidad,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-podemos,vivienda,5,provisional,,,,,v0,
-podemos,sanidad-educacion,5,provisional,,,,,v0,
-podemos,trabajo-pensiones,5,provisional,,,,,v0,
+podemos,vivienda,5,provisional,,"Programa electoral de Podemos (29-N), pág. 8",https://pazcasaytrabajo.es/programa-electoral/programa-electoral-paz-casa-y-trabajo.pdf#page=8,2026-11-22,v0,
+podemos,sanidad-educacion,5,provisional,,Demócrata: Montero propone desviar gasto militar para nacionalizar Repsol,https://www.democrata.es/politica/irene-montero-propone-desviar-gasto-militar-para-nacionalizar-repsol-reforzar-sanidad-y-lanzar-un-super-publico/,2026-11-22,v0,
+podemos,trabajo-pensiones,5,provisional,,"Programa electoral de Podemos (29-N), págs. 41 y 45",https://pazcasaytrabajo.es/programa-electoral/programa-electoral-paz-casa-y-trabajo.pdf#page=41,2026-11-22,v0,
 podemos,clima-energia,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 podemos,inmigracion,1,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-podemos,industria-id,5,provisional,,Demócrata,,,v0,Propuesta de nacionalizar Repsol.
+podemos,industria-id,5,provisional,,"Programa electoral de Podemos (29-N), pág. 18",https://pazcasaytrabajo.es/programa-electoral/programa-electoral-paz-casa-y-trabajo.pdf#page=18,2026-11-22,v0,Propuesta de nacionalizar Repsol.
 podemos,derechos-civiles,5,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
 podemos,euskera,3,estimado,,,,,v0,Sin propuesta con fuente localizada; nivel por coherencia con posiciones afines del partido.
-podemos,defensa,1,provisional,,El Debate,,,v0,Pide salir de la OTAN.
+podemos,defensa,1,provisional,,"Programa electoral de Podemos (29-N), pág. 28",https://pazcasaytrabajo.es/programa-electoral/programa-electoral-paz-casa-y-trabajo.pdf#page=28,2026-11-22,v0,Pide salir de la OTAN.
