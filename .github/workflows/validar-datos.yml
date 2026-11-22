@@ -3,9 +3,9 @@ name: Validar datos
 on:
   push:
     branches: [main]
-    paths: ['data/**', 'scripts/validar_datos.py', '.github/workflows/validar-datos.yml']
+    paths: ['data/**', 'scripts/validar_datos.py', 'scripts/extraer_enlaces.py', '.github/workflows/validar-datos.yml']
   pull_request:
-    paths: ['data/**', 'scripts/validar_datos.py', '.github/workflows/validar-datos.yml']
+    paths: ['data/**', 'scripts/validar_datos.py', 'scripts/extraer_enlaces.py', '.github/workflows/validar-datos.yml']
 
 permissions:
   contents: read
@@ -29,11 +29,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Las URL se sacan leyendo las columnas de los CSV: leído como texto, «url,fecha» parece un solo enlace.
+      - name: Extraer los enlaces de data/
+        run: python3 scripts/extraer_enlaces.py enlaces.txt
       - name: Comprobar enlaces de las fuentes
         id: lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --max-concurrency 4 --timeout 20 --max-retries 2 --accept '200..=299,403,406,429' 'data/*.csv' 'data/*.json' 'data/i18n/*.json' 'data/i18n/*.csv'
+          args: --no-progress --max-concurrency 4 --timeout 20 --max-retries 2 --accept '200..=299,403,406,429' enlaces.txt
           fail: false
           jobSummary: true
       - name: Avisar de enlaces rotos
