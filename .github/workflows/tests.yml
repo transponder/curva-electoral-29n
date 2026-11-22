@@ -3,9 +3,9 @@ name: Tests
 on:
   push:
     branches: [main]
-    paths: ['js/**', 'tests/**', 'data/**', '.github/workflows/tests.yml']
+    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['js/**', 'tests/**', 'data/**', '.github/workflows/tests.yml']
+    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', '.github/workflows/tests.yml']
 
 permissions:
   contents: read
@@ -19,3 +19,5 @@ jobs:
         with:
           node-version: '22'
       - run: node --test
+      - name: Versiones de CSS y JS en index.html
+        run: python3 scripts/versionar.py --comprobar

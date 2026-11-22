@@ -70,11 +70,11 @@
     "n_cur": "Curvas",
     "n_fic": "Partidos",
     "n_gui": "Guías",
-    "n_met": "Método",
+    "n_met": "Metodología",
     "n_who": "Quiénes somos",
     "a_menu": "Principal",
     "a_menubtn": "Menú",
-    "estado": "Datos provisionales · actualizados el {fecha_corta}",
+    "estado": "Datos provisionales · actualizados el {fecha_dia}",
     "who_more": "Más sobre nosotros y contacto →",
     "ct_h": "Contacto",
     "ct_s": "¿Has visto un error, echas en falta una propuesta o quieres decirnos algo? Escríbenos. Para una corrección, lo que más nos ayuda es el partido, el tema y el enlace a la fuente.",
@@ -92,7 +92,11 @@
     "f_priv": "Privacidad",
     "f_upd": "Actualizado el {fecha}",
     "f_lic": "Datos con licencia CC BY 4.0",
-    "legend": "Información pública actualizada a {fecha}. <span class=\"tag\">Programa</span> viene del programa o de un documento del 29-N, <span class=\"tag\">Campaña</span> es un compromiso anunciado en campaña y <span class=\"tag\">Antes del 29-N</span> es una actuación o postura previa."
+    "legend": "Información pública actualizada a {fecha}. <span class=\"tag\">Programa</span> viene del programa o de un documento del 29-N, <span class=\"tag\">Campaña</span> es un compromiso anunciado en campaña y <span class=\"tag\">Antes del 29-N</span> es una actuación o postura previa.",
+    "met_h": "Metodología",
+    "method": "Metodología",
+    "tab3": "Partidos",
+    "a_home2": "Kurba, ir al inicio"
   },
   "metodo": [
     "Cada tema tiene una escala de 1 a 5 con una posición concreta en cada nivel. Tu respuesta y la posición de cada partido se sitúan en esa misma escala.",
