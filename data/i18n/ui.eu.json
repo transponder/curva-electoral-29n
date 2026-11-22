@@ -1,5 +1,30 @@
 {
   "ui": {
+    "go": "Hasi · 2 min",
+    "explore": "Ikusi kurbak testa egin gabe",
+    "how_h": "Nola egiten dugun",
+    "how1_t": "Zer proposatzen duten",
+    "how1_s": "Alderdi bakoitzak Kongresurako eta Gobernurako proposatzen duena jasotzen dugu, A-29ko programatik eta beste iturri publiko batzuetatik abiatuta.",
+    "how2_t": "Iturriarekin",
+    "how2_s": "Proposamen bakoitzak bere esteka du. Gai batean bat ere aurkitzen ez badugu, jarrera zenbatetsi gisa markatzen da eta hala esaten dugu.",
+    "how3_t": "Nori bozkatu esan gabe",
+    "how3_s": "Aukerak zenbakirik gabe eta ausazko ordenan agertzen dira, eta emaitzak bat-etortzeak erakusten ditu, ez irabazle bat.",
+    "ex_note": "Alderdien kurbak eta fitxak ikusten ari zara, testa egin gabe.",
+    "ex_go": "Egin testa · 2 min",
+    "to_cmp": "Alderatu bi alderdi",
+    "cur_h_ex": "Alderdien kurbak",
+    "top_h_ex": "Gaiz gai",
+    "cmp_h": "Alderatu bi alderdi",
+    "cmp_s": "Aukeratu bi, eta ikusi zein gaitan proposatzen duten gauza bera eta zeinetan ez.",
+    "cmp_vs": "eta",
+    "cmp_eq": "Bat datoz",
+    "cmp_d1": "Urrats 1",
+    "cmp_dn": "{n} urrats",
+    "cmp_same": "{a} eta {b} {t} gaietatik {n}etan datoz bat.",
+    "a_cmpa": "Lehen alderdia",
+    "a_cmpb": "Bigarren alderdia",
+    "a_cmpc": "Bi alderdien kurbak",
+    "beta_note": "Proba-bertsioa: jarrerak behin-behinekoak dira, eta bigarren kodetze independente baten zain daude.",
     "next": "Hurrengoa",
     "see": "Emaitza ikusi",
     "src_h": "Iturriak",
@@ -64,7 +89,6 @@
     "b1": "Zure erantzunak ez dira zure gailutik ateratzen",
     "b2": "Ez da inkesta bat: ez da ezer jasotzen, ezta batzen ere",
     "b3": "Hamaika gai, zazpi hautagaitza, datu bakoitza bere iturriarekin",
-    "go": "Hasi",
     "method": "Metodoa",
     "guides_t": "Bozkatzeko gida azkarrak",
     "disc": "Alderdien jarrerak haien hauteskunde-programetatik eta informazio publikotik abiatuta landu dira. Alderdiek ez dituzte baliozkotu. Pilotu honetan behin-behinekoak dira.",
@@ -112,8 +136,14 @@
     "a_chart": "Zure kurba alderdienen gainean",
     "a_img": "Zure balio-kurba eta hurbilen dituzun hiru alderdiak dituen irudia"
   },
-  "nombres": {
-    "pnv": "EAJ-PNV",
-    "podemoseu": "Podemos Ahal Dugu"
-  }
+  "metodo": [
+    "Gai bakoitzak 1etik 5erako eskala bat du, eta maila bakoitzak jarrera zehatz bat. Zure erantzuna eta alderdi bakoitzaren jarrera eskala berean kokatzen dira.",
+    "Galderak eta haien aukerak ausazko ordenan agertzen dira, ezker-eskuin ardatzik ez iradokitzeko. 1etik 5erako eskalak gai bakoitzaren barruko aukerak ordenatzen ditu; ez du esanahi bera gai guztietan, eta ez da ideologia baten baliokidea.",
+    "Hurbiltasuna zure kurbaren eta alderdiarenaren arteko batez besteko distantzia da, gai bakoitzari ematen diozun garrantziaren arabera haztatua: «Handia» «Ertaina» halako bi da, eta «Batere ez» aukerak ez du zenbatzen.",
+    "Jarrerak hauteskunde-programetatik, parlamentuko bozketetatik eta adierazpen publikoetatik abiatuta landu dira, alderdiei kontsultatu gabe. Alderdi batek gai bati buruz iritzirik ematen ez duenean, jarrera zenbatetsi gisa markatzen da.",
+    "Fitxek egitura bera dute alderdi guztientzat: proposamenak gaika eta ematen diezun garrantziaren arabera ordenatuta, programa, Euskadiko hautagaitzak beren ibilbidearekin eta webgune ofiziala. Datu bakoitzak bere iturrirako esteka du. Alderdi baten proposamenik aurkitu ez badugu gai bati buruz, berariaz adierazten da.",
+    "1etik 5erako jarrerak kode-liburu publiko baten bidez esleitzen dira; liburu horrek maila bakoitza adierazle behagarrien bidez definitzen du.",
+    "Jarrera ertainak dituzten alderdiek edozein kurbatatik hurbilago agertzeko joera dute. Hurbiltasun handiak ez du esan nahi garrantzi handiena ematen diozun horretan bat zatoztenik: berrikusi «Zerk bereizten ditu hurbilen dituzunak» atala.",
+    "Ez da inkesta bat: ez da erantzunik jasotzen, ezta batzen ere."
+  ]
 }
