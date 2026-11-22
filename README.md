@@ -23,7 +23,7 @@ js/app.js             Interfaz, flujo y rutas, sin dependencias
 js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
 js/paginas.js         Metodología completa, aviso legal, privacidad y «Quiénes somos»
 data/temas.json       11 temas: pregunta, 5 opciones y código de 3 letras para el gráfico
-data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas, programa y otros compromisos, con fuente
+data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas (fuente: BOE; la biografía, en fuente_bio/url_bio), programa y otros compromisos, con fuente
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
 data/propuestas.csv   Propuestas concretas por partido y tema (fichas), con fuente
 data/recursos.json    Guías para votar (fechas, Congreso, Senado, Concierto…), con fuentes

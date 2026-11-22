@@ -464,7 +464,9 @@ document.addEventListener("click",function(e){if(!e.target.closest("#wrap"))$("t
 if(window.ResizeObserver){var lw=0;new ResizeObserver(function(){var w=$("wrap").clientWidth;if(w&&w!==lw){lw=w;if(!$("s-res").hidden&&st.tab==="cur")draw();}}).observe($("wrap"));}
 
 /* ---------- fichas ---------- */
-function src(k){var s=S[k];return' <a href="'+safeUrl(s.u)+'" title="'+esc(s.t)+'" target="_blank" rel="noopener">'+t("src")+" ↗</a>";}
+function src(k,lab){var s=S[k];return' <a href="'+safeUrl(s.u)+'" title="'+esc(s.t)+'" target="_blank" rel="noopener">'+(lab||t("src"))+" ↗</a>";}
+/* Persona: la fuente de la biografía y, aparte, la de la candidatura (BOE); si solo hay una, «Fuente». */
+function srcPer(x){return x[4]?src(x[4])+" ·"+src(x[3],t("src_cand")):src(x[3]);}
 function prop(x,tx){return'<li><span class="tag">'+t("tag_"+x[2])+"</span> "+esc(tx||x[0])+src(x[1])+"</li>";}
 function ficha(full){
   var R=ranked(),p=selP(),sid=p?p.id:null;
@@ -483,7 +485,7 @@ function ficha(full){
     h+="<p>"+esc(e&&e.prog?e.prog:pg.note)+"</p>";
     h+=p.web?'<a href="'+safeUrl(p.web)+'" target="_blank" rel="noopener"><span>'+t("web")+"</span>"+EXT+"</a>":"<p>"+t("web_no")+"</p>";
     $("f-prog").innerHTML=h;
-    $("f-ppl").innerHTML=p.ppl.map(function(x,j){var y=e&&e.ppl[j];return'<li><b>'+esc(x[0])+'</b><span class="role">'+esc(y?y[0]||x[1].replace("Congreso","Kongresua"):x[1])+'</span><span class="bio">'+esc(y&&y[1]?y[1]:x[2])+src(x[3])+"</span></li>";}).join("")+(p.lead?'<li><span class="role">'+esc(e&&e.lead||p.lead)+"</span></li>":"");
+    $("f-ppl").innerHTML=p.ppl.map(function(x,j){var y=e&&e.ppl[j];return'<li><b>'+esc(x[0])+'</b><span class="role">'+esc(y?y[0]||x[1].replace("Congreso","Kongresua"):x[1])+'</span><span class="bio">'+esc(y&&y[1]?y[1]:x[2])+srcPer(x)+"</span></li>";}).join("")+(p.lead?'<li><span class="role">'+esc(e&&e.lead||p.lead)+"</span></li>":"");
     $("f-sen").innerHTML="<b>"+t("sen")+"</b> "+esc(e&&e.senado||p.senado)+(p.pres?"<br><b>"+t("pres")+"</b> "+esc(p.pres):"<br>"+t("nopres"));
   }
   renderCmp();

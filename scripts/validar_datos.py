@@ -207,6 +207,13 @@ def validar(carpeta):
                     err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: la url debe empezar por https://")
                 if dominio_descartado(x.get("url")):
                     err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: {dominio_descartado(x['url'])} es una fuente descartada")
+                # Fuente aparte para la biografía de una persona (la principal acredita la candidatura).
+                if bool((x.get("fuente_bio") or "").strip()) != bool((x.get("url_bio") or "").strip()):
+                    err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: «fuente_bio» y «url_bio» van juntas")
+                if x.get("url_bio") and not x["url_bio"].startswith("https://"):
+                    err(f"partidos.json: «{lista}» n.º {n} de «{p.get('id')}»: la url_bio debe empezar por https://")
+                if lista == "personas" and x.get("cargo", "").startswith(("Congreso", "Senado")) and "boe.es" not in x.get("url", ""):
+                    avisos.append(f"partidos.json: «{x.get('nombre')}» ({p.get('id')}) es candidato/a y su fuente no es el BOE")
                 if lista == "otros" and x.get("etiqueta") and x["etiqueta"] not in ETIQUETAS:
                     err(f"partidos.json: «otros» n.º {n} de «{p.get('id')}»: etiqueta debe ser Programa, Campaña o Antes del 29-N")
 
