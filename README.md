@@ -1,4 +1,4 @@
-# Tu curva de valor electoral · Euskadi 29-N
+# Kurba · Tu curva de valor electoral · Euskadi 29-N
 
 Web estática e informativa para las elecciones generales del 29 de noviembre de 2026 en Araba, Bizkaia y Gipuzkoa. Muestra en una «curva de valor» qué propone cada partido en 11 temas e incluye un test para que cada persona compare su curva con la de los partidos.
 
@@ -16,17 +16,20 @@ python3 -m http.server 8000
 ## Estructura
 
 ```
-index.html            Página única (rutas con #/…)
-css/styles.css        Estilos, sin fuentes externas
-js/app.js             Interfaz y vistas, sin dependencias
+index.html            Página única con las pantallas de Kurba (rutas con #/…)
+css/kurba.css         Estilos (diseño de UX de Kurba)
+js/datos.js           Carga data/ y construye los objetos que usa la interfaz
+js/app.js             Interfaz, flujo y rutas, sin dependencias
 js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
-data/temas.json       11 temas: pregunta y 5 opciones (texto exacto del codebook)
-data/partidos.json    Partidos con curva, color neutro, candidaturas y enlaces (a verificar)
+js/paginas.js         Metodología completa, privacidad y «Quiénes somos»
+data/temas.json       11 temas: pregunta, 5 opciones y código de 3 letras para el gráfico
+data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas, programa y otros compromisos, con fuente
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
-data/propuestas.csv   Propuestas concretas por partido y tema (fichas)
-data/i18n/            Versión en euskera: temas, propuestas (mismo orden) e interfaz
-data/meta.json        Versión, fechas (congelación 24-N), contacto de correcciones
-assets/               Favicon e imagen para compartir
+data/propuestas.csv   Propuestas concretas por partido y tema (fichas), con fuente
+data/recursos.json    Guías para votar (fechas, Congreso, Senado, Concierto…), con fuentes
+data/i18n/            Euskera: temas, propuestas (mismo orden), partidos, guías e interfaz; ui.es.json tiene los textos en castellano
+data/meta.json        Versión, fechas, correo de correcciones, «Quiénes somos», titular de la web
+assets/               Favicon, imagen para compartir y tipografías (Inter y Space Grotesk, licencia OFL)
 ```
 
 ## Cómo actualizar la codificación
@@ -57,6 +60,10 @@ Cada cambio en temas o propuestas tiene que ir también en `data/i18n/`:
 La validación falla si falta alguna traducción o si las filas no se corresponden.
 
 La metodología completa está en la página `#/metodologia`, basada en el codebook del proyecto.
+
+## Rutas
+
+`#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
 
 ## Validar los datos antes de publicar
 

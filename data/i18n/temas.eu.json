@@ -2,6 +2,7 @@
   {
     "id": "autogobierno",
     "nombre": "Autogobernua",
+    "codigo": "AUT",
     "pregunta": "Zer harreman izan beharko luke Euskadik Estatuarekin?",
     "opciones": [
       "Kontzertu Ekonomikoa berrikusi eta eskumenak Estatuari itzuli",
@@ -14,6 +15,7 @@
   {
     "id": "fiscalidad",
     "nombre": "Zergak",
+    "codigo": "ZER",
     "pregunta": "Zer egin beharko litzateke zergekin?",
     "opciones": [
       "Zergak oro har jaitsi pertsonei eta enpresei",
@@ -26,6 +28,7 @@
   {
     "id": "vivienda",
     "nombre": "Etxebizitza",
+    "codigo": "ETX",
     "pregunta": "Nola heldu beharko litzaioke etxebizitza eskuratzeko arazoari?",
     "opciones": [
       "Lurzorua liberalizatu, izapideak murriztu eta merkatuari jarduten utzi",
@@ -38,6 +41,7 @@
   {
     "id": "sanidad-educacion",
     "nombre": "Osasuna eta hezkuntza",
+    "codigo": "OSA",
     "pregunta": "Zer eredu nahi duzu osasunerako eta hezkuntzarako?",
     "opciones": [
       "Gastua mugatu eta kudeaketa pribatua eta aukeratzeko askatasuna zabaldu",
@@ -50,6 +54,7 @@
   {
     "id": "trabajo-pensiones",
     "nombre": "Lana eta pentsioak",
+    "codigo": "LAN",
     "pregunta": "Zer egin lan-merkatuarekin eta pentsioekin?",
     "opciones": [
       "Lan-merkatua malgutu eta pentsioak aurrezki pribatuarekin osatu",
@@ -62,6 +67,7 @@
   {
     "id": "clima-energia",
     "nombre": "Klima eta energia",
+    "codigo": "KLI",
     "pregunta": "Zer erritmotan egin beharko luke aurrera trantsizio energetikoak?",
     "opciones": [
       "Egungo klima-helburuak kendu",
@@ -74,6 +80,7 @@
   {
     "id": "inmigracion",
     "nombre": "Immigrazioa",
+    "codigo": "IMM",
     "pregunta": "Zer immigrazio-politika nahiago duzu?",
     "opciones": [
       "Erregularizazio zabala, legezko bideak eta harrerari lehentasuna",
@@ -86,6 +93,7 @@
   {
     "id": "industria-id",
     "nombre": "Industria eta I+G",
+    "codigo": "IND",
     "pregunta": "Zer eginkizun izan beharko luke sektore publikoak industrian eta berrikuntzan?",
     "opciones": [
       "Bat ere ez: merkatuak erabaki dezala, eta diru-laguntza gutxiago",
@@ -98,6 +106,7 @@
   {
     "id": "derechos-civiles",
     "nombre": "Eskubide zibilak",
+    "codigo": "ESK",
     "pregunta": "Zer egin eskubide zibilen legeekin (adibidez, abortua, eutanasia edo genero-berdintasuna)?",
     "opciones": [
       "Berrikusi, murrizteko edo indargabetzeko",
@@ -110,6 +119,7 @@
   {
     "id": "euskera",
     "nombre": "Euskara",
+    "codigo": "EUS",
     "pregunta": "Zer hizkuntza-politika nahiago duzu euskararentzat?",
     "opciones": [
       "Euskara-eskakizunak murriztu enplegu publikoan eta hezkuntzan",
@@ -122,6 +132,7 @@
   {
     "id": "defensa",
     "nombre": "Defentsa-gastua",
+    "codigo": "DEF",
     "pregunta": "Zer egin beharko luke Espainiak defentsa-gastuarekin?",
     "opciones": [
       "Gastu militarra murriztu",

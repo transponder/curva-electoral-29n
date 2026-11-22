@@ -1,0 +1,202 @@
+{
+  "eh-bildu": {
+    "siglas": "EH Bildu",
+    "nota": "Ezkerreko koalizio subiranista. 2023an Pedro Sánchezen inbestidura babestu zuen.",
+    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
+    "programa_docs": [],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Diputatua eta bozeramaile albokoa Kongresuan; Alternatibatik dator. Taldeko bozeramaile izateko proposatua."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Eusko legebiltzarkidea (1987an jaioa). Mertxe Aizpuruaren lekukoa hartu du zerrendaburu gisa."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Diputatua Kongresuan eta koalizioaren solaskidea klima-aldaketaren arloan."
+      },
+      {
+        "cargo": "Koordinatzaile nagusia",
+        "descripcion": "EH Bilduko koordinatzaile nagusia."
+      }
+    ],
+    "senado": "",
+    "responsable_euskadi": "",
+    "otros": [
+      "«PSOEren ezkerrean dagoen ezkerra» gisa aurkezten da Araban, Bizkaian, Gipuzkoan eta Nafarroan."
+    ]
+  },
+  "frente-amplio": {
+    "siglas": "Frente Amplio",
+    "nota": "Sumar Mugimendua, Ezker Anitza-IU, Berdeak eta beste erakunde batzuen koalizioa. Presidentetzarako hautagaia Ada Colau da.",
+    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
+    "programa_docs": [],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Sumarren diputatua Bizkaitik azken legegintzaldian; Podemos Euskadiko idazkari nagusi ohia."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Ezker Anitza-IUko militantea."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Ezker Anitza-IUko militantea eta koalizioak Araban dituen bi kargu publikoetako bat."
+      }
+    ],
+    "senado": "«Senado de Progreso» barruan: Alba Gutiérrez (2.a Bizkaian), Samira Raiss (2.a Gipuzkoan)",
+    "responsable_euskadi": "Euskadiko arduraduna identifikatzeke",
+    "otros": [
+      "Senatura «Senado de Progreso» barruan doa PSE-EErekin Bizkaian eta Gipuzkoan; ez du Senaturako zerrendarik aurkezten Araban.",
+      "Podemos gabe aurkezten da."
+    ]
+  },
+  "pnv": {
+    "siglas": "EAJ-PNV",
+    "nota": "Euskal alderdi abertzalea. Eusko Jaurlaritzako lehendakaritza du, eta 2023an Pedro Sánchezen inbestidura babestu zuen.",
+    "programa_nota": "Azaroaren 9an aurkeztu zuen programa. 2026ko azaroaren 13an ez dugu dokumentu osoa aurkitu; proposamenak aurkezpen publikotik hartu dira.",
+    "programa_docs": [],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Diputatua Kongresuan. Hauteskunde orokorretan EAJ-PNVren Bizkaiko zerrendaburu den lehen emakumea."
+      },
+      {
+        "cargo": null,
+        "descripcion": "EAJ-PNVren bozeramailea Kongresuan azken legegintzaldian."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Vitoria-Gasteizko alkate ohia."
+      },
+      {
+        "cargo": "EBBko presidentea",
+        "descripcion": "Euzkadi Buru Batzarraren presidentea; EBB EAJ-PNVren zuzendaritza da."
+      }
+    ],
+    "senado": "",
+    "responsable_euskadi": "",
+    "otros": [
+      "Voxekin edozein akordio baztertzen du."
+    ]
+  },
+  "podemos": {
+    "siglas": "Podemos Ahal Dugu",
+    "nota": "Frente Ampliotik bereiz aurkezten da. Presidentetzarako hautagaia Irene Montero da.",
+    "programa_nota": "2026ko azaroaren 13an, A-29ko programa argitaratu gabe dago.",
+    "programa_docs": [],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Santurtziko zinegotzia eta Podemosen Estatuko Herritarren Kontseiluko kidea."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Podemos Euskadiko koordinatzaile nagusi albokoa eta Estatuko Herritarren Kontseiluko kidea."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Podemosen bozeramailea Vitoria-Gasteizko Udalean eta alkatetzarako hautagaia 2027an."
+      }
+    ],
+    "senado": "",
+    "responsable_euskadi": "Euskadiko arduraduna egiaztatzeke",
+    "otros": [
+      "Leloa: «Paz, casa y trabajo» (bakea, etxea eta lana)."
+    ]
+  },
+  "pp": {
+    "siglas": "PP",
+    "nota": "PPren hautagaitza Euskadin. Presidentetzarako hautagaia Alberto Núñez Feijóo da.",
+    "programa_nota": "Programa azaroaren 10ean aurkeztu zen. Estekak hedabide batek argitaratutako testu osora darama; alderdiaren esteka ofiziala falta da.",
+    "programa_docs": [
+      "«Contrato con España» (PDF, urriaren 19a)",
+      "«La reconstrucción nacional» programa, 249 neurri (testu osoa Artículo14n, azaroaren 10a)"
+    ],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Euskadiko PPko idazkari nagusia."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Unibertsitateko ikaslea; telebistako tertuliakide gisa eta sare sozialetan eraiki du bere profil publikoa."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Arabako PPko presidentea."
+      },
+      {
+        "cargo": "Euskadiko PPko presidentea",
+        "descripcion": "Euskadiko PPko presidentea da; 2023an Kongresurako zerrendaburu izan zen Araban."
+      }
+    ],
+    "senado": "Jon Albisu (Bizkaia), Daniel García (Araba); zerrendarik gabe Gipuzkoan",
+    "responsable_euskadi": "",
+    "otros": [
+      "Ez du Senaturako hautagaitzarik aurkezten Gipuzkoan."
+    ]
+  },
+  "pse-ee": {
+    "siglas": "PSE-EE",
+    "nota": "PSOEren euskal federazioa. Presidentetzarako hautagaia Pedro Sánchez da.",
+    "programa_nota": "PSOEren Estatuko programa partekatzen du; 2026ko azaroaren 13an argitaratu gabe dago. Proposamenak PSOEk iragarritako konpromisoetatik hartu dira.",
+    "programa_docs": [],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Sozialisten bozeramailea Kongresuan 2022tik; lehendakaria 2009 eta 2012 artean eta Kongresuko presidentea 2016an."
+      },
+      {
+        "cargo": null,
+        "descripcion": "Euskal diputatu sozialisten koordinatzailea eta Gipuzkoako Batzar Nagusietako presidente ohia."
+      },
+      {
+        "cargo": null,
+        "descripcion": "PSE-EEko idazkari nagusia Araban; Eusko Jaurlaritzako Turismo, Merkataritza eta Kontsumoko sailburua hautagai izan arte."
+      },
+      {
+        "cargo": "PSE-EEko idazkari nagusia",
+        "descripcion": "Euskal sozialisten idazkari nagusia."
+      }
+    ],
+    "senado": "",
+    "responsable_euskadi": "",
+    "otros": [
+      "Senaturako zerrenda bateratua Frente Ampliorekin Bizkaian eta Gipuzkoan («Senado de Progreso»).",
+      "Kanpaina boto erabilgarrian oinarritua, PPren eta Voxen aurrean."
+    ]
+  },
+  "vox": {
+    "siglas": "Vox",
+    "nota": "Presidentetzarako hautagaia Santiago Abascal da. Eserleku bat du Eusko Legebiltzarrean, Arabatik.",
+    "programa_nota": "2026ko azaroaren 13an, A-29ko programa orokorra argitaratu gabe dago. Estekatutako dokumentua ekaineko desarautze-plana da.",
+    "programa_docs": [
+      "Voxen desarautze-programa (PDF, 2026ko ekaina)"
+    ],
+    "personas": [
+      {
+        "cargo": null,
+        "descripcion": "Voxen Bizkaiko zerrendetan agertu da Eusko Legebiltzarrerako (2024)."
+      },
+      {
+        "cargo": null,
+        "descripcion": "2019ko azaroan ere Voxen Kongresurako zerrendaburu izan zen Gipuzkoan."
+      },
+      {
+        "cargo": null,
+        "descripcion": "2023an Voxen zerrendaburu izan zen Arabako Batzar Nagusietarako."
+      },
+      {
+        "cargo": "Eusko legebiltzarkidea",
+        "descripcion": "Voxen zerrendaburua Eusko Legebiltzarrerako 2024an; Senaturako hautagaia Araban."
+      }
+    ],
+    "senado": "",
+    "responsable_euskadi": "",
+    "otros": []
+  }
+}

@@ -1,0 +1,141 @@
+[
+  {
+    "id": "votar",
+    "titulo": "Fechas clave: cómo y dónde votar",
+    "pregunta": "¿Sabes en qué colegio y mesa te toca votar el 29?",
+    "cuerpo": [
+      "<p>La campaña termina el viernes 27. El sábado 28 es jornada de reflexión y el domingo 29 se vota, de 9:00 a 20:00.</p>",
+      "<p><b>Dónde votas.</b> La tarjeta censal que llega a casa indica tu mesa y tu colegio, pero no hace falta llevarla. También puedes consultarlo en la sede electrónica del INE, con Cl@ve, o en el teléfono gratuito 900 343 232.</p>",
+      "<p><b>Qué llevar.</b> DNI, pasaporte o permiso de conducir originales, con fotografía. Valen aunque estén caducados, pero no se admiten fotocopias. También sirve el DNI digital de la aplicación MiDNI.</p>",
+      "<p><b>Si pediste el voto por correo.</b> Entrégalo en una oficina de Correos hasta el jueves 26 a las 14:00. Si te aceptaron la solicitud, ya no puedes votar en tu mesa el día 29, aunque no llegues a enviarlo.</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "INE: elecciones a Cortes Generales del 29 de noviembre de 2026 (consulta del censo, tarjeta censal y teléfono 900 343 232)",
+        "url": "https://ine.es/dyngs/Prensa/EG2026.htm"
+      },
+      {
+        "fuente": "Ministerio del Interior: documentos válidos para identificarse en la mesa, incluido el DNI digital",
+        "url": "https://www.interior.gob.es/opencms/es/detalle/articulo/El-DNI-digital-sera-valido-como-medio-de-identificacion-en-las-Elecciones-Generales-del-29-de-noviembre/"
+      },
+      {
+        "fuente": "Correos: voto por correo, elecciones del 29 de noviembre",
+        "url": "https://www.correos.es/es/es/particulares/para-el-ciudadano/voto-por-correo"
+      }
+    ]
+  },
+  {
+    "id": "congreso",
+    "titulo": "Cómo se reparte tu voto al Congreso",
+    "pregunta": "¿Sabes cuántos diputados elige tu provincia?",
+    "cuerpo": [
+      "<p>Al Congreso votas una <b>lista cerrada</b>: eliges una candidatura, no a personas concretas. Cada provincia es una circunscripción. Para el 29-N, <b>Araba elige 4 diputados, Bizkaia 8 y Gipuzkoa 6</b>.</p>",
+      "<p>Los escaños se reparten con la ley D'Hondt entre las candidaturas que superan el 3 % de los votos válidos de la provincia. Cuantos menos escaños reparte una provincia, más votos hacen falta en la práctica para conseguir uno, así que el reparto real se aleja más del porcentaje de votos.</p>",
+      "<p>Entender esto sirve para leer las encuestas y los resultados, no para decidir por ti: esta herramienta compara posiciones, no calcula escaños.</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "Real Decreto 806/2026 de convocatoria (BOE)",
+        "url": "https://www.democrata.es/uploads/s1/32/98/39/7/boedisolucioncortes.pdf"
+      },
+      {
+        "fuente": "La Moncloa: convocatoria de elecciones y reparto de escaños",
+        "url": "https://www.lamoncloa.gob.es/consejodeministros/referencias/paginas/2026/20261005-referencia-convocatoria-elecciones.aspx"
+      }
+    ]
+  },
+  {
+    "id": "senado",
+    "titulo": "Cómo se vota al Senado",
+    "pregunta": "¿Sabías que al Senado puedes votar a personas de partidos distintos?",
+    "cuerpo": [
+      "<p>La papeleta del Senado es de color sepia y recoge a todas las personas candidatas de tu provincia. Cada provincia elige <b>4 senadores</b> y tú puedes marcar <b>hasta 3 nombres</b>, de la misma candidatura o de candidaturas distintas. Salen elegidas las cuatro personas con más votos.</p>",
+      "<p>En Euskadi hay particularidades este año: el PSE-EE y el Frente Amplio van juntos al Senado como «Senado de Progreso» en Bizkaia y Gipuzkoa; el Frente Amplio no presenta lista propia al Senado en Álava, y el PP no presenta candidatura al Senado en Gipuzkoa.</p>",
+      "<p>Los nombres de cada partido aparecen en su ficha, en «Candidaturas en Euskadi».</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "Demócrata: candidaturas en Euskadi publicadas en el BOE (28 de octubre)",
+        "url": "https://www.democrata.es/en/euskadi/euskadi-publishes-the-provisional-lists-15-candidacies-for-alava-12-for-bizkaia-and-11-for-gipuzkoa-for-congress/"
+      },
+      {
+        "fuente": "Gasteiz Hoy: IU liderará la candidatura de Frente Amplio por Álava",
+        "url": "https://www.gasteizhoy.com/iu-liderara-la-candidatura-de-frente-amplio-por-alava-que-no-se-presentara-al-senado/"
+      }
+    ]
+  },
+  {
+    "id": "concierto",
+    "titulo": "El Concierto Económico y el Cupo",
+    "pregunta": "¿Sabes por qué el Concierto Económico aparece en esta campaña?",
+    "cuerpo": [
+      "<p>En Euskadi, las diputaciones forales recaudan casi todos los impuestos. Las instituciones vascas pagan al Estado una cantidad, el <b>Cupo</b>, por las competencias que el Estado sigue ejerciendo en Euskadi, como defensa o exteriores.</p>",
+      "<p>El Concierto y el Cupo se actualizan en una Comisión Mixta entre el Estado y Euskadi, y sus cambios se aprueban en el Congreso. Por eso lo que votan los diputados en Madrid afecta directamente a la financiación vasca.</p>",
+      "<p>Los partidos difieren en si hay que mantenerlo, revisarlo o ampliarlo. Puedes compararlos en el tema «Autogobierno» de cada ficha.</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "Gobierno Vasco: acta de la Comisión Mixta del Concierto Económico (2026)",
+        "url": "https://www.euskadi.eus/contenidos/informacion/comision_mixta/es_14815/adjuntos/Acta_CMCE__01_2026.pdf"
+      },
+      {
+        "fuente": "Deia: el Congreso rechaza el intento de Vox de alterar el Concierto (2025)",
+        "url": "https://www.deia.eus/politica/2025/04/08/congreso-da-espalda-vox-alterar-9498593.html"
+      }
+    ]
+  },
+  {
+    "id": "estatuto",
+    "titulo": "El Estatuto de Gernika y las transferencias pendientes",
+    "pregunta": "¿Sabes qué competencias del Estatuto siguen sin transferirse?",
+    "cuerpo": [
+      "<p>El Estatuto de Gernika, de 1979, fija qué competencias corresponden a Euskadi. Algunas siguen sin transferirse: en 2025 el Gobierno Vasco presentó propuestas sobre trece competencias pendientes para completar el Estatuto.</p>",
+      "<p>Las transferencias se negocian con el Gobierno de España, por lo que la composición del Congreso influye en su ritmo. Al mismo tiempo, en el Parlamento Vasco se negocia un posible «nuevo estatus».</p>",
+      "<p>Compara lo que propone cada partido en el tema «Autogobierno» de su ficha.</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "Deia: las competencias pendientes del Estatuto de Gernika (2025)",
+        "url": "https://www.deia.eus/politica/2025/10/22/gobiernos-vasco-espanol-avanzan-cierre-transferencias-estatuto-gernika-10251792.html"
+      }
+    ]
+  },
+  {
+    "id": "debates",
+    "titulo": "Debates electorales",
+    "pregunta": "¿Vas a ver los debates que quedan?",
+    "cuerpo": [
+      "<p>A 20 de noviembre: el cara a cara entre Pedro Sánchez y Alberto Núñez Feijóo se celebró el jueves 19 en RTVE. Para el lunes 23 están anunciados el debate a cuatro de Atresmedia, con Feijóo, Abascal y Colau confirmados, y un debate de RTVE entre portavoces de ocho grupos parlamentarios, nacionalistas incluidos. RTVE mantiene su propuesta de debate a cuatro para el jueves 26, que el PP ha rechazado.</p>",
+      "<p>Ver al menos un debate, o un resumen de varios medios distintos, ayuda a contrastar lo que dice cada partido con lo que ves aquí.</p>"
+    ],
+    "fuentes": [
+      {
+        "fuente": "Demócrata: el debate Sánchez-Feijóo del 19 de noviembre en RTVE",
+        "url": "https://www.democrata.es/actualidad/debate-sanchez-feijoo-hora-donde-ver-19-noviembre/"
+      },
+      {
+        "fuente": "Demócrata: RTVE celebrará el 23 de noviembre un debate con ocho fuerzas parlamentarias",
+        "url": "https://www.democrata.es/en/general-elections-spain/rtve-will-hold-an-eight-way-election-debate-on-november-23-with-pp-psoe-vox-frente-amplio-and-nationalist-parties/"
+      },
+      {
+        "fuente": "Demócrata: calendario de debates del 29-N (Atresmedia, 23 de noviembre)",
+        "url": "https://www.democrata.es/en/general-elections-spain/29n-election-debate-schedule-dates-candidates-times-and-where-to-watch-them/"
+      },
+      {
+        "fuente": "Vozpópuli: el PSOE acudirá al debate a cuatro de RTVE del 26 y el PP lo rechaza",
+        "url": "https://www.vozpopuli.com/espana/sanchez-acepta-el-cara-a-cara-con-feijoo-en-una-television-privada-y-pide-que-el-debate-a-cuatro-se-celebre-en-rtve.html"
+      }
+    ]
+  },
+  {
+    "id": "leer",
+    "titulo": "Cómo usar este resultado",
+    "pregunta": "¿Sabes qué mide y qué no mide tu porcentaje de cercanía?",
+    "cuerpo": [
+      "<p>El porcentaje mide cuánto se parecen tus respuestas a las posiciones de cada partido en once temas, ponderado por lo que te importa cada uno. No mide la credibilidad de un partido, su historial cumpliendo promesas ni la valía de sus candidatos.</p>",
+      "<p>Las posiciones de los partidos están elaboradas a partir de información pública y son provisionales. Cuando un partido no se pronuncia, la posición aparece como estimada.</p>",
+      "<p>Úsalo como punto de partida: revisa en las fichas qué propone cada partido en los temas que más te importan y contrasta con otras fuentes.</p>"
+    ],
+    "fuentes": []
+  }
+]

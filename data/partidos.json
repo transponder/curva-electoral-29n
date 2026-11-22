@@ -1,13 +1,376 @@
 {
-  "_nota": "Colores neutros asignados por orden alfabético (paleta apta para daltonismo), no los corporativos de cada partido. Webs y cuentas se rellenan solo tras verificarlas (codebook, pendiente v1).",
+  "_nota": "Colores neutros asignados por orden alfabético (paleta apta para daltonismo), no los corporativos. «forma» es el marcador de cada partido en el gráfico (circle, square, triup, diamond, tridown, penta, cross), para que se distingan también sin color. Personas y «otros» llevan su fuente. «color_oscuro» (opcional) es el color en modo oscuro, cuando «color» no contrasta lo suficiente con el fondo oscuro.",
   "codificados": [
-    { "id": "eh-bildu", "siglas": "EH Bildu", "nombre": "Euskal Herria Bildu", "lang": "eu", "color": "#0072B2", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "frente-amplio", "siglas": "Frente Amplio", "nombre": "Frente Amplio", "color": "#E69F00", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "pnv", "siglas": "PNV", "nombre": "Euzko Alderdi Jeltzalea – Partido Nacionalista Vasco", "color": "#009E73", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "podemos", "siglas": "Podemos", "nombre": "Podemos", "color": "#CC79A7", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "pp", "siglas": "PP", "nombre": "Partido Popular", "color": "#D55E00", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "pse-ee", "siglas": "PSE-EE", "nombre": "Partido Socialista de Euskadi – Euskadiko Ezkerra", "color": "#56B4E9", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } },
-    { "id": "vox", "siglas": "Vox", "nombre": "Vox", "color": "#6B4C9A", "web": "", "programa": "", "responsable_euskadi": "", "cabezas_lista": { "araba": "", "bizkaia": "", "gipuzkoa": "" } }
+    {
+      "id": "eh-bildu",
+      "siglas": "EH Bildu",
+      "nombre": "Euskal Herria Bildu",
+      "color": "#0072B2",
+      "forma": "square",
+      "nota": "Coalición soberanista de izquierdas. Apoyó la investidura de Pedro Sánchez en 2023.",
+      "web": "https://ehbildu.eus",
+      "candidatura_presidencia": "",
+      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
+      "programa_docs": [],
+      "personas": [
+        {
+          "nombre": "Oskar Matute",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Diputado y portavoz adjunto en el Congreso; procede de Alternatiba. Propuesto como portavoz del grupo.",
+          "fuente": "Onda Vasca: EH Bildu renueva sus listas",
+          "url": "https://www.ondavasca.com/eh-bildu-se-lanza-a-por-el-voto-de-izquierda-con-matute-de-portavoz/"
+        },
+        {
+          "nombre": "Oihana Etxebarrieta",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Parlamentaria vasca (nacida en 1987). Releva a Mertxe Aizpurua al frente de la lista.",
+          "fuente": "Onda Vasca: EH Bildu renueva sus listas",
+          "url": "https://www.ondavasca.com/eh-bildu-se-lanza-a-por-el-voto-de-izquierda-con-matute-de-portavoz/"
+        },
+        {
+          "nombre": "Mikel Otero",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Diputado en el Congreso e interlocutor de la coalición en cambio climático.",
+          "fuente": "Onda Vasca: EH Bildu renueva sus listas",
+          "url": "https://www.ondavasca.com/eh-bildu-se-lanza-a-por-el-voto-de-izquierda-con-matute-de-portavoz/"
+        },
+        {
+          "nombre": "Arnaldo Otegi",
+          "cargo": "Coordinador general",
+          "descripcion": "Coordinador general de EH Bildu.",
+          "fuente": "Moncloa.com: presentación de la candidatura de EH Bildu",
+          "url": "https://www.moncloa.com/2026/10/19/eh-bildu-elecciones-generales-29n-2-3451602/"
+        }
+      ],
+      "senado": "Idurre Bideguren (Bizkaia), Sonia Jacinto (Gipuzkoa), Josu Estarrona (Araba)",
+      "responsable_euskadi": "",
+      "otros": [
+        {
+          "texto": "Se presenta como «la izquierda a la izquierda del PSOE» en Araba, Bizkaia, Gipuzkoa y Navarra.",
+          "etiqueta": "Campaña",
+          "fuente": "Moncloa.com: presentación de la candidatura de EH Bildu",
+          "url": "https://www.moncloa.com/2026/10/19/eh-bildu-elecciones-generales-29n-2-3451602/"
+        }
+      ]
+    },
+    {
+      "id": "frente-amplio",
+      "siglas": "Frente Amplio",
+      "nombre": "Frente Amplio",
+      "color": "#E69F00",
+      "forma": "penta",
+      "nota": "Coalición de Sumar Mugimendua, Ezker Anitza-IU, Berdeak y otras organizaciones. Su candidata a la Presidencia es Ada Colau.",
+      "web": "https://frenteamplio.info",
+      "candidatura_presidencia": "Ada Colau",
+      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
+      "programa_docs": [],
+      "personas": [
+        {
+          "nombre": "Lander Martínez",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Diputado de Sumar por Bizkaia en la última legislatura; exsecretario general de Podemos Euskadi.",
+          "fuente": "Orain: Lander Martínez, cabeza de lista de Sumar en Bizkaia (2023)",
+          "url": "https://orain.eus/es/politica/elecciones/elecciones-generales/2023/06/17/el-exsecretario-general-de-podemos-euskadi-lander-martinez-sera-cabeza-de-lista-de-sumar-en-bizkaia/"
+        },
+        {
+          "nombre": "Rosa Rubio",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Militante de Ezker Anitza-IU.",
+          "fuente": "Orain: Lander Martínez encabezará la lista del Frente Amplio por Bizkaia",
+          "url": "https://orain.eus/en/politics/elections/hauteskunde-orokorrak/2026/10/27/lander-martinez-will-head-the-broad-front-list-for-bizkaia-to-the-29n-congress/"
+        },
+        {
+          "nombre": "José Damián García-Moreno",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Militante de Ezker Anitza-IU y uno de los dos cargos públicos de la coalición en Álava.",
+          "fuente": "Gasteiz Hoy: IU liderará la candidatura de Frente Amplio por Álava",
+          "url": "https://www.gasteizhoy.com/iu-liderara-la-candidatura-de-frente-amplio-por-alava-que-no-se-presentara-al-senado/"
+        }
+      ],
+      "senado": "Dentro de «Senado de Progreso»: Alba Gutiérrez (n.º 2 en Bizkaia), Samira Raiss (n.º 2 en Gipuzkoa)",
+      "responsable_euskadi": "Responsable en Euskadi pendiente de identificar",
+      "otros": [
+        {
+          "texto": "Al Senado concurre dentro de «Senado de Progreso» con el PSE-EE en Bizkaia y Gipuzkoa; no presenta lista al Senado por Álava.",
+          "etiqueta": "Campaña",
+          "fuente": "Gasteiz Hoy: IU liderará la candidatura de Frente Amplio por Álava",
+          "url": "https://www.gasteizhoy.com/iu-liderara-la-candidatura-de-frente-amplio-por-alava-que-no-se-presentara-al-senado/"
+        },
+        {
+          "texto": "Concurre sin Podemos.",
+          "etiqueta": "Campaña",
+          "fuente": "Moncloa.com: el Frente Amplio en Euskadi, sin Podemos",
+          "url": "https://www.moncloa.com/2026/10/20/sumar-euskadi-confluencia-sin-podemos-3451989/"
+        }
+      ]
+    },
+    {
+      "id": "pnv",
+      "siglas": "PNV",
+      "nombre": "Euzko Alderdi Jeltzalea – Partido Nacionalista Vasco",
+      "color": "#009E73",
+      "forma": "circle",
+      "nota": "Partido nacionalista vasco. Preside el Gobierno Vasco y apoyó la investidura de Pedro Sánchez en 2023.",
+      "web": "https://www.eaj-pnv.eus",
+      "candidatura_presidencia": "",
+      "programa_nota": "Presentó su programa el 9 de noviembre. A 13 de noviembre de 2026 no hemos localizado el documento completo; las propuestas proceden de su presentación pública.",
+      "programa_docs": [],
+      "personas": [
+        {
+          "nombre": "Idoia Sagastizabal",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Diputada en el Congreso. Primera mujer que encabeza la lista del PNV por Bizkaia en unas generales.",
+          "fuente": "Demócrata: quiénes encabezan las listas del PNV",
+          "url": "https://www.democrata.es/elecciones-generales-espana/quienes-encabezaran-listas-pnv-congreso-nombres-con-aitor-esteban-afronta-29n/"
+        },
+        {
+          "nombre": "Maribel Vaquero",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Portavoz del PNV en el Congreso en la última legislatura.",
+          "fuente": "Orain: el PNV ratifica sus candidaturas al Congreso",
+          "url": "https://orain.eus/es/politica/2026/10/17/el-pnv-ratifica-unanimidad-maribel-vaquero-idoia-sagastizabal-gorka-urtaran-candidatos-al-congreso/"
+        },
+        {
+          "nombre": "Gorka Urtaran",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Exalcalde de Vitoria-Gasteiz.",
+          "fuente": "Orain: el PNV ratifica sus candidaturas al Congreso",
+          "url": "https://orain.eus/es/politica/2026/10/17/el-pnv-ratifica-unanimidad-maribel-vaquero-idoia-sagastizabal-gorka-urtaran-candidatos-al-congreso/"
+        },
+        {
+          "nombre": "Aitor Esteban",
+          "cargo": "Presidente del EBB",
+          "descripcion": "Presidente del Euzkadi Buru Batzar, la dirección del PNV.",
+          "fuente": "Orain: el PNV ratifica sus candidaturas al Congreso",
+          "url": "https://orain.eus/es/politica/2026/10/17/el-pnv-ratifica-unanimidad-maribel-vaquero-idoia-sagastizabal-gorka-urtaran-candidatos-al-congreso/"
+        }
+      ],
+      "senado": "Nerea Ahedo (Bizkaia), Luke Uribe-Etxebarria (Gipuzkoa), Saray Zarate (Araba)",
+      "responsable_euskadi": "",
+      "otros": [
+        {
+          "texto": "Descarta cualquier acuerdo con Vox.",
+          "etiqueta": "Campaña",
+          "fuente": "Gasteiz Hoy: entrevista a Gorka Urtaran",
+          "url": "https://www.gasteizhoy.com/urtaran-pnv-entrevista-29n/"
+        }
+      ]
+    },
+    {
+      "id": "podemos",
+      "siglas": "Podemos",
+      "nombre": "Podemos",
+      "color": "#CC79A7",
+      "forma": "cross",
+      "nota": "Concurre por separado del Frente Amplio. Su candidata a la Presidencia es Irene Montero.",
+      "web": "https://podemos.info",
+      "candidatura_presidencia": "Irene Montero",
+      "programa_nota": "Sin programa del 29-N publicado a 13 de noviembre de 2026.",
+      "programa_docs": [],
+      "personas": [
+        {
+          "nombre": "José Manuel de Pablos",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Concejal en Santurtzi y miembro del Consejo Ciudadano Estatal de Podemos.",
+          "fuente": "Deia: Podemos Euskadi en el Consejo Estatal (2025)",
+          "url": "https://www.deia.eus/politica/2025/04/12/euskadi-representado-consejo-estatal-9516072.html"
+        },
+        {
+          "nombre": "Maite Gartzia",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Coordinadora general adjunta de Podemos Euskadi y miembro del Consejo Ciudadano Estatal.",
+          "fuente": "Deia: Podemos Euskadi en el Consejo Estatal (2025)",
+          "url": "https://www.deia.eus/politica/2025/04/12/euskadi-representado-consejo-estatal-9516072.html"
+        },
+        {
+          "nombre": "Garbiñe Ruiz",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Portavoz de Podemos en el Ayuntamiento de Vitoria-Gasteiz y su candidata a la alcaldía en 2027.",
+          "fuente": "Orain: candidaturas de Podemos a las forales y municipales",
+          "url": "https://orain.eus/es/politica/2026/10/13/candidaturas-podemos-las-elecciones-forales-en-la-capv-richar-vaquero-en-bizkaia-miren-echeveste-en-gipuzkoa-david-rodriguez-en-araba/"
+        }
+      ],
+      "senado": "Miguel Fernández Marcos (Bizkaia), Yolanda Martín (Gipuzkoa), Juan Miller (Araba)",
+      "responsable_euskadi": "Responsable en Euskadi pendiente de verificar",
+      "otros": [
+        {
+          "texto": "Lema «Paz, casa y trabajo».",
+          "etiqueta": "Campaña",
+          "fuente": "Vozpópuli: la candidatura de Irene Montero",
+          "url": "https://www.vozpopuli.com/espana/politica/montero-retiene-su-escano-y-su-sueldo-europeo-mientras-fia-al-personalismo-la-supervivencia-de-podemos-el-29-n.html"
+        }
+      ]
+    },
+    {
+      "id": "pp",
+      "siglas": "PP",
+      "nombre": "Partido Popular",
+      "color": "#D55E00",
+      "forma": "diamond",
+      "nota": "Candidatura del PP en Euskadi. Su candidato a la Presidencia es Alberto Núñez Feijóo.",
+      "web": "https://www.pp.es",
+      "candidatura_presidencia": "Alberto Núñez Feijóo",
+      "programa_nota": "Programa presentado el 10 de noviembre. El enlace lleva al texto íntegro publicado por un medio; falta el enlace oficial del partido.",
+      "programa_docs": [
+        {
+          "titulo": "«Contrato con España» (PDF, 19 de octubre)",
+          "url": "https://www.eldebate.com/uploads/files/2026/10/19/CONTRATO%20CON%20ESPANA%20.pdf"
+        },
+        {
+          "titulo": "Programa «La reconstrucción nacional», 249 medidas (texto íntegro en Artículo14, 10 de noviembre)",
+          "url": "https://www.articulo14.es/politica/consulte-el-programa-integro-del-partido-popular-20261110.html"
+        }
+      ],
+      "personas": [
+        {
+          "nombre": "Esther Martínez",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Secretaria general del PP vasco.",
+          "fuente": "Demócrata: candidaturas en Euskadi publicadas en el BOE (28 de octubre)",
+          "url": "https://www.democrata.es/en/euskadi/euskadi-publishes-the-provisional-lists-15-candidacies-for-alava-12-for-bizkaia-and-11-for-gipuzkoa-for-congress/"
+        },
+        {
+          "nombre": "Jon Echeverría",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Estudiante universitario; ha construido su perfil público como tertuliano en televisión y en redes sociales.",
+          "fuente": "Moncloa.com: el PP de Gipuzkoa apuesta por Jon Echeverría",
+          "url": "https://www.moncloa.com/2026/10/19/pp-gipuzkoa-elecciones-congreso-29n-3451156/"
+        },
+        {
+          "nombre": "Iñaki Oyarzabal",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Presidente del PP de Álava.",
+          "fuente": "Demócrata: candidaturas en Euskadi publicadas en el BOE (28 de octubre)",
+          "url": "https://www.democrata.es/en/euskadi/euskadi-publishes-the-provisional-lists-15-candidacies-for-alava-12-for-bizkaia-and-11-for-gipuzkoa-for-congress/"
+        },
+        {
+          "nombre": "Javier de Andrés",
+          "cargo": "Presidente del PP vasco",
+          "descripcion": "Preside el PP vasco; fue cabeza de lista al Congreso por Araba en 2023.",
+          "fuente": "Moncloa.com: el PP de Gipuzkoa apuesta por Jon Echeverría",
+          "url": "https://www.moncloa.com/2026/10/19/pp-gipuzkoa-elecciones-congreso-29n-3451156/"
+        }
+      ],
+      "senado": "Jon Albisu (Bizkaia), Daniel García (Araba); sin lista en Gipuzkoa",
+      "responsable_euskadi": "",
+      "otros": [
+        {
+          "texto": "No presenta candidatura al Senado por Gipuzkoa.",
+          "etiqueta": "Campaña",
+          "fuente": "Demócrata: candidaturas en Euskadi publicadas en el BOE (28 de octubre)",
+          "url": "https://www.democrata.es/en/euskadi/euskadi-publishes-the-provisional-lists-15-candidacies-for-alava-12-for-bizkaia-and-11-for-gipuzkoa-for-congress/"
+        }
+      ]
+    },
+    {
+      "id": "pse-ee",
+      "siglas": "PSE-EE",
+      "nombre": "Partido Socialista de Euskadi – Euskadiko Ezkerra",
+      "color": "#56B4E9",
+      "forma": "triup",
+      "nota": "Federación vasca del PSOE. Su candidato a la Presidencia es Pedro Sánchez.",
+      "web": "https://www.socialistasvascos.com",
+      "candidatura_presidencia": "Pedro Sánchez",
+      "programa_nota": "Comparte el programa estatal del PSOE, sin publicar a 13 de noviembre de 2026. Las propuestas proceden de compromisos anunciados por el PSOE.",
+      "programa_docs": [],
+      "personas": [
+        {
+          "nombre": "Patxi López",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Portavoz socialista en el Congreso desde 2022; lehendakari entre 2009 y 2012 y presidente del Congreso en 2016.",
+          "fuente": "Moncloa.com: candidaturas del PSE-EE",
+          "url": "https://www.moncloa.com/2026/10/15/candidaturas-pse-ee-generales-3449109/"
+        },
+        {
+          "nombre": "Rafaela Romero",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Coordinadora de los diputados socialistas vascos y expresidenta de las Juntas Generales de Gipuzkoa.",
+          "fuente": "Moncloa.com: candidaturas del PSE-EE",
+          "url": "https://www.moncloa.com/2026/10/15/candidaturas-pse-ee-generales-3449109/"
+        },
+        {
+          "nombre": "Javier Hurtado",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Secretario general del PSE-EE en Álava; consejero de Turismo, Comercio y Consumo del Gobierno Vasco hasta su candidatura.",
+          "fuente": "Orain: Javier Hurtado, candidato por Álava",
+          "url": "https://orain.eus/en/politics/2026/10/13/javier-hurtado-will-be-the-pseee-candidate-for-congress-in-alava/"
+        },
+        {
+          "nombre": "Eneko Andueza",
+          "cargo": "Secretario general del PSE-EE",
+          "descripcion": "Secretario general de los socialistas vascos.",
+          "fuente": "Moncloa.com: precampaña del PSE-EE",
+          "url": "https://www.moncloa.com/2026/10/19/patxi-lopez-precampana-pse-ee-bilbao-3451603/"
+        }
+      ],
+      "senado": "Txema Oleaga (Bizkaia), Alberto Albistegui (Gipuzkoa), Daniel Senderos (Araba)",
+      "responsable_euskadi": "",
+      "otros": [
+        {
+          "texto": "Lista conjunta al Senado con Frente Amplio en Bizkaia y Gipuzkoa («Senado de Progreso»).",
+          "etiqueta": "Campaña",
+          "fuente": "Demócrata: candidaturas en Euskadi publicadas en el BOE (28 de octubre)",
+          "url": "https://www.democrata.es/en/euskadi/euskadi-publishes-the-provisional-lists-15-candidacies-for-alava-12-for-bizkaia-and-11-for-gipuzkoa-for-congress/"
+        },
+        {
+          "texto": "Campaña centrada en el voto útil frente a PP y Vox.",
+          "etiqueta": "Campaña",
+          "fuente": "Moncloa.com: precampaña del PSE-EE",
+          "url": "https://www.moncloa.com/2026/10/19/patxi-lopez-precampana-pse-ee-bilbao-3451603/"
+        }
+      ]
+    },
+    {
+      "id": "vox",
+      "siglas": "Vox",
+      "nombre": "Vox",
+      "color": "#6B4C9A",
+      "color_oscuro": "#A68BD4",
+      "forma": "tridown",
+      "nota": "Su candidato a la Presidencia es Santiago Abascal. Tiene un escaño en el Parlamento Vasco, por Álava.",
+      "web": "https://www.voxespana.es",
+      "candidatura_presidencia": "Santiago Abascal",
+      "programa_nota": "Sin programa general del 29-N publicado a 13 de noviembre de 2026. El documento enlazado es su plan de desregulación de junio.",
+      "programa_docs": [
+        {
+          "titulo": "Programa de desregulación de Vox (PDF, junio de 2026)",
+          "url": "https://www.elindependiente.com/wp-content/uploads/2026/06/Programa-de-desregularizaci%C3%B3n-de-Vox.pdf"
+        }
+      ],
+      "personas": [
+        {
+          "nombre": "Marco Antonio Moreno Asla",
+          "cargo": "Congreso · Bizkaia",
+          "descripcion": "Ha figurado en las listas de Vox por Bizkaia al Parlamento Vasco (2024).",
+          "fuente": "The Objective: listas de Vox al Parlamento Vasco (2024)",
+          "url": "https://theobjective.com/espana/politica/2024-03-18/vox-amaia-martinez-pais-vasco/"
+        },
+        {
+          "nombre": "Juan de Dios Dávila",
+          "cargo": "Congreso · Gipuzkoa",
+          "descripcion": "Ya encabezó la lista de Vox al Congreso por Gipuzkoa en noviembre de 2019.",
+          "fuente": "Vozpópuli: candidatos de Vox al 10-N (2019)",
+          "url": "https://www.vozpopuli.com/espana/politica/vox-presenta-candidatos-congreso-provincias_0_1288972311.html"
+        },
+        {
+          "nombre": "Jonathan Romero",
+          "cargo": "Congreso · Araba",
+          "descripcion": "Fue cabeza de lista de Vox a las Juntas Generales de Álava en 2023.",
+          "fuente": "Gasteiz Hoy: candidaturas a Juntas Generales de Álava (2023)",
+          "url": "https://www.gasteizhoy.com/listas-juntas-generales-de-alava-28m/"
+        },
+        {
+          "nombre": "Amaia Martínez",
+          "cargo": "Parlamentaria vasca",
+          "descripcion": "Cabeza de lista de Vox al Parlamento Vasco en 2024; candidata al Senado por Álava.",
+          "fuente": "The Objective: listas de Vox al Parlamento Vasco (2024)",
+          "url": "https://theobjective.com/espana/politica/2024-03-18/vox-amaia-martinez-pais-vasco/"
+        }
+      ],
+      "senado": "Ángel Martínez (Bizkaia), Andrés Paramio (Gipuzkoa), Amaia Martínez (Araba)",
+      "responsable_euskadi": "",
+      "otros": []
+    }
   ],
   "sin_curva": []
 }

@@ -3,6 +3,7 @@
     "id": "autogobierno",
     "nombre": "Autogobierno",
     "corto": "Autogob.",
+    "codigo": "AUT",
     "pregunta": "¿Qué relación debería tener Euskadi con el Estado?",
     "opciones": [
       "Revisar el Concierto Económico y devolver competencias al Estado",
@@ -16,6 +17,7 @@
     "id": "fiscalidad",
     "nombre": "Fiscalidad",
     "corto": "Fiscalidad",
+    "codigo": "FIS",
     "pregunta": "¿Qué debería hacerse con los impuestos?",
     "opciones": [
       "Bajar de forma general los impuestos a personas y empresas",
@@ -29,6 +31,7 @@
     "id": "vivienda",
     "nombre": "Vivienda",
     "corto": "Vivienda",
+    "codigo": "VIV",
     "pregunta": "¿Cómo debería abordarse el acceso a la vivienda?",
     "opciones": [
       "Liberalizar suelo, reducir trámites y dejar actuar al mercado",
@@ -42,6 +45,7 @@
     "id": "sanidad-educacion",
     "nombre": "Sanidad y educación",
     "corto": "San./Edu.",
+    "codigo": "SAN",
     "pregunta": "¿Qué modelo quieres para la sanidad y la educación?",
     "opciones": [
       "Contener el gasto y ampliar la gestión privada y la libre elección",
@@ -55,6 +59,7 @@
     "id": "trabajo-pensiones",
     "nombre": "Trabajo y pensiones",
     "corto": "Trabajo",
+    "codigo": "TRA",
     "pregunta": "¿Qué hacer con el mercado laboral y las pensiones?",
     "opciones": [
       "Flexibilizar el mercado laboral y complementar las pensiones con ahorro privado",
@@ -68,6 +73,7 @@
     "id": "clima-energia",
     "nombre": "Clima y energía",
     "corto": "Clima",
+    "codigo": "CLI",
     "pregunta": "¿A qué ritmo debería avanzar la transición energética?",
     "opciones": [
       "Retirar los objetivos climáticos actuales",
@@ -81,6 +87,7 @@
     "id": "inmigracion",
     "nombre": "Inmigración",
     "corto": "Inmigración",
+    "codigo": "INM",
     "pregunta": "¿Qué política de inmigración prefieres?",
     "opciones": [
       "Regularización amplia, vías legales y prioridad a la acogida",
@@ -95,6 +102,7 @@
     "id": "industria-id",
     "nombre": "Industria e I+D",
     "corto": "Industria",
+    "codigo": "IND",
     "pregunta": "¿Qué papel debería tener el sector público en la industria y la innovación?",
     "opciones": [
       "Ninguno: que decida el mercado y menos subvenciones",
@@ -108,6 +116,7 @@
     "id": "derechos-civiles",
     "nombre": "Derechos civiles",
     "corto": "Derechos",
+    "codigo": "DER",
     "pregunta": "¿Qué hacer con las leyes de derechos civiles (por ejemplo, aborto, eutanasia o igualdad de género)?",
     "opciones": [
       "Revisarlas para restringirlas o derogarlas",
@@ -121,6 +130,7 @@
     "id": "euskera",
     "nombre": "Euskera",
     "corto": "Euskera",
+    "codigo": "EUS",
     "pregunta": "¿Qué política lingüística prefieres para el euskera?",
     "opciones": [
       "Reducir los requisitos de euskera en empleo público y educación",
@@ -134,6 +144,7 @@
     "id": "defensa",
     "nombre": "Gasto en defensa",
     "corto": "Defensa",
+    "codigo": "DEF",
     "pregunta": "¿Qué debería hacer España con el gasto en defensa?",
     "opciones": [
       "Reducir el gasto militar",
