@@ -102,7 +102,7 @@
         prog: { docs: (p.programa_docs || []).map(function (x) { return { t: x.titulo, u: x.url }; }), note: p.programa_nota || '' },
         props: props[p.id] || temaIds.map(function () { return []; }),
         otros: (p.otros || []).map(function (x) { return [x.texto, fuente(x.fuente, x.url), ETQ[x.etiqueta] || 'c']; }),
-        ppl: (p.personas || []).map(function (x) { return [x.nombre, x.cargo, x.descripcion, fuente(x.fuente, x.url)]; }),
+        ppl: (p.personas || []).map(function (x) { return [x.nombre, x.cargo, x.descripcion, fuente(x.fuente, x.url), x.url_bio ? fuente(x.fuente_bio, x.url_bio) : null]; }),
         senado: p.senado || '', lead: p.responsable_euskadi || '',
       };
     });

@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent.parent / "data"
-CLAVES = {"url", "web"}
+CLAVES = {"url", "url_bio", "web"}
 # No son fuentes: el contador de visitas solo acepta peticiones de la propia web.
 IGNORAR = ("https://kurba29n.goatcounter.com/",)
 

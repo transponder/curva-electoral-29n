@@ -259,7 +259,8 @@ function paginasDePartido({ D }) {
   const partidos = D.ED.eu.parties, temas = D.ED.eu.attrs, A = D.A, S = D.S, m = D.META;
   const datos = JSON.parse(fs.readFileSync(path.join(RAIZ, 'data/partidos.json'), 'utf8')).codificados;
   const nombre = Object.fromEntries(datos.map((p) => [p.id, p.nombre || p.siglas]));
-  const fuente = (k) => ` <a href="${esc(S[k].u)}" title="${esc(S[k].t)}" target="_blank" rel="noopener">Fuente ↗</a>`;
+  const fuente = (k, lab = 'Fuente') => ` <a href="${esc(S[k].u)}" title="${esc(S[k].t)}" target="_blank" rel="noopener">${lab} ↗</a>`;
+  const fuentePer = (x) => (x[4] ? `${fuente(x[4])} ·${fuente(x[3], 'Candidatura')}` : fuente(x[3]));
   const prop = (x) => `<li><span class="tag">${TAG[x[2]]}</span> ${esc(x[0])}${fuente(x[1])}</li>`;
   const ext = (href, texto) => `<a href="${esc(href)}" target="_blank" rel="noopener"><span>${esc(texto)}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"/></svg></a>`;
 
@@ -283,7 +284,7 @@ function paginasDePartido({ D }) {
     const prog = p.prog.docs.map((d) => ext(d.u, d.t)).join('') +
       (p.prog.note ? `<p>${esc(p.prog.note)}</p>` : '') +
       (p.web ? ext(p.web, 'Web oficial') : '<p>Web oficial: pendiente de verificar.</p>');
-    const personas = p.ppl.map((x) => `<li><b>${esc(x[0])}</b><span class="role">${esc(x[1])}</span><span class="bio">${esc(x[2])}${fuente(x[3])}</span></li>`).join('') +
+    const personas = p.ppl.map((x) => `<li><b>${esc(x[0])}</b><span class="role">${esc(x[1])}</span><span class="bio">${esc(x[2])}${fuentePer(x)}</span></li>`).join('') +
       (p.lead ? `<li><span class="role">${esc(p.lead)}</span></li>` : '');
     const resto = partidos.filter((o) => o.id !== p.id)
       .map((o) => `<a href="/partido/${o.id}/"><span class="on">${esc(o.n)}</span><svg class="ch" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></a>`).join('');

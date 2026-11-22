@@ -55,7 +55,7 @@
     "senado": "«Senado de Progreso» barruan: Alba Gutiérrez (2.a Bizkaian), Samira Raiss (2.a Gipuzkoan)",
     "responsable_euskadi": "Euskadiko arduraduna identifikatzeke",
     "otros": [
-      "Senatura «Senado de Progreso» barruan doa PSE-EErekin Bizkaian eta Gipuzkoan; ez du Senaturako zerrendarik aurkezten Araban.",
+      "Senatura PSE-EErekin doa «Senado de Progreso» koalizioan (PSOE-EZAN IU-MS); koalizioak zerrenda aurkezten du Araban, Bizkaian eta Gipuzkoan.",
       "Podemos gabe aurkezten da."
     ]
   },
@@ -178,7 +178,7 @@
     "senado": "",
     "responsable_euskadi": "",
     "otros": [
-      "Senaturako zerrenda bateratua Frente Ampliorekin Bizkaian eta Gipuzkoan («Senado de Progreso»).",
+      "Senaturako zerrenda bateratua Araban, Bizkaian eta Gipuzkoan: «Senado de Progreso» (PSOE-EZAN IU-MS).",
       "Kanpaina boto erabilgarrian oinarritua, PPren eta Voxen aurrean."
     ]
   },
@@ -204,8 +204,8 @@
         "descripcion": "2023an Voxen zerrendaburu izan zen Arabako Batzar Nagusietarako."
       },
       {
-        "cargo": "Eusko legebiltzarkidea",
-        "descripcion": "Voxen zerrendaburua Eusko Legebiltzarrerako 2024an; Senaturako hautagaia Araban."
+        "cargo": "Senatua · Araba",
+        "descripcion": "Eusko legebiltzarkidea; Voxen zerrendaburua Eusko Legebiltzarrerako 2024an."
       }
     ],
     "senado": "",
