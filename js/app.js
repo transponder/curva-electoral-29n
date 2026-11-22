@@ -570,7 +570,10 @@
 
       h('h2', { id: 'correcciones' }, 'Correcciones'),
       P('Cualquier persona o partido puede señalar un error aportando su fuente. Si la fuente es de rango igual o superior a la usada, recodificamos en 48 horas y anotamos el cambio con fecha.'),
-      P(m.contacto_correcciones ? ['Escríbenos a ', h('a', { href: 'mailto:' + m.contacto_correcciones }, m.contacto_correcciones), '.'] : h('span', { class: 'placeholder', style: { display: 'block' } }, 'Canal de correcciones pendiente (correo o formulario).')),
+      m.repositorio ? P(h('a', { class: 'btn', href: m.repositorio + '/issues/new?template=correccion.yml', target: '_blank', rel: 'noopener' }, 'Pedir una corrección')) : null,
+      m.repositorio ? h('p', { class: 'small', style: { color: 'var(--ink-2)' } }, 'Se abre un formulario público en GitHub; necesitas una cuenta.') : null,
+      m.repositorio ? P(h('a', { href: m.repositorio + '/issues?q=label%3Acorrecci%C3%B3n', target: '_blank', rel: 'noopener' }, 'Ver las correcciones pedidas y cómo se resolvieron')) : null,
+      P(m.contacto_correcciones ? ['También puedes escribirnos a ', h('a', { href: 'mailto:' + m.contacto_correcciones }, m.contacto_correcciones), '.'] : h('span', { class: 'placeholder', style: { display: 'block' } }, 'Correo de contacto pendiente, para quien no use GitHub.')),
 
       h('h2', null, 'Cómo se calcula la cercanía del test'),
       P('En cada tema que contestas, medimos la distancia entre tu opción y la del partido (de 0 a 4 pasos) y la multiplicamos por la importancia que le das (poco ×0,5, bastante ×1, mucho ×2). La cercanía es 100 % menos la distancia total dividida por la máxima posible. Los temas que te saltas no cuentan. El cálculo se hace en tu navegador.'),
