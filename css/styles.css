@@ -223,7 +223,10 @@ details.why summary { cursor: pointer; font-weight: 700; }
 
 .results-list { display: grid; gap: 10px; }
 .result-row { display: grid; grid-template-columns: minmax(84px, 130px) 1fr 52px; gap: 12px; align-items: center; }
-.result-row .who { display: flex; gap: 8px; align-items: center; font-weight: 700; }
+.result-row .who { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font-weight: 700; min-width: 0; }
+.result-row .who .dot { flex: none; }
+.result-row .who .badge { margin-left: 0 !important; }
+@media (max-width: 560px) { .result-row { grid-template-columns: minmax(0, 1fr) minmax(60px, 1fr) 44px; gap: 10px; } }
 .result-row .track { height: 12px; background: var(--line); border-radius: 6px; overflow: hidden; }
 .result-row .fill { height: 100%; border-radius: 6px; }
 .result-row .pct { font-variant-numeric: tabular-nums; font-weight: 800; text-align: right; }
