@@ -655,7 +655,9 @@
     if (base !== lastRoute) { if (!location.hash.split('#')[2]) window.scrollTo({ top: 0 }); lastRoute = base; }
   });
 
-  load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); }).catch(err => {
+  const listo = () => document.documentElement.classList.remove('cargando');
+  load().then(() => { lastRoute = location.hash.split('#').slice(0, 2).join('#'); route(); listo(); }).catch(err => {
+    listo();
     console.error(err);
     app.replaceChildren(h('div', { class: 'error-box' },
       h('h2', null, 'No se han podido cargar los datos'),
