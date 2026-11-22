@@ -16,6 +16,6 @@
   },
   "titular": "Kurba es una iniciativa ciudadana sin ánimo de lucro de dos estudiantes universitarios del País Vasco. No realiza ninguna actividad económica: no vende nada, no tiene publicidad ni recibe financiación de nadie. Contacto: contacto@kurba29n.com.",
   "analitica": "Contamos las visitas de forma anónima con GoatCounter, sin cookies ni identificadores: qué pantallas se abren, cuántas personas empiezan y terminan el test y a cuántos temas dan importancia, en qué pregunta lo dejan, qué pestañas y guías consultan, el idioma, y el país o la región, el sistema operativo, el navegador y el tamaño de pantalla aproximados. Nunca se envían tus respuestas, la importancia que das a cada tema ni qué partidos te salen más cercanos: las fichas de partido se cuentan todas juntas. GoatCounter no guarda tu dirección IP. Si tu navegador pide no ser rastreado (Do Not Track o Global Privacy Control), no se cuenta nada.",
-  "goatcounter": "",
+  "goatcounter": "https://kurba29n.goatcounter.com/count",
   "licencia_datos": "CC BY 4.0"
 }

@@ -3,9 +3,9 @@ name: Tests
 on:
   push:
     branches: [main]
-    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', '.github/workflows/tests.yml']
+    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', 'scripts/generar_paginas.js', 'metodologia/**', 'aviso-legal/**', 'privacidad/**', 'quienes-somos/**', 'partido/**', 'sitemap.xml', '.github/workflows/tests.yml']
   pull_request:
-    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', '.github/workflows/tests.yml']
+    paths: ['js/**', 'css/**', 'index.html', 'tests/**', 'data/**', 'scripts/versionar.py', 'scripts/generar_paginas.js', 'metodologia/**', 'aviso-legal/**', 'privacidad/**', 'quienes-somos/**', 'partido/**', 'sitemap.xml', '.github/workflows/tests.yml']
 
 permissions:
   contents: read
@@ -21,3 +21,5 @@ jobs:
       - run: node --test
       - name: Versiones de CSS y JS en index.html
         run: python3 scripts/versionar.py --comprobar
+      - name: Páginas estáticas y sitemap al día con data/
+        run: node scripts/generar_paginas.js --comprobar

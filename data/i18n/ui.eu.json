@@ -175,7 +175,10 @@
     "tbl_p": "Alderdia",
     "tbl_n": "1etik 5erako aukera gai bakoitzean. * jarrera estimatua, proposamenik aurkitu gabe.",
     "met_h": "Metodologia",
-    "a_home2": "Kurba, hasierara joan"
+    "a_home2": "Kurba, hasierara joan",
+    "c_part": "alderdi",
+    "c_temas": "gai",
+    "c_props": "proposamen iturriarekin"
   },
   "metodo": [
     "Gai bakoitzak 1etik 5erako eskala bat du, eta maila bakoitzak jarrera zehatz bat. Zure erantzuna eta alderdi bakoitzaren jarrera eskala berean kokatzen dira.",

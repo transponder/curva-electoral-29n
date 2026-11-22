@@ -76,6 +76,12 @@ function setLang(l){
   if(st.res){exploreMode(!!st.explore);recList("recs-res");renderKey();renderAdjust();update(true);}
   if(curScreen()==="s-rec"&&curRec)openRec(curRec);
   titulo();
+  /* El idioma va en la URL (?lang=eu) para poder enlazar y compartir la versión en euskera. */
+  try{
+    var u=new URL(location.href);
+    if(l==="eu")u.searchParams.set("lang","eu");else u.searchParams.delete("lang");
+    if(u.href!==location.href)history.replaceState(null,"",u.pathname+u.search+u.hash);
+  }catch(e){}
 }
 
 /* ---------- contenido en euskera: fichas y guías ---------- */
@@ -668,6 +674,24 @@ document.querySelector(".skip").addEventListener("click",function(e){
 window.addEventListener("hashchange",alCambiar);
 window.addEventListener("popstate",alCambiar);
 
+/* Portada: las curvas reales de los partidos y las cifras del proyecto. */
+function renderHero(){
+  var P=E().parties,n=NT(),W=310,H=118,mX=10,mY=12,o=[],v,nProps=0;
+  function X(i){return mX+i*(W-2*mX)/(n-1);}
+  /* Un pequeño desplazamiento por partido para que las líneas que coinciden no se tapen del todo. */
+  function Y(val,slot){return mY+(5-val)/4*(H-2*mY)+(slot-(P.length+1)/2)*1.3;}
+  for(v=1;v<=5;v++)o.push('<line x1="0" x2="'+W+'" y1="'+Y(v,(P.length+1)/2)+'" y2="'+Y(v,(P.length+1)/2)+'" stroke="var(--dark-line)" vector-effect="non-scaling-stroke"/>');
+  P.forEach(function(p){
+    o.push('<polyline points="'+p.s.map(function(val,i){return X(i).toFixed(1)+","+Y(val,p.slot).toFixed(1);}).join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>');
+    p.props.forEach(function(t){nProps+=t.length;});
+  });
+  $("hero-svg").innerHTML=o.join("");
+  $("c-part").textContent=P.length;$("c-temas").textContent=n;$("c-props").textContent=nProps;
+  $("cifras").hidden=false;
+}
+renderHero();
+
+if(/[?&]lang=eu(&|$)/.test(location.search))setLang("eu");
 aplicar();
 primera=false;
 document.documentElement.classList.remove("cargando-datos");

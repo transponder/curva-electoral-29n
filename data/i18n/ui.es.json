@@ -96,7 +96,10 @@
     "met_h": "Metodología",
     "method": "Metodología",
     "tab3": "Partidos",
-    "a_home2": "Kurba, ir al inicio"
+    "a_home2": "Kurba, ir al inicio",
+    "c_part": "partidos",
+    "c_temas": "temas",
+    "c_props": "propuestas con fuente"
   },
   "metodo": [
     "Cada tema tiene una escala de 1 a 5 con una posición concreta en cada nivel. Tu respuesta y la posición de cada partido se sitúan en esa misma escala.",
