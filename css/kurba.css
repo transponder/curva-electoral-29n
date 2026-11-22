@@ -223,6 +223,8 @@ details.card summary{cursor:pointer;font-family:var(--f-display);font-weight:700
 #cmp .tcard{background:var(--bg)}
 .cmp-pick select{min-width:0}
 .explore .you-only{display:none!important}
+/* Sin test, los atajos de curvas se quedan en «Todos»: sobran, los botones de partido ya muestran y ocultan. */
+.explore .quick{display:none}
 .beta{font:600 11px/1 Inter,system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:4px 7px;margin-left:8px;align-self:center}
 .betanote{font-size:13px;color:var(--ink-2);margin:8px 0 0}
 

@@ -50,11 +50,12 @@ function fechaAct(){
   return LANG==="eu"?y+"ko "+mes+" "+d+"a":d+" de "+mes+" de "+y;
 }
 var CORREO=META.contacto_correcciones||"";
-/* Sin año, para la etiqueta de estado: «22 de noviembre» / «azaroaren 22an». */
+/* Sin año, para la etiqueta de estado: «22 de noviembre» / «azaroak 22» (mes en nominativo). */
+var MESES_NOM_EU=["urtarrilak","otsailak","martxoak","apirilak","maiatzak","ekainak","uztailak","abuztuak","irailak","urriak","azaroak","abenduak"];
 function fechaDia(){
   var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(META.actualizado||"");if(!m)return"";
-  var mes=MESES[LANG][+m[2]-1],d=+m[3];
-  return LANG==="eu"?mes+" "+d+"an":d+" de "+mes;
+  var d=+m[3];
+  return LANG==="eu"?MESES_NOM_EU[+m[2]-1]+" "+d:d+" de "+MESES.es[+m[2]-1];
 }
 function rellenar(x){return String(x).replace(/\{fecha\}/g,fechaAct()).replace(/\{fecha_dia\}/g,fechaDia()).replace(/\{correo\}/g,CORREO);}
 function applyStatic(){
@@ -136,9 +137,10 @@ document.addEventListener("click",function(e){var b=e.target.closest("[data-rec]
 $("rec-back").addEventListener("click",function(){show(prevScreen);if(prevScreen==="s-res")setTab(st.tab);});
 function renderMethod(){
   var h=(LANG==="eu"?METHOD_EU:METHOD).map(function(x){return"<p>"+esc(x)+"</p>";}).join("")+
-    (META.codebook?'<p><a href="'+esc(META.codebook)+'" target="_blank" rel="noopener">'+t("cb_link")+" ↗</a></p>":"")+
-    '<p><a href="#/metodologia">'+esc(t("met_full"))+" →</a></p>";
-  $("met-body").innerHTML=h;document.querySelector("#method-res .method").innerHTML=h;
+    (META.codebook?'<p><a href="'+esc(META.codebook)+'" target="_blank" rel="noopener">'+t("cb_link")+" ↗</a></p>":"");
+  /* En la página de metodología el texto completo está justo debajo: el enlace solo va en el resultado. */
+  $("met-body").innerHTML=h;
+  document.querySelector("#method-res .method").innerHTML=h+'<p><a href="#/metodologia">'+esc(t("met_full"))+" →</a></p>";
 }
 renderMethod();
 /* Las páginas de texto devuelven listas con huecos (null) y sublistas: se aplanan antes de pintarlas. */

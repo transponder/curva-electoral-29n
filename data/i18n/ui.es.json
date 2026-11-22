@@ -74,7 +74,7 @@
     "n_who": "Quiénes somos",
     "a_menu": "Principal",
     "a_menubtn": "Menú",
-    "estado": "Datos provisionales · actualizados el {fecha_dia}",
+    "estado": "Datos provisionales · {fecha_dia}",
     "who_more": "Más sobre nosotros y contacto →",
     "ct_h": "Contacto",
     "ct_s": "¿Has visto un error, echas en falta una propuesta o quieres decirnos algo? Escríbenos. Para una corrección, lo que más nos ayuda es el partido, el tema y el enlace a la fuente.",
@@ -104,7 +104,7 @@
     "La cercanía es la distancia media entre tu curva y la del partido, ponderada por la importancia que das a cada tema: «Alta» cuenta el doble que «Media» y «Ninguna» no cuenta.",
     "Las posiciones se han elaborado a partir de programas electorales, votaciones parlamentarias y declaraciones públicas, sin consultar a los partidos. Cuando un partido no se pronuncia sobre un tema, la posición se marca como estimada.",
     "Las fichas siguen la misma estructura para todos los partidos: propuestas ordenadas por tema y por la importancia que les das, programa, candidaturas en Euskadi con su trayectoria y web oficial. Cada dato enlaza a su fuente. Si no hemos localizado propuestas de un partido sobre un tema, se indica expresamente.",
-    "Las posiciones de 1 a 5 se asignan con un libro de códigos público que define cada nivel con indicadores observables.",
+    "Cada posición de 1 a 5 corresponde a una opción concreta, definida para cada tema; las tienes todas en «Los temas y sus opciones», en la metodología completa.",
     "Los partidos con posiciones intermedias tienden a aparecer más cerca de cualquier curva. Una cercanía alta no equivale a coincidencia en lo que más te importa: revisa el bloque «Qué separa a tus más cercanos».",
     "No es una encuesta: no se recoge ni se agrega ninguna respuesta."
   ]
