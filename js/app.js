@@ -493,6 +493,14 @@ function src(k,lab){var s=S[k];return' <a href="'+safeUrl(s.u)+'" title="'+esc(s
 /* Persona: la fuente de la biografía y, aparte, la de la candidatura (BOE); si solo hay una, «Fuente». */
 function srcPer(x){return x[4]?src(x[4])+" ·"+src(x[3],t("src_cand")):src(x[3]);}
 function prop(x,tx){return'<li><span class="tag">'+t("tag_"+x[2])+"</span> "+esc(tx||x[0])+src(x[1])+"</li>";}
+/* Por qué el partido está en esa opción: la cita literal que la respalda, con su fuente, o el aviso de que es estimada. */
+function base(p,i){
+  var c=p.cit&&p.cit[i];if(!c)return"";
+  var nota=c[3]?'<p class="cita-n" lang="es">'+esc(c[3])+"</p>":"";
+  if(c[0]&&c[1]){var f=S[c[1]],ok=c[2]==="validado";
+    return'<div class="cita"><p class="cita-h"><span class="pill '+(ok?"good":"mid")+'">'+t(ok?"val":"prov")+"</span>"+t("cita_h")+'</p><blockquote lang="es">«'+esc(c[0])+'»</blockquote><p class="cita-f"><a href="'+safeUrl(f.u)+'" target="_blank" rel="noopener">'+esc(f.t)+" ↗</a>"+(LANG==="eu"?'<span class="cita-l">'+t("cita_lang")+"</span>":"")+"</p>"+nota+"</div>";}
+  return'<div class="cita est-c"><p class="cita-h"><span class="pill bad">'+t("estd")+"</span>"+t("cita_none")+"</p>"+nota+"</div>";
+}
 function ficha(full){
   var R=ranked(),p=selP(),sid=p?p.id:null;
   $("fsw").innerHTML=R.map(function(x){return'<button class="pchip'+(x.p.id===sid?" sel":"")+'" data-id="'+x.p.id+'" aria-pressed="'+(x.p.id===sid)+'" style="'+(x.p.id===sid?"":"background:transparent;color:var(--ink);text-decoration:none;font-weight:500")+'">'+sw(x.p)+esc(pn(x.p))+"</button>";}).join("");
@@ -521,8 +529,8 @@ function ficha(full){
     else{var d=Math.abs(u-v);pill=d===0?t("p0"):d===1?t("p1"):t("p2");cls=d===0?"good":d===1?"mid":"bad";}
     var est=isEst(p,i)?' <span class="est">'+t("est")+"</span>":"";
     var pr=p.props[i].length?'<ul class="pts">'+p.props[i].map(function(x,j){return prop(x,e&&e.props[i]&&e.props[i][j]);}).join("")+"</ul>":'<p class="none">'+t("noprops")+"</p>";
-    if(st.explore)return'<div class="tcard"><div class="th"><span class="tn">'+esc(an(a))+'</span></div><div class="tv"><b>'+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+pr+"</div>";
-    return'<div class="tcard'+(w?"":" dim")+'"><div class="th"><span class="tn">'+esc(an(a))+(w===2?" <span>"+t("much")+"</span>":w===1?"":" <span>"+t("nc")+"</span>")+'</span><span class="pill '+cls+'">'+pill+'</span></div><div class="tv"><b>'+t("you")+'</b><span>'+(u===null?"—":esc(ao(a,u)))+"</span><b>"+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+pr+"</div>";
+    if(st.explore)return'<div class="tcard"><div class="th"><span class="tn">'+esc(an(a))+'</span></div><div class="tv"><b>'+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+base(p,i)+pr+"</div>";
+    return'<div class="tcard'+(w?"":" dim")+'"><div class="th"><span class="tn">'+esc(an(a))+(w===2?" <span>"+t("much")+"</span>":w===1?"":" <span>"+t("nc")+"</span>")+'</span><span class="pill '+cls+'">'+pill+'</span></div><div class="tv"><b>'+t("you")+'</b><span>'+(u===null?"—":esc(ao(a,u)))+"</span><b>"+esc(pn(p))+"</b><span>"+esc(ao(a,v))+est+"</span></div>"+base(p,i)+pr+"</div>";
   }).join("");
 }
 /* ---------- comparar dos partidos ---------- */
@@ -803,17 +811,16 @@ window.addEventListener("popstate",alCambiar);
 
 /* Portada: las curvas reales de los partidos y las cifras del proyecto. */
 function renderHero(){
-  var P=E().parties,n=NT(),W=310,H=118,mX=10,mY=12,o=[],v,nProps=0;
+  var P=E().parties,n=NT(),W=310,H=118,mX=10,mY=12,o=[],v;
   function X(i){return mX+i*(W-2*mX)/(n-1);}
   /* Un pequeño desplazamiento por partido para que las líneas que coinciden no se tapen del todo. */
   function Y(val,slot){return mY+(5-val)/4*(H-2*mY)+(slot-(P.length+1)/2)*1.3;}
   for(v=1;v<=5;v++)o.push('<line x1="0" x2="'+W+'" y1="'+Y(v,(P.length+1)/2)+'" y2="'+Y(v,(P.length+1)/2)+'" stroke="var(--dark-line)" vector-effect="non-scaling-stroke"/>');
   P.forEach(function(p){
     o.push('<polyline points="'+p.s.map(function(val,i){return X(i).toFixed(1)+","+Y(val,p.slot).toFixed(1);}).join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>');
-    p.props.forEach(function(t){nProps+=t.length;});
   });
   $("hero-svg").innerHTML=o.join("");
-  $("c-part").textContent=P.length;$("c-temas").textContent=n;$("c-props").textContent=nProps;
+  $("c-part").textContent=P.length;$("c-temas").textContent=n;$("c-val").textContent=P.reduce(function(n,p){return n+p.estado.filter(function(e){return e==="validado";}).length;},0);
   $("cifras").hidden=false;
 }
 renderHero();

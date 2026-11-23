@@ -180,6 +180,14 @@ button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{o
 .pts a,.ppl a{font-size:13px;white-space:nowrap}
 #rec-src .pts a{white-space:normal;overflow-wrap:anywhere}
 .none{font-size:13.5px;font-style:italic;color:var(--ink-2)}
+.cita{border-left:3px solid var(--ink);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
+.cita.est-c{border-left:3px dashed var(--ink-2)}
+.cita-h{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.cita blockquote{margin:0;font-size:14px;line-height:1.5;color:var(--ink)}
+.cita-f{margin:0;font-size:12.5px;line-height:1.4;color:var(--ink-2);overflow-wrap:anywhere}
+.cita-f a{color:var(--ink-2)}
+.cita-l{display:block;font-style:italic}
+.cita-n{margin:0;font-size:12.5px;line-height:1.4;font-style:italic;color:var(--ink-2)}
 .tag{display:inline-block;padding:0 6px;border:1px solid var(--line);border-radius:4px;font-size:11px;font-weight:600;color:var(--ink-2);vertical-align:1px;white-space:nowrap}
 .list{background:var(--surface);border-radius:18px;padding:0 16px;display:flex;flex-direction:column}
 .list>*{border-bottom:1px solid var(--grid)}
