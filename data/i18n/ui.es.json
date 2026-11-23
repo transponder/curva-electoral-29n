@@ -1,5 +1,17 @@
 {
   "ui": {
+    "rt_txt": "Esta es mi curva de valor electoral para el 29-N. Haz el test de Kurba y mira en qué temas coincidimos:",
+    "rt_done": "Enlace compartido.",
+    "rt_noshare": "No se ha podido abrir el menú de compartir. Copia el enlace o mándalo por WhatsApp.",
+    "rc_sum": "De los {t} temas que habéis respondido, coincidís en {n} y estáis a un paso en {c}.",
+    "rc_none": "No hay ningún tema que hayáis respondido ambas personas.",
+    "rc_nc": "{n} temas no se comparan porque alguna de las dos personas respondió «No lo tengo claro».",
+    "rc_nc1": "1 tema no se compara porque alguna de las dos personas respondió «No lo tengo claro».",
+    "rc_eq": "Coincidís",
+    "rc_otra": "La otra persona",
+    "rc_gone": "Hemos olvidado el resultado compartido.",
+    "ri_h": "Alguien quiere comparar su curva con la tuya",
+    "ri_bad_h": "Este enlace ya no funciona",
     "go": "Empezar · 2 min",
     "cur_h_ex": "Las curvas de los partidos",
     "top_h_ex": "Tema a tema",

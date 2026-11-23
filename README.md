@@ -21,6 +21,7 @@ css/kurba.css         Estilos (diseño de UX de Kurba)
 js/datos.js           Carga data/ y construye los objetos que usa la interfaz
 js/app.js             Interfaz, flujo y rutas, sin dependencias
 js/cercania.js        Cálculo de cercanía (módulo puro, con tests)
+js/reto.js            «Compárate conmigo»: respuestas codificadas en el enlace #/reto/<código> (módulo puro, con tests)
 js/paginas.js         Metodología completa, aviso legal, privacidad y «Quiénes somos»
 data/temas.json       11 temas: pregunta, 5 opciones y código de 3 letras para el gráfico
 data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas (fuente: BOE; la biografía, en fuente_bio/url_bio), programa y otros compromisos, con fuente
@@ -74,7 +75,7 @@ La metodología completa está en la página `#/metodologia`, basada en el codeb
 
 ## Rutas
 
-`#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/quienes-somos` (y `#/contacto`) · `#/aviso-legal` · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
+`#/` inicio · `#/test` · `#/resultado` · `#/curvas` · `#/fichas` · `#/partido/<id>` · `#/comparar/<id>/<id>` · `#/reto/<código>` (comparar tu curva con la de otra persona; el código lleva sus respuestas y solo existe si esa persona lo crea) · `#/guias` · `#/guia/<id>` · `#/metodologia` (y `#/metodologia/correcciones`) · `#/quienes-somos` (y `#/contacto`) · `#/aviso-legal` · `#/privacidad`. Sin haber hecho el test, curvas, fichas y comparador se abren en modo exploración.
 
 ## Versiones de CSS y JS (caché)
 
