@@ -23,6 +23,33 @@ Abrid `citas-provisionales.csv`, que tiene una fila por casilla provisional:
 
 La columna `pasaje_del_programa` (34 de 43 filas) trae el párrafo del programa ya extraído del PDF, para ir más rápido. Lo ha sacado `pdftotext`, así que **comprobadlo contra el PDF antes de pegarlo** y recortadlo a dos frases como máximo. Las 9 filas sin pasaje tienen como fuente un medio, y hay que leer el artículo.
 
+## Citas pegadas el 23-N (issue #34): 23 de 43
+
+Están pegadas las citas de las 23 casillas provisionales cuya fuente es el programa de **EH Bildu, PP, Vox, Frente Amplio o Podemos**. Las casillas siguen como `provisional`: para pasarlas a `validado` hacen falta vuestros dos nombres en `codificadores`.
+
+Cómo se han sacado:
+
+- Los PDF se han descargado de la web oficial de cada partido (las URL de la tabla de abajo). Sus páginas coinciden con las de la tabla: 30, 82, 66, 151 y 141.
+- Cada cita se ha copiado del texto del PDF y se ha comprobado que aparece literal en la página citada, con un máximo de dos frases. Una página (la 130 del Frente Amplio) se ha comprobado también sobre la imagen del PDF. La `fecha_consulta` es la del 23-N.
+- Dos citas siguen en la página siguiente, y la fuente lo indica: PP · sanidad (págs. 68-69) y Vox · clima (págs. 11-12).
+
+Cuando el pasaje no justificaba bien el nivel, la cita se ha tomado de otra frase del programa. En tres casillas eso cambia la página de la `fuente` y de la `url`:
+
+| Casilla | Antes | Ahora | Por qué |
+|---|---|---|---|
+| EH Bildu · autogobierno (5) | pág. 23, Euskal Herria como nación | pág. 24, «derecho a decidir del pueblo vasco» | El nivel 5 es el derecho a decidir |
+| Vox · vivienda (1) | pág. 24, IVA 0 % | pág. 23, «ampliación de suelo disponible… supresión de trabas» | El nivel 1 es liberalizar suelo y quitar trámites |
+| Frente Amplio · vivienda (5) | pág. 10, expropiación | pág. 11, prohibir comprar vivienda que no sea para residir | El nivel 5 incluye límites a la compra |
+
+En otras tres la cita también es otra frase, de la misma página: EH Bildu · vivienda (prohibición de la compra especulativa), Vox · sanidad («colaboración público-privada») y Podemos · trabajo (jornada de 30 horas, empezando por 35).
+
+Con la cita delante, siguen pendientes las dudas de nivel de más abajo: PP · defensa (5) y Frente Amplio · defensa (2).
+
+Lo que falta:
+
+- **PNV (6) y PSE-EE (5).** Sus webs devuelven una página de verificación anti-bots en lugar del PDF, así que no se han podido comprobar desde el entorno automático. Hay que pegarlas a mano con `pasaje_del_programa`.
+- **9 casillas con fuente en un medio** (PNV · euskera y defensa, PSE-EE · defensa, Vox · autogobierno, trabajo, derechos civiles y defensa, Frente Amplio · sanidad, Podemos · sanidad). Hay que leer el artículo o, mejor, buscar la propuesta en el programa.
+
 ## Comprobad una vez los enlaces oficiales
 
 Desde el entorno en el que se hizo la revisión no se podía abrir las webs de los partidos. Los textos se han comprobado con los PDF archivados en [jynus/programas-electorales-29n-generales-2026](https://github.com/jynus/programas-electorales-29n-generales-2026), que guarda el original de cada programa, su URL oficial y su suma SHA-256. Las sumas coinciden. Aun así, abrid estos enlaces una vez y confirmad que es el mismo documento y que la página cuadra:
