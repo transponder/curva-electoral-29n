@@ -51,7 +51,7 @@ Edita `data/codificacion.csv` (se puede abrir en Excel o Google Sheets y exporta
 | `estado` | `validado`, `provisional` o `estimado` |
 | `cita` | cita textual, máximo dos frases |
 | `fuente`, `url`, `fecha_consulta` | de dónde sale (AAAA-MM-DD) |
-| `codificadores` | quién la ha codificado |
+| `codificadores` | quién ha comprobado la cita en la fuente (basta una firma; en las validadas, «Equipo Kurba») |
 | `nota` | justificación breve si aún no hay cita |
 
 Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Programa`, `Campaña` o `Antes del 29-N`. Cada propuesta necesita `fuente`, `url` y `fecha_consulta`.
@@ -98,7 +98,7 @@ Cada cambio en `data/` se comprueba automáticamente en GitHub (workflow «Valid
 python3 scripts/validar_datos.py
 ```
 
-La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y dos nombres en `codificadores` (separados por `;`). Una casilla `estimado` necesita una `nota`. Una `url` sin `fecha_consulta`, o un enlace a un dominio descartado, también es un error. Al final, la validación cuenta cuántas provisionales tienen ya fuente y cuántas tienen cita.
+La validación falla, entre otros casos, si falta alguna de las 77 casillas, si un `nivel` no está entre 1 y 5 o si una casilla marcada como `validado` no tiene `cita`, `fuente`, `url`, `fecha_consulta` y quién ha comprobado la cita en `codificadores` (basta una firma, por ejemplo «Equipo Kurba»). Una casilla `estimado` necesita una `nota`. Una `url` sin `fecha_consulta`, o un enlace a un dominio descartado, también es un error. Al final, la validación cuenta cuántas provisionales tienen ya fuente y cuántas tienen cita.
 ## Tests y sensibilidad del cálculo
 
 El cálculo de cercanía está en `js/cercania.js`, separado de la interfaz. Para comprobarlo:

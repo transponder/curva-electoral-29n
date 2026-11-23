@@ -133,7 +133,7 @@
     "pregunta": "¿Sabes qué mide y qué no mide tu porcentaje de cercanía?",
     "cuerpo": [
       "<p>El porcentaje mide cuánto se parecen tus respuestas a las posiciones de cada partido en once temas, ponderado por lo que te importa cada uno. No mide la credibilidad de un partido, su historial cumpliendo promesas ni la valía de sus candidatos.</p>",
-      "<p>Las posiciones de los partidos están elaboradas a partir de información pública y son provisionales. Cuando un partido no se pronuncia, la posición aparece como estimada.</p>",
+      "<p>Las posiciones de los partidos salen de sus programas y de otras fuentes oficiales, y cada una lleva una cita comprobada en la fuente. Cuando un partido no se pronuncia, la posición aparece como estimada.</p>",
       "<p>Úsalo como punto de partida: revisa en las fichas qué propone cada partido en los temas que más te importan y contrasta con otras fuentes.</p>"
     ],
     "fuentes": []

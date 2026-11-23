@@ -338,8 +338,9 @@ def validar(carpeta):
             for campo in ("cita", "fuente", "url", "fecha_consulta"):
                 if not r[campo]:
                     err(f"{donde}: una casilla «validado» necesita «{campo}»")
-            if n_codificadores(r["codificadores"]) < 2:
-                err(f"{donde}: una casilla «validado» necesita dos codificadores en «codificadores» (separados por ;)")
+            # Basta una firma: quien comprueba la cita en la fuente (metodología del 24-N).
+            if n_codificadores(r["codificadores"]) < 1 or r["codificadores"].strip().lower() == "v0":
+                err(f"{donde}: una casilla «validado» necesita en «codificadores» quién ha comprobado la cita")
         if r["estado"] == "estimado" and not r["nota"]:
             err(f"{donde}: una casilla «estimado» necesita una «nota» que explique la deducción")
         if r["estado"] == "estimado" and (r["cita"] or r["url"]):
