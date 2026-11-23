@@ -1,5 +1,5 @@
 {
-  "_nota": "Colores de la paleta de Kurba (diseño de UX); «color_oscuro» es el color en modo oscuro. «forma» es el marcador de cada partido en el gráfico (circle, square, triup, diamond, tridown, penta, cross), para que se distingan también sin color. Personas y «otros» llevan su fuente.",
+  "_nota": "Colores de la paleta de Kurba (diseño de UX); «color_oscuro» es el color en modo oscuro. «forma» es el marcador de cada partido en el gráfico (circle, square, triup, diamond, tridown, penta, cross), para que se distingan también sin color. Personas y «otros» llevan su fuente. «representacion» explica por qué cada partido tiene curva (criterio de la metodología). «sin_curva» son las demás candidaturas proclamadas en el BOE, y «papeletas», todas las de cada provincia en el orden del BOE.",
   "codificados": [
     {
       "id": "eh-bildu",
@@ -9,6 +9,11 @@
       "color_oscuro": "#1a9fd0",
       "forma": "square",
       "nota": "Coalición soberanista de izquierdas. Apoyó la investidura de Pedro Sánchez en 2023.",
+      "representacion": {
+        "texto": "5 escaños en el Congreso por Araba, Bizkaia y Gipuzkoa en las generales de 2023.",
+        "fuente": "Deia: el PSE gana en Euskadi y triple empate (resultados del 23 de julio de 2023)",
+        "url": "https://www.deia.eus/elecciones-generales/2023/07/23/pse-gana-euskadi-triple-empate-7083225.html"
+      },
       "web": "https://ehbildu.eus",
       "candidatura_presidencia": "",
       "programa_nota": "Programa publicado el 16 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
@@ -77,6 +82,11 @@
       "color_oscuro": "#dc3f8e",
       "forma": "penta",
       "nota": "Coalición de Sumar Mugimendua, Ezker Anitza-IU, Berdeak y otras organizaciones. Su candidata a la Presidencia es Ada Colau.",
+      "representacion": {
+        "texto": "Coalición que incluye a Sumar, que obtuvo 1 escaño en el Congreso por Bizkaia en las generales de 2023.",
+        "fuente": "elDiario.es: resultados de las generales de 2023 en Bizkaia",
+        "url": "https://www.eldiario.es/euskadi/pnv-mantiene-primera-fuerza-bizkaia-pierde-escano-gana-eh-bildu-pse-ee-afianza_1_10401577.html"
+      },
       "web": "https://frenteamplio.info",
       "candidatura_presidencia": "Ada Colau",
       "programa_nota": "Programa presentado el 16 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
@@ -140,6 +150,11 @@
       "color_oscuro": "#268f4c",
       "forma": "circle",
       "nota": "Partido nacionalista vasco. Preside el Gobierno Vasco y apoyó la investidura de Pedro Sánchez en 2023.",
+      "representacion": {
+        "texto": "5 escaños en el Congreso por Araba, Bizkaia y Gipuzkoa en las generales de 2023.",
+        "fuente": "Deia: el PSE gana en Euskadi y triple empate (resultados del 23 de julio de 2023)",
+        "url": "https://www.deia.eus/elecciones-generales/2023/07/23/pse-gana-euskadi-triple-empate-7083225.html"
+      },
       "web": "https://www.eaj-pnv.eus",
       "candidatura_presidencia": "",
       "programa_nota": "Programa presentado el 9 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo las anteriores al 29-N.",
@@ -208,6 +223,11 @@
       "color_oscuro": "#8a4fc8",
       "forma": "cross",
       "nota": "Concurre por separado del Frente Amplio. Su candidata a la Presidencia es Irene Montero.",
+      "representacion": {
+        "texto": "Diputadas y diputados en el Congreso en la legislatura que termina: los de Podemos dejaron el grupo de Sumar en diciembre de 2023 y pasaron al Grupo Mixto.",
+        "fuente": "RTVC: los cinco diputados de Podemos dejan Sumar (diciembre de 2023)",
+        "url": "https://rtvc.es/cinco-diputados-podemos-dejan-sumar/"
+      },
       "web": "https://podemos.info",
       "candidatura_presidencia": "Irene Montero",
       "programa_nota": "Programa publicado en noviembre de 2026 en pazcasaytrabajo.es, su web de campaña. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo una de campaña.",
@@ -265,6 +285,11 @@
       "color_oscuro": "#4a80e0",
       "forma": "diamond",
       "nota": "Candidatura del PP en Euskadi. Su candidato a la Presidencia es Alberto Núñez Feijóo.",
+      "representacion": {
+        "texto": "2 escaños en el Congreso por Euskadi en las generales de 2023.",
+        "fuente": "Deia: el PSE gana en Euskadi y triple empate (resultados del 23 de julio de 2023)",
+        "url": "https://www.deia.eus/elecciones-generales/2023/07/23/pse-gana-euskadi-triple-empate-7083225.html"
+      },
       "web": "https://www.pp.es",
       "candidatura_presidencia": "Alberto Núñez Feijóo",
       "programa_nota": "Programa presentado el 10 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece, salvo una anterior al 29-N. No hemos localizado el «Contrato con España» en la web del PP.",
@@ -333,6 +358,11 @@
       "color_oscuro": "#dd4a43",
       "forma": "triup",
       "nota": "Federación vasca del PSOE. Su candidato a la Presidencia es Pedro Sánchez.",
+      "representacion": {
+        "texto": "5 escaños en el Congreso por Araba, Bizkaia y Gipuzkoa en las generales de 2023.",
+        "fuente": "Deia: el PSE gana en Euskadi y triple empate (resultados del 23 de julio de 2023)",
+        "url": "https://www.deia.eus/elecciones-generales/2023/07/23/pse-gana-euskadi-triple-empate-7083225.html"
+      },
       "web": "https://www.socialistasvascos.com",
       "candidatura_presidencia": "Pedro Sánchez",
       "programa_nota": "Comparte el programa estatal del PSOE, presentado el 15 de noviembre de 2026; no hemos localizado un programa propio del PSE-EE. Cada propuesta enlaza a la página del programa en la que aparece, salvo las de campaña y las anteriores al 29-N.",
@@ -403,6 +433,11 @@
       "color_oscuro": "#76a31c",
       "forma": "tridown",
       "nota": "Su candidato a la Presidencia es Santiago Abascal. Tiene un escaño en el Parlamento Vasco, por Álava.",
+      "representacion": {
+        "texto": "1 escaño en el Parlamento Vasco, por Álava, en las elecciones de 2024, y grupo propio en el Congreso.",
+        "fuente": "elDiario.es: resultados de las elecciones vascas del 21 de abril de 2024",
+        "url": "https://www.eldiario.es/euskadi/pnv-sobrevive-gran-subida-eh-bildu-gana-votos-euskadi-retiene-mayoria-absoluta-pse-ee_1_11307120.html"
+      },
       "web": "https://www.voxespana.es",
       "candidatura_presidencia": "Santiago Abascal",
       "programa_nota": "Programa publicado el 12 de noviembre de 2026. Cada propuesta de la ficha enlaza a la página del programa en la que aparece; dos proceden de su plan de desregulación de junio.",
@@ -459,5 +494,308 @@
       "otros": []
     }
   ],
-  "sin_curva": []
+  "sin_curva": [
+    {
+      "id": "escanos-en-blanco",
+      "siglas": "Escaños en Blanco",
+      "nombre": "Escaños en Blanco para Dejar Escaños Vacíos",
+      "web": "",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=14"
+        },
+        {
+          "provincia": "araba",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=17"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=82"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=84"
+        }
+      ]
+    },
+    {
+      "id": "pacma",
+      "siglas": "PACMA",
+      "nombre": "Partido Animalista con el Medio Ambiente",
+      "web": "https://pacma.es",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=15"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=46"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=81"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=84"
+        }
+      ]
+    },
+    {
+      "id": "pcte-elak",
+      "siglas": "PCTE/ELAK",
+      "nombre": "Partido Comunista de los Trabajadores de Euskadi / Euskadiko Langileen Alderdi Komunista",
+      "web": "https://pcte.es",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=15"
+        },
+        {
+          "provincia": "araba",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=18"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=45"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=48"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=83"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=84"
+        }
+      ]
+    },
+    {
+      "id": "salf",
+      "siglas": "SALF",
+      "nombre": "Se Acabó La Fiesta",
+      "web": "",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=15"
+        }
+      ]
+    },
+    {
+      "id": "frente-obrero",
+      "siglas": "Frente Obrero",
+      "nombre": "Frente Obrero (FO)",
+      "web": "https://frenteobrero.es",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=15"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=46"
+        },
+        {
+          "provincia": "gipuzkoa",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=81"
+        }
+      ]
+    },
+    {
+      "id": "feministas-al-congreso",
+      "siglas": "Feministas al Congreso",
+      "nombre": "Feministas al Congreso (PFAC)",
+      "web": "",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=16"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=47"
+        }
+      ]
+    },
+    {
+      "id": "mundo-mas-justo",
+      "siglas": "Por un Mundo Más Justo",
+      "nombre": "Por un Mundo Más Justo (MUNDO+JUSTO)",
+      "web": "https://www.porunmundomasjusto.es",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=16"
+        },
+        {
+          "provincia": "araba",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=18"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=47"
+        },
+        {
+          "provincia": "bizkaia",
+          "camara": "senado",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=48"
+        }
+      ]
+    },
+    {
+      "id": "justicia-y-ley",
+      "siglas": "Justicia y Ley",
+      "nombre": "Justicia y Ley (JL)",
+      "web": "",
+      "listas": [
+        {
+          "provincia": "araba",
+          "camara": "congreso",
+          "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=16"
+        }
+      ]
+    }
+  ],
+  "papeletas": {
+    "_nota": "Candidaturas proclamadas en cada provincia, en el orden del BOE del 3 de noviembre. Una lista con dos id es una candidatura conjunta (Senado de Progreso). «personas» es el número de candidatas y candidatos titulares al Senado.",
+    "araba": {
+      "congreso": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=13",
+        "candidaturas": [
+          "pse-ee",
+          "eh-bildu",
+          "pnv",
+          "escanos-en-blanco",
+          "vox",
+          "pacma",
+          "podemos",
+          "pcte-elak",
+          "salf",
+          "frente-obrero",
+          "pp",
+          "frente-amplio",
+          "feministas-al-congreso",
+          "mundo-mas-justo",
+          "justicia-y-ley"
+        ]
+      },
+      "senado": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=16",
+        "candidaturas": [
+          [
+            "pse-ee",
+            "frente-amplio"
+          ],
+          "eh-bildu",
+          "pnv",
+          "escanos-en-blanco",
+          "vox",
+          "podemos",
+          "pcte-elak",
+          "pp",
+          "mundo-mas-justo"
+        ],
+        "personas": 20
+      }
+    },
+    "bizkaia": {
+      "congreso": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=44",
+        "candidaturas": [
+          "pnv",
+          "pse-ee",
+          "eh-bildu",
+          "pcte-elak",
+          "vox",
+          "frente-amplio",
+          "podemos",
+          "pacma",
+          "frente-obrero",
+          "pp",
+          "mundo-mas-justo",
+          "feministas-al-congreso"
+        ]
+      },
+      "senado": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=47",
+        "candidaturas": [
+          "pnv",
+          "eh-bildu",
+          "pcte-elak",
+          "podemos",
+          "vox",
+          "pp",
+          "mundo-mas-justo",
+          [
+            "pse-ee",
+            "frente-amplio"
+          ]
+        ],
+        "personas": 20
+      }
+    },
+    "gipuzkoa": {
+      "congreso": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=80",
+        "candidaturas": [
+          "eh-bildu",
+          "pse-ee",
+          "pnv",
+          "pacma",
+          "frente-obrero",
+          "escanos-en-blanco",
+          "vox",
+          "podemos",
+          "pp",
+          "pcte-elak"
+        ]
+      },
+      "senado": {
+        "url": "https://www.boe.es/boe/dias/2026/11/03/pdfs/BOE-A-2026-23103.pdf#page=83",
+        "candidaturas": [
+          "eh-bildu",
+          "pnv",
+          "pacma",
+          "escanos-en-blanco",
+          "podemos",
+          "pcte-elak",
+          [
+            "pse-ee",
+            "frente-amplio"
+          ],
+          "vox"
+        ],
+        "personas": 19
+      }
+    }
+  }
 }

@@ -63,6 +63,16 @@
         h('li', null, 'No valoramos la credibilidad, el cumplimiento de promesas pasadas ni a los candidatos.')),
       P('La escala ordena las opciones dentro de cada tema. El 1 y el 5 no significan izquierda o derecha, ni mejor o peor. En el test las opciones salen sin números y en orden aleatorio.'),
 
+      h('h3', { id: 'candidaturas', tabindex: '-1' }, 'Qué candidaturas tienen curva'),
+      P('Tienen curva las candidaturas que se presentan en Araba, Bizkaia o Gipuzkoa y que tenían representación, en la legislatura que termina, en el Congreso de los Diputados (por cualquier circunscripción) o en el Parlamento Vasco, o que son sucesoras directas de una que la tenía:'),
+      h('ul', null, partidos.map(function (p) {
+        return h('li', null, h('strong', null, p.n), ': ', p.rep ? [p.rep.t, ' ', h('a', { href: p.rep.u, target: '_blank', rel: 'noopener' }, p.rep.f + ' ↗')] : 'pendiente de fuente.');
+      })),
+      (D.OTRAS || []).length ? [
+        P('Las demás candidaturas proclamadas no tienen curva, pero también están en la papeleta. Las listamos con su fuente para que nadie piense que las ocultamos:'),
+        otrasCandidaturas(D, 'es', { titulo: false, intro: false }),
+      ] : null,
+
       h('h3', null, 'Jerarquía de fuentes'),
       P('Usamos la fuente de rango más alto disponible. Una inferior solo completa lo que la superior no dice.'),
       h('ol', null,
@@ -178,5 +188,40 @@
     return txt ? txt.split(/\n\s*\n/).map(function (par) { return P(par.trim()); }) : null;
   }
 
-  window.KurbaPaginas = { metodologia: metodologia, privacidad: privacidad, avisoLegal: avisoLegal, quienes: quienes };
+  /* Candidaturas proclamadas sin curva («sin_curva» y «papeletas» de data/partidos.json): en la pestaña
+     «Partidos» y en la metodología. Los textos salen de data/i18n/ui.*.json. */
+  var PROVINCIAS = ['araba', 'bizkaia', 'gipuzkoa'];
+  function otrasCandidaturas(D, lang, opc) {
+    opc = opc || {};
+    var otras = D.OTRAS || [], pap = D.PAPELETAS || {}, conCurva = D.ED.eu.parties.map(function (p) { return p.id; });
+    if (!otras.length) return null;
+    function t(k) { var v = (D.TX[lang] || {})[k]; return v === undefined ? D.TX.es[k] : v; }
+    function ext(href, texto, cls) { return h('a', { class: cls, href: href, target: '_blank', rel: 'noopener' }, texto + ' ↗'); }
+    function nCurva(c) {
+      return c.filter(function (x) { return (Array.isArray(x) ? x : [x]).some(function (i) { return conCurva.indexOf(i) >= 0; }); }).length;
+    }
+    var lista = h('ul', { class: 'ppl list oc-list' }, otras.map(function (o) {
+      var donde = PROVINCIAS.map(function (p) {
+        var ls = o.listas.filter(function (l) { return l.prov === p; });
+        if (!ls.length) return null;
+        return ext(ls[0].u, t('oc_' + p) + ' · ' + ls.map(function (l) { return t(l.cam === 'senado' ? 'oc_sen' : 'oc_cong'); }).join(t('oc_y')), 'oc-chip');
+      });
+      return h('li', null, h('b', null, o.n), o.nombre !== o.n ? h('span', { class: 'role' }, o.nombre) : null,
+        h('span', { class: 'oc-chips' }, donde, o.web ? ext(o.web, t('oc_web'), 'oc-chip') : null));
+    }));
+    var cuentas = h('ul', { class: 'small oc-cuentas' }, PROVINCIAS.filter(function (p) { return pap[p] && pap[p].congreso; }).map(function (p) {
+      var cg = pap[p].congreso, sn = pap[p].senado || { candidaturas: [] };
+      return h('li', null, h('strong', null, t('oc_' + p)), ': ',
+        t('oc_cuenta').replace('{n}', cg.candidaturas.length).replace('{c}', nCurva(cg.candidaturas))
+          .replace('{s}', sn.candidaturas.length).replace('{k}', sn.personas || 0), ' ', ext(cg.url, t('oc_boe')));
+    }));
+    return [
+      opc.titulo === false ? null : h('h3', null, t('oc_h')),
+      opc.intro === false ? null : h('p', { class: 'small' }, t('oc_s'), ' ', h('a', { href: '#/metodologia/candidaturas' }, t('oc_por') + ' →')),
+      lista, cuentas,
+      h('p', { class: 'small' }, t('oc_fuente')),
+    ];
+  }
+
+  window.KurbaPaginas = { otrasCandidaturas: otrasCandidaturas, metodologia: metodologia, privacidad: privacidad, avisoLegal: avisoLegal, quienes: quienes };
 })();
