@@ -161,6 +161,7 @@ function renderPaginas(){
   pintar("met-full",KP.metodologia(D,C,LANG));
   pintar("priv-body",KP.privacidad(D,LANG));
   pintar("legal-body",KP.avisoLegal(D,LANG));
+  pintar("f-otras",KP.otrasCandidaturas(D,LANG));
 }
 renderPaginas();
 function renderQuienes(){
@@ -771,7 +772,9 @@ function aplicar(){
       case"guia":if(!openRec(parts[1]))show("s-404");break;
       case"metodologia":
         show("s-met");
-        if(parts[1]==="correcciones"){var c=$("correcciones");c.scrollIntoView({block:"start"});if(!primera)c.focus({preventScroll:true});}
+        /* #/metodologia/correcciones, #/metodologia/candidaturas…: la sección con ese id. */
+        var c=parts[1]&&/^[a-z-]+$/.test(parts[1])?$(parts[1]):null;
+        if(c){c.scrollIntoView({block:"start"});if(!primera)c.focus({preventScroll:true});}
         break;
       case"privacidad":show("s-priv");break;
       case"aviso-legal":show("s-legal");break;

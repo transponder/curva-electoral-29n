@@ -25,6 +25,8 @@ js/reto.js            «Compárate conmigo»: respuestas codificadas en el enlac
 js/paginas.js         Metodología completa, aviso legal, privacidad y «Quiénes somos»
 data/temas.json       11 temas: pregunta, 5 opciones y código de 3 letras para el gráfico
 data/partidos.json    Partidos: color y forma del marcador, nota, candidaturas (fuente: BOE; la biografía, en fuente_bio/url_bio), programa y otros compromisos, con fuente
+                      «representacion»: por qué tiene curva (criterio de la metodología, con fuente).
+                      «sin_curva»: las demás candidaturas proclamadas, con sus listas y la página del BOE; «papeletas»: todas las de cada provincia, en el orden del BOE
 data/codificacion.csv Una fila por partido × tema: nivel, estado, cita, fuente, url…
 data/propuestas.csv   Propuestas concretas por partido y tema (fichas), con fuente
 data/recursos.json    Guías para votar (fechas, Congreso, Senado, Concierto…), con fuentes

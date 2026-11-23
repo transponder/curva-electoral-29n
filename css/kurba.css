@@ -238,6 +238,10 @@ details.card summary{cursor:pointer;font-family:var(--f-display);font-weight:700
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 [tabindex="-1"]:focus{outline:none}
 #shareimg:not([src]){display:none}
+/* Otras candidaturas (sin curva) */
+.oc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ppl .oc-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;font-size:13px;white-space:nowrap}
+.oc-cuentas{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 /* «Compárate conmigo» */
 a.ghost{display:inline-flex;align-items:center;color:var(--ink);text-decoration:none}
 .rt-aviso{background:var(--bg);border-radius:16px;padding:14px}

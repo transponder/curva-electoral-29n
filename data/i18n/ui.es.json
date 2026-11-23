@@ -1,5 +1,18 @@
 {
   "ui": {
+    "oc_h": "Otras candidaturas en Araba, Bizkaia y Gipuzkoa",
+    "oc_s": "También están en la papeleta, pero no tienen curva: Kurba compara a las candidaturas con representación en el Congreso o en el Parlamento Vasco en la legislatura que termina.",
+    "oc_por": "Por qué no tienen curva",
+    "oc_araba": "Araba",
+    "oc_bizkaia": "Bizkaia",
+    "oc_gipuzkoa": "Gipuzkoa",
+    "oc_cong": "Congreso",
+    "oc_sen": "Senado",
+    "oc_y": " y ",
+    "oc_cuenta": "{n} candidaturas al Congreso, {c} de ellas con curva; {s} al Senado, con {k} personas candidatas.",
+    "oc_boe": "BOE",
+    "oc_web": "Web",
+    "oc_fuente": "Fuente: candidaturas proclamadas por las juntas electorales provinciales (BOE del 3 de noviembre de 2026).",
     "rt_txt": "Esta es mi curva de valor electoral para el 29-N. Haz el test de Kurba y mira en qué temas coincidimos:",
     "rt_done": "Enlace compartido.",
     "rt_noshare": "No se ha podido abrir el menú de compartir. Copia el enlace o mándalo por WhatsApp.",

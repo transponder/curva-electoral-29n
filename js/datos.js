@@ -104,6 +104,15 @@
         otros: (p.otros || []).map(function (x) { return [x.texto, fuente(x.fuente, x.url), ETQ[x.etiqueta] || 'c']; }),
         ppl: (p.personas || []).map(function (x) { return [x.nombre, x.cargo, x.descripcion, fuente(x.fuente, x.url), x.url_bio ? fuente(x.fuente_bio, x.url_bio) : null]; }),
         senado: p.senado || '', lead: p.responsable_euskadi || '',
+        rep: p.representacion ? { t: p.representacion.texto, f: p.representacion.fuente, u: p.representacion.url } : null,
+      };
+    });
+
+    // Candidaturas proclamadas sin curva y papeletas de cada provincia (BOE del 3 de noviembre).
+    var OTRAS = (d.partidos.sin_curva || []).map(function (o) {
+      return {
+        id: o.id, n: o.siglas, nombre: o.nombre || o.siglas, web: o.web || '',
+        listas: (o.listas || []).map(function (l) { return { prov: l.provincia, cam: l.camara, u: l.url }; }),
       };
     });
 
@@ -122,6 +131,7 @@
       TX: { es: d.uiEs.ui || {}, eu: d.uiEu.ui || {} },
       METHOD: d.uiEs.metodo || [], METHOD_EU: d.uiEu.metodo || [],
       META: d.meta, TEMAS: d.temas, CODIFICACION: d.codificacion,
+      OTRAS: OTRAS, PAPELETAS: d.partidos.papeletas || {},
     };
   }
 

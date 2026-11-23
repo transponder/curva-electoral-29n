@@ -26,6 +26,12 @@ COLOR = re.compile(r"^#[0-9A-Fa-f]{6}$")
 # la elección o copias de terceros de notas de agencia. Se sustituyen por el programa oficial o
 # por un medio de referencia (EITB, Deia, El Correo, EFE, Europa Press…).
 DOMINIOS_DESCARTADOS = {"brainsre.news", "diarioestrategia.cl", "vivirediciones.es"}
+PROVINCIAS = ("araba", "bizkaia", "gipuzkoa")
+CAMARAS = ("congreso", "senado")
+BOE_PROCLAMACION = re.compile(r"^https://www\.boe\.es/boe/dias/\d{4}/\d{2}/\d{2}/pdfs/BOE-A-\d{4}-\d+\.pdf#page=\d+$")
+# Textos del bloque «Otras candidaturas»: tienen que estar en castellano y en euskera (error, no aviso).
+CLAVES_OBLIGATORIAS_EU = ("oc_h", "oc_s", "oc_por", "oc_araba", "oc_bizkaia", "oc_gipuzkoa", "oc_cong", "oc_sen",
+                          "oc_y", "oc_cuenta", "oc_boe", "oc_web", "oc_fuente")
 
 
 def dominio_descartado(url):
@@ -140,6 +146,75 @@ def validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos):
     faltan = sorted(claves - set(ui_eu))
     if faltan:
         avisos.append(f"i18n/ui.eu.json: {len(faltan)} textos sin traducir (salen en castellano): {', '.join(faltan)}")
+
+
+def validar_candidaturas(partidos, err):
+    """Candidaturas sin curva («sin_curva») y papeletas de cada provincia, sacadas del BOE de proclamación.
+    Cada candidatura de las papeletas tiene que ser un partido con curva o estar en «sin_curva», y al revés:
+    así no puede faltar ninguna en la web."""
+    cod = {p.get("id"): p for p in partidos.get("codificados", [])}
+    for p in cod.values():
+        r = p.get("representacion") or {}
+        if not all((r.get(c) or "").strip() for c in ("texto", "fuente", "url")) or not r.get("url", "").startswith("https://"):
+            err(f"partidos.json: «{p.get('id')}» necesita «representacion» con texto, fuente y url https:// (criterio para tener curva)")
+    sin = {}
+    for n, o in enumerate(partidos.get("sin_curva", []), start=1):
+        i = o.get("id")
+        if not i or i in cod or i in sin:
+            err(f"partidos.json: «sin_curva» n.º {n}: id vacío, repetido o de un partido con curva («{i}»)")
+            continue
+        sin[i] = o
+        for campo in ("siglas", "nombre"):
+            if not (o.get(campo) or "").strip():
+                err(f"partidos.json: «sin_curva» «{i}» no tiene «{campo}»")
+        if o.get("web") and (not o["web"].startswith("https://") or dominio_descartado(o["web"])):
+            err(f"partidos.json: la web de «{i}» debe empezar por https:// y no ser una fuente descartada")
+        if not o.get("listas"):
+            err(f"partidos.json: «sin_curva» «{i}» no tiene «listas»")
+        for l in o.get("listas", []):
+            if l.get("provincia") not in PROVINCIAS or l.get("camara") not in CAMARAS:
+                err(f"partidos.json: «{i}»: lista con provincia o cámara no válida ({l.get('provincia')}, {l.get('camara')})")
+            if not BOE_PROCLAMACION.match(l.get("url", "")):
+                err(f"partidos.json: «{i}»: la url de cada lista debe ser el PDF del BOE con #page=N")
+    pap = partidos.get("papeletas") or {}
+    if sin and not pap:
+        err("partidos.json: falta «papeletas»")
+        return
+    aparece = {i: set() for i in sin}
+    for prov in PROVINCIAS:
+        for cam in CAMARAS:
+            x = (pap.get(prov) or {}).get(cam)
+            if not x:
+                err(f"partidos.json: falta «papeletas.{prov}.{cam}»")
+                continue
+            if not BOE_PROCLAMACION.match(x.get("url", "")):
+                err(f"partidos.json: «papeletas.{prov}.{cam}»: la url debe ser el PDF del BOE con #page=N")
+            if cam == "senado" and not (isinstance(x.get("personas"), int) and x["personas"] > 0):
+                err(f"partidos.json: «papeletas.{prov}.senado» necesita «personas» (número de titulares)")
+            vistos = []
+            for c in x.get("candidaturas", []):
+                ids = c if isinstance(c, list) else [c]
+                for i in ids:
+                    if i in sin:
+                        aparece[i].add((prov, cam))
+                    elif i not in cod:
+                        err(f"partidos.json: «papeletas.{prov}.{cam}»: «{i}» no es un partido con curva ni está en «sin_curva»")
+                vistos += ids
+            if len(set(vistos)) != len(vistos):
+                err(f"partidos.json: «papeletas.{prov}.{cam}» repite alguna candidatura")
+    for i, o in sin.items():
+        listas = {(l.get("provincia"), l.get("camara")) for l in o.get("listas", [])}
+        if listas != aparece[i]:
+            err(f"partidos.json: «{i}»: sus «listas» ({sorted(listas)}) no coinciden con las «papeletas» ({sorted(aparece[i])})")
+
+
+def validar_claves_eu(carpeta, err):
+    for lengua in ("es", "eu"):
+        ruta = carpeta / "i18n" / f"ui.{lengua}.json"
+        ui = json.loads(ruta.read_text(encoding="utf-8")).get("ui", {}) if ruta.exists() else {}
+        faltan = [k for k in CLAVES_OBLIGATORIAS_EU if not (isinstance(ui.get(k), str) and ui[k].strip())]
+        if faltan:
+            err(f"i18n/ui.{lengua}.json: faltan textos de «Otras candidaturas»: {', '.join(faltan)}")
 
 
 def pendientes_de_publicar(carpeta, err, avisos):
@@ -318,6 +393,8 @@ def validar(carpeta):
 
     validar_euskera(carpeta / "i18n", temas, propuestas, err)
     validar_recursos_y_partidos_eu(carpeta, partidos, err, avisos)
+    validar_candidaturas(partidos, err)
+    validar_claves_eu(carpeta, err)
     pendientes_de_publicar(carpeta, err, avisos)
     meta = json.loads((carpeta / "meta.json").read_text(encoding="utf-8"))
     gc = (meta.get("goatcounter") or "").strip()

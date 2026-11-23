@@ -1,5 +1,18 @@
 {
   "ui": {
+    "oc_h": "Beste hautagaitza batzuk Araban, Bizkaian eta Gipuzkoan",
+    "oc_s": "Hauek ere hauteskunde-txartelean daude, baina ez dute kurbarik: Kurbak amaitzen den legegintzaldian Kongresuan edo Eusko Legebiltzarrean ordezkaritza zuten hautagaitzak alderatzen ditu.",
+    "oc_por": "Zergatik ez duten kurbarik",
+    "oc_araba": "Araba",
+    "oc_bizkaia": "Bizkaia",
+    "oc_gipuzkoa": "Gipuzkoa",
+    "oc_cong": "Kongresua",
+    "oc_sen": "Senatua",
+    "oc_y": " eta ",
+    "oc_cuenta": "{n} hautagaitza Kongresurako, horietatik {c} kurbarekin; {s} Senaturako, {k} hautagairekin.",
+    "oc_boe": "BOE",
+    "oc_web": "Webgunea",
+    "oc_fuente": "Iturria: probintzietako hauteskunde-batzordeek aldarrikatutako hautagaitzak (2026ko azaroaren 3ko BOE).",
     "rt_h": "Alderatu zure kurba beste pertsona batenarekin",
     "rt_s": "Sortu esteka bat norbaitek testa egin dezan eta zuen bi kurbak elkarrekin ikus ditzan, baita zein gaitan bat zatozten ere.",
     "rt_go": "Alderatu nirekin",
