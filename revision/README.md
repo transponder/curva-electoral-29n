@@ -1,5 +1,55 @@
 # Revisión de fuentes · v3, bloque 2
 
+## Validación completa del 23-N (issue #34)
+
+Estado: **76 de 77 casillas validadas**, todas con cita literal, fuente oficial, enlace a la página y `fecha_consulta`. Queda **1 estimada**: Podemos · autogobierno. Ya no hay ninguna provisional. Los apartados siguientes a este son el histórico de la revisión.
+
+**Metodología.** Para validar una casilla basta una firma: la de quien comprueba que la cita está en la fuente y que corresponde a la opción. En las casillas validadas, `codificadores` dice «Equipo Kurba». `validar_datos.py` exige al menos una firma y rechaza el `v0` heredado. La metodología publicada (`js/paginas.js`) explica el cambio.
+
+**Cómo se ha comprobado.**
+
+- Cada cita aparece literal en la página que indica la `url` (`#page=N` es la página del PDF), con un máximo de dos frases. El texto se ha extraído con `pdftotext` y se ha cotejado por programa. Cuando una cita sigue en la página siguiente, la fuente lo indica («págs. 42-43»).
+- **Programas de EH Bildu, PP, Vox, Frente Amplio y Podemos:** descargados el 23-N de la URL oficial que enlaza Kurba.
+- **Programas del PNV y del PSOE:** sus webs bloquean la descarga automática. Se ha usado la copia archivada en jynus/programas-electorales-29n-generales-2026, comprobando que su SHA-256 coincide con la del archivo y que su origen es la URL oficial que enlaza Kurba. Conviene abrir una vez esos dos enlaces y confirmar que la página cuadra.
+- **El PP y el Frente Amplio han publicado versiones nuevas** de sus programas. Kurba sigue enlazando la URL que tenía, que hoy sirve un PDF distinto del archivado; las páginas citadas corresponden al PDF que sirve hoy esa URL. Si los partidos retiran esa versión, habrá que revisar las páginas.
+
+**Fuentes oficiales que no son el programa** (4 casillas, en las que el programa del 29-N no trata el tema):
+
+| Casilla | Fuente |
+|---|---|
+| PNV · defensa (4) | Diario de Sesiones del Congreso, pleno núm. 107 (26-3-2025), pág. 34: intervención de Aitor Esteban |
+| Vox · autogobierno (1) | Diario de Sesiones del Congreso, pleno núm. 110 (10-4-2025), pág. 72: enmienda a la totalidad de Vox al Concierto Económico |
+| Vox · trabajo y pensiones (1) | Programa de desregulación de Vox (junio de 2026), pág. 73: deroga la reforma laboral de 2021 |
+| PSE-EE · autogobierno (3) | Acuerdo de bases para el Programa de Gobierno Vasco 2024-2028 (PNV y PSE-EE), pág. 73 |
+
+**Niveles cambiados al validar** (la cita encaja con otra opción; cada casilla lo dice en su `nota`):
+
+| Casilla | Antes | Ahora | Qué dice la fuente |
+|---|---|---|---|
+| PNV · inmigración | 3 | 2 | «Promover vías legales, seguras y ordenadas de migración» |
+| PNV · euskera | 4 | 3 | Valorar las lenguas oficiales en el acceso al MIR; nada sobre la lengua vehicular |
+| PSE-EE · clima y energía | 3 | 4 | «acelerar una transición ecológica justa, impulsar las energías renovables» |
+| PP · trabajo y pensiones | 2 | 3 | Pensiones que «suban cada año con el IPC», como ahora |
+| PP · defensa | 5 | 4 | Ley de programación ligada a la industria de defensa; sin cifra del PIB |
+| Frente Amplio · sanidad y educación | 4 | 5 | «sanidad 100 % pública… de gestión directa con un suelo del 8 % del PIB» |
+| Frente Amplio · industria e I+D | 4 | 5 | La SEPI entrará «como accionista en nuevas empresas y sectores estratégicos» |
+| Frente Amplio · euskera | 3 | 4 | Inmersión en la lengua cooficial como lengua vehicular (por analogía; ver abajo) |
+| Frente Amplio · defensa | 2 | 1 | «reducción efectiva de las partidas militares» |
+
+**Encaje indirecto: revisadlo con prioridad.** La cita es oficial y literal, pero no habla exactamente de lo que mide la opción:
+
+- **Frente Amplio · euskera:** el programa no menciona el euskera. La cita defiende la inmersión en catalán.
+- **PSE-EE · euskera:** la cita trata de las lenguas cooficiales en la Administración General del Estado, no de los perfiles lingüísticos vascos.
+- **PSE-EE · defensa y Vox · defensa:** ninguno de los dos programas da una cifra de gasto.
+
+**Pendiente.**
+
+- **Podemos · autogobierno** sigue estimada. El programa no trata el modelo territorial y podemos.info no admite la consulta automática. Si encontráis un documento oficial, la casilla se valida como las demás.
+- Las **fichas** (`propuestas.csv`) siguen teniendo 12 propuestas con fuente en un medio. No afectan a la cercanía, pero conviene pasarlas a la misma fuente oficial que ahora tiene su casilla.
+- **Textos en euskera:** los nuevos textos de la interfaz y de la guía «Cómo usar este resultado» necesitan revisión (#23).
+
+---
+
 Revisión del 22 de noviembre de 2026. Qué ha cambiado en `data/`, qué tenéis que hacer vosotros y qué queda pendiente.
 
 ## Qué ha cambiado

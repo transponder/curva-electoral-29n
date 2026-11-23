@@ -210,12 +210,12 @@ function paginasDeTexto({ D, C, KP }) {
   const correo = m.contacto_correcciones;
   const asunto = encodeURIComponent('Corrección Kurba');
   const cuerpoCorreo = encodeURIComponent('Partido:\nTema:\nQué está mal:\nFuente (enlace):\nFecha de la fuente:\n');
-  const estado = `<a class="estado" href="/metodologia/">Datos provisionales · ${fechaLarga(m.actualizado, false)}</a>`;
+  const estado = `<a class="estado" href="/metodologia/">Datos validados · ${fechaLarga(m.actualizado, false)}</a>`;
   return [
     {
       ruta: '/metodologia/', seccion: 'metodologia',
       titulo: 'Metodología y fuentes',
-      descripcion: 'Cómo sitúa Kurba a cada partido en 11 temas para las generales del 29-N en Euskadi: jerarquía de fuentes, doble codificación, posiciones estimadas, cálculo de la cercanía y datos descargables.',
+      descripcion: 'Cómo sitúa Kurba a cada partido en 11 temas para las generales del 29-N en Euskadi: jerarquía de fuentes, validación con cita, posiciones estimadas, cálculo de la cercanía y datos descargables.',
       cuerpo: `<h1>Metodología y fuentes</h1>\n${estado}\n` +
         (D.METHOD || []).map((p) => `<p class="lead" style="font-size:16px">${esc(p)}</p>`).join('\n') +
         `\n<div class="prose">${nodos(KP.metodologia(D, C, 'es'))}</div>`,
@@ -293,7 +293,7 @@ function paginasDePartido({ D }) {
 <h1>${esc(p.n)}</h1>
 ${nombre[p.id] !== p.n ? `<p class="small" style="margin-top:-8px">${esc(nombre[p.id])}</p>` : ''}
 <p class="lead">${esc(p.note)}</p>
-<a class="estado" href="/metodologia/">Datos provisionales · ${fechaLarga(m.actualizado, false)}</a>
+<a class="estado" href="/metodologia/">Datos validados · ${fechaLarga(m.actualizado, false)}</a>
 ${CTA(`¿En qué coincides con ${esc(p.n)} y en qué no? Responde 11 preguntas y compara tu curva con la de los ${partidos.length} partidos. Tus respuestas no salen de tu dispositivo.`)}
 <p class="small"><a href="/#/partido/${p.id}">Ver la curva de ${esc(p.n)} junto a la de los demás partidos →</a></p>
 <h2>Tema a tema</h2>
@@ -309,7 +309,7 @@ ${p.otros.length ? `<h2>Otros compromisos</h2>\n<ul class="pts card">${p.otros.m
 <div class="darklist">${prog}</div>
 <h2>El resto de partidos</h2>
 <nav class="list others" aria-label="Fichas del resto de partidos">${resto}</nav>
-<p class="small">Las posiciones se han elaborado a partir de programas electorales, votaciones parlamentarias y declaraciones públicas, sin consultar a los partidos, y son provisionales. <a href="/metodologia/">Cómo lo hacemos</a> · <a href="/metodologia/#correcciones">Señalar un error</a></p>`;
+<p class="small">Las posiciones se han elaborado a partir de programas electorales, votaciones parlamentarias y declaraciones públicas, sin consultar a los partidos, y cada una lleva una cita comprobada en la fuente. <a href="/metodologia/">Cómo lo hacemos</a> · <a href="/metodologia/#correcciones">Señalar un error</a></p>`;
 
     return {
       ruta: `/partido/${p.id}/`, seccion: 'partidos', titulo, descripcion, cuerpo,
