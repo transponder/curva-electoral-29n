@@ -20,7 +20,6 @@
     el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
   }
   function P() { return h.apply(null, ['p', null].concat([].slice.call(arguments))); }
-  function pendiente(texto) { return h('p', { class: 'pendiente' }, texto); }
   function correo(m, asunto, cuerpo) {
     var q = [];
     if (asunto) q.push('subject=' + encodeURIComponent(asunto));
@@ -44,15 +43,15 @@
     var estimadas = cod.filter(function (r) { return r.estado === 'estimado'; }).length;
     var nProps = partidos.reduce(function (n, p) { return n + p.props.reduce(function (k, t) { return k + t.length; }, 0); }, 0);
     var abbr = { provisional: 'P', estimado: 'E', validado: 'V' };
-    var acuerdo = m.acuerdo_por_tema || {};
 
     return [
       soloCastellano(lang),
       h('h2', null, 'Metodología completa'),
       h('p', { class: 'small' }, 'Codificación ' + (m.version_codificacion || '') + ' · actualizada el ' + fecha(m.actualizado) + ' · las posiciones se congelan el ' + fecha(m.congelacion) + ' salvo errores de hecho.'),
       h('p', { class: 'aviso' }, h('strong', null, 'Estado hoy: '),
-        nProps + ' propuestas con fuente. De las ' + total + ' posiciones, ' + estimadas + ' son estimadas (sin propuesta localizada), ' +
-        conCita + ' tienen cita textual y ' + validadas + ' están validadas por dos personas. Lo que sigue describe el método completo; todavía no está aplicado a todas las casillas.'),
+        nProps + ' propuestas con fuente. De las ' + total + ' posiciones, ' + estimadas + (estimadas === 1 ? ' es estimada' : ' son estimadas') + ' (sin propuesta localizada), ' +
+        conCita + ' tienen cita textual y ' + validadas + ' están validadas: su cita se ha comprobado en la fuente oficial.' +
+        (validadas + estimadas < total ? ' Lo que sigue describe el método completo; todavía no está aplicado a todas las casillas.' : '')),
 
       h('h3', null, 'Qué medimos'),
       P('En cada uno de los ' + temas.length + ' temas situamos a cada partido en una de cinco opciones: la que mejor describe su propuesta más concreta sobre ese tema, no su retórica general.'),
@@ -76,22 +75,16 @@
 
       h('h3', null, 'Estados de cada posición'),
       h('ul', null,
-        h('li', null, h('strong', null, 'Validada: '), 'dos personas la codificaron por separado y coinciden, con cita y fuente.'),
-        h('li', null, h('strong', null, 'Provisional: '), 'hay al menos una propuesta con fuente en ese tema, pero falta la segunda codificación.'),
+        h('li', null, h('strong', null, 'Validada: '), 'tiene una cita literal de una fuente oficial, con enlace y fecha de consulta, y el equipo ha comprobado que la cita está en la fuente y corresponde a la opción asignada.'),
+        h('li', null, h('strong', null, 'Provisional: '), 'hay al menos una propuesta con fuente en ese tema, pero todavía no se ha comprobado la cita.'),
         h('li', null, h('strong', null, 'Estimada: '), 'no hemos localizado ninguna propuesta ni cita con fuente en ese tema. Se deduce por coherencia con las posiciones afines del partido, por regla a no más de un paso de su posición documentada más próxima (las excepciones se anotan). En el gráfico se ve como un marcador hueco.')),
 
-      h('h3', null, 'Doble codificación'),
+      h('h3', null, 'Cómo se valida una posición'),
       h('ol', null,
-        h('li', null, 'Dos personas codifican cada posición por separado, sin ver la otra codificación.'),
-        h('li', null, 'Si coinciden, queda validada.'),
-        h('li', null, 'Si difieren en un paso, discuten la evidencia y acuerdan; si no, decide una tercera persona.'),
-        h('li', null, 'Si difieren en dos o más, se revisa la definición de las opciones de ese tema y el cambio queda registrado.'),
-        h('li', null, 'Publicamos el porcentaje de acuerdo inicial por tema.')),
-      Object.keys(acuerdo).length
-        ? h('div', { class: 'table-scroll', tabindex: 0, role: 'region', 'aria-label': 'Acuerdo inicial por tema' }, h('table', { class: 'data-table' },
-            h('thead', null, h('tr', null, h('th', null, 'Tema'), h('th', { class: 'c' }, 'Acuerdo inicial'))),
-            h('tbody', null, temas.map(function (t) { return h('tr', null, h('td', null, t.nombre), h('td', { class: 'c' }, acuerdo[t.id] != null ? acuerdo[t.id] + ' %' : '—')); }))))
-        : pendiente('El acuerdo por tema se publicará al terminar la segunda codificación.'),
+        h('li', null, 'Se asigna la opción a partir de la fuente de rango más alto disponible y se copia una cita literal de una o dos frases.'),
+        h('li', null, 'Una persona del equipo abre la fuente enlazada, comprueba que la cita está en ella (en la página indicada, si es un PDF) y que corresponde a la opción asignada. Si es así, la posición queda validada. En los datos firma como «Equipo Kurba».'),
+        h('li', null, 'Si la cita encaja mejor con otra opción, se corrige la opción antes de validar y el cambio queda registrado en el repositorio.'),
+        h('li', null, 'Si no hay ninguna fuente oficial que permita situar al partido, la posición sigue estimada.')),
 
       h('h3', { id: 'correcciones', tabindex: '-1' }, 'Correcciones'),
       P('Cualquier persona o partido puede señalar un error aportando su fuente. Si la fuente es de rango igual o superior a la usada, recodificamos en 48 horas y anotamos el cambio con fecha.'),
@@ -163,7 +156,7 @@
       h('h2', null, 'Datos abiertos'),
       P('Los datos de posiciones, propuestas y temas se publican con licencia ', m.licencia_datos || 'CC BY 4.0', ': puedes copiarlos, reutilizarlos y adaptarlos, también con fines comerciales, siempre que cites a «Kurba (kurba29n.com)». Se descargan desde la ', h('a', { href: '#/metodologia' }, 'metodología'), '.'),
       h('h2', null, 'Errores y correcciones'),
-      P('Hacemos lo posible por que la información sea exacta, pero puede contener errores. Las posiciones son provisionales hasta completar la segunda codificación, como se explica en la metodología. Si encuentras un error, escríbenos con la fuente a ', h('a', { href: correo(m, 'Corrección Kurba', CUERPO_CORRECCION) }, m.contacto_correcciones), ': si la fuente es de rango igual o superior a la usada, lo corregimos en 48 horas y anotamos el cambio con fecha.'),
+      P('Hacemos lo posible por que la información sea exacta, pero puede contener errores. Cada posición indica si está validada, es provisional o es estimada, como se explica en la metodología. Si encuentras un error, escríbenos con la fuente a ', h('a', { href: correo(m, 'Corrección Kurba', CUERPO_CORRECCION) }, m.contacto_correcciones), ': si la fuente es de rango igual o superior a la usada, lo corregimos en 48 horas y anotamos el cambio con fecha.'),
       h('h2', null, 'Ley aplicable'),
       P('Esta web se rige por la ley española.'),
     ];
