@@ -3,7 +3,7 @@
    data/meta.json («goatcounter»). País o región, sistema y navegador los deduce GoatCounter
    de la propia petición; no guarda la dirección IP.
    Nunca se envían respuestas, importancias ni partidos: solo rutas normalizadas y nombres
-   de eventos de uso (empezar o terminar el test, pestañas, guías…). */
+   de eventos de uso (empezar o terminar el test, pestañas, guías, crear o abrir un reto…). */
 (function () {
   'use strict';
   var url = null, primera = true, enviados = {};
@@ -28,12 +28,14 @@
   }
 
   // Ruta de la web → ruta que se cuenta. Las fichas y comparaciones se cuentan sin el partido:
-  // la ficha que se abre al terminar el test es la del partido más cercano.
+  // la ficha que se abre al terminar el test es la del partido más cercano. El reto se cuenta
+  // sin su código, que lleva las respuestas de otra persona.
   function normalizar(hash) {
     var p = (hash || '').replace(/^#\/?/, '').split('/').filter(Boolean);
     if (!p.length) return '/';
     if (p[0] === 'partido') return '/fichas';
     if (p[0] === 'comparar') return '/comparar';
+    if (p[0] === 'reto') return '/reto';
     return '/' + p.join('/');
   }
 

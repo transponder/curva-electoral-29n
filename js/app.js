@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
 function iniciar(D){
 var A=D.A,ED=D.ED,S=D.S,RES=D.RES,RESEU=D.RESEU,PEU=D.PEU,TX=D.TX,PNAME=D.PNAME,CODE=D.CODE,CODE_EU=D.CODE_EU,METHOD=D.METHOD,METHOD_EU=D.METHOD_EU,META=D.META;
-var C=window.Cercania,MINT=C.MIN_TEMAS;
+var C=window.Cercania,MINT=C.MIN_TEMAS,RT=window.Reto;
 var AN=window.Analitica;AN.configurar(META.goatcounter);
 function ev(n,u){AN.evento(n,u);}
 var LANG="es";
@@ -75,6 +75,8 @@ function setLang(l){
   recList("recs-start");
   if(st.res){exploreMode(!!st.explore);recList("recs-res");renderKey();renderAdjust();update(true);}
   if(curScreen()==="s-rec"&&curRec)openRec(curRec);
+  if(curScreen()==="s-reto")riPintar();
+  rtCerrar();
   titulo();
   /* El idioma va en la URL (?lang=eu) para poder enlazar y compartir la versión en euskera. */
   try{
@@ -93,7 +95,7 @@ var st={ed:"eu",q:0,ans:[],w:[],sel:null,tab:"cer"};
 function $(id){return document.getElementById(id);}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function safeUrl(u){return /^https?:\/\//.test(u||"")?esc(u):"#";}
-var SCREENS=["s-start","s-q","s-res","s-rec","s-met","s-gl","s-priv","s-legal","s-about","s-404"];
+var SCREENS=["s-start","s-q","s-res","s-rec","s-met","s-gl","s-priv","s-legal","s-about","s-reto","s-404"];
 function show(id){
   SCREENS.forEach(function(s){$(s).hidden=s!==id;});window.scrollTo(0,0);
   document.body.setAttribute("data-pantalla",id);
@@ -118,6 +120,8 @@ function shape(t,x,y,r){
 }
 function sw(p,s){s=s||14;return'<svg width="'+s+'" height="'+s+'" viewBox="0 0 14 14" aria-hidden="true" style="flex:none;fill:var(--s'+p.slot+')">'+shape(p.sh,7,7,4.6)+"</svg>";}
 var youSw='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="flex:none"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+/* La otra persona de un reto: rombo gris, sin color de partido. */
+var otraSw='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" style="flex:none;fill:var(--ink-2)">'+shape("diamond",7,7,4.6)+"</svg>";
 
 /* ---------- idioma ---------- */
 var toastT;
@@ -184,7 +188,7 @@ MBTN.addEventListener("click",function(){menu(MBTN.getAttribute("aria-expanded")
 MENU.addEventListener("click",function(e){if(e.target.closest("a"))menu(false);});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&MBTN.getAttribute("aria-expanded")==="true"){menu(false);MBTN.focus();}});
 if(window.matchMedia){var mqMenu=window.matchMedia("(min-width: 760px)");var cerrarMenu=function(){if(mqMenu.matches)menu(false);};if(mqMenu.addEventListener)mqMenu.addEventListener("change",cerrarMenu);else if(mqMenu.addListener)mqMenu.addListener(cerrarMenu);}
-var SECCION={test:"test",resultado:"test",curvas:"curvas",fichas:"fichas",partido:"fichas",comparar:"fichas",guias:"guias",guia:"guias",metodologia:"metodologia","quienes-somos":"quienes-somos",contacto:"quienes-somos"};
+var SECCION={test:"test",resultado:"test",curvas:"curvas",fichas:"fichas",partido:"fichas",comparar:"fichas",guias:"guias",guia:"guias",reto:"test",metodologia:"metodologia","quienes-somos":"quienes-somos",contacto:"quienes-somos"};
 function marcarMenu(){
   var parts=location.hash.replace(/^#\/?/,"").split("/"),sec=SECCION[parts[0]]||null;
   if(parts[0]==="resultado"&&parts[1]==="guias")sec="guias";
@@ -266,7 +270,7 @@ $("q-imp").addEventListener("click",function(e){
 $("q-next").addEventListener("click",function(){
   if(st.q<NT()-1){st.q++;renderQ();window.scrollTo(0,0);$("q-text").focus();}
   else{
-    if(st.enCurso){st.enCurso=false;var k=counted();ev("test-fin");ev("test-temas-"+(k<10?"0":"")+k);if(k<MINT)ev("test-sin-porcentaje");}
+    if(st.enCurso){st.enCurso=false;var k=counted();ev("test-fin");ev("test-temas-"+(k<10?"0":"")+k);if(k<MINT)ev("test-sin-porcentaje");if(st.reto)ev("reto-fin");}
     show("s-res");startResults();
   }
 });
@@ -290,6 +294,7 @@ function setTab(t){
   st.tab=t;
   TABS.forEach(function(k){$("t-"+k).hidden=k!==t;$("tb-"+k).setAttribute("aria-selected",k===t);$("tb-"+k).tabIndex=k===t?0:-1;});
   if(t==="cur")draw();
+  if(t==="cer")rcCard();
   marcar(true);
 }
 TABS.forEach(function(k,ix){
@@ -321,7 +326,7 @@ function update(full){
     return lab+'<button class="row" data-id="'+r.p.id+'">'+sw(r.p)+'<span class="nm">'+esc(pn(r.p))+(tie?"<small>"+t("tie")+"</small>":"")+'</span><span class="bar"><i style="width:'+(r.a||0)+"%;background:var(--s"+r.p.slot+')"></i></span><span class="pc">'+pct(r.a)+"</span></button>";
   }).join("");
   $("sep-card").hidden=!valid;$("shareimg").closest(".card").hidden=!valid;
-  orient(R);separa(R);chips();if(st.tab==="cur")draw();ficha(full);tablaAlt();
+  orient(R);separa(R);rcCard();rtCard();chips();if(st.tab==="cur")draw();ficha(full);tablaAlt();
   clearTimeout(update.t);update.t=setTimeout(shareImg,250);
 }
 function orient(R){
@@ -371,9 +376,12 @@ $("rank").addEventListener("click",function(e){var b=e.target.closest(".row");if
 /* ---------- curvas ---------- */
 function chips(){
   var R=ranked();
-  $("chips").innerHTML='<span class="pchip you you-only">'+youSw+t("you")+"</span>"+R.map(function(r){var p=r.p;return'<button class="pchip'+(p.id===st.sel?" sel":"")+'" data-id="'+p.id+'" aria-pressed="'+!hidden[p.id]+'">'+sw(p)+esc(pn(p))+"</button>";}).join("");
+  $("chips").innerHTML='<span class="pchip you you-only">'+youSw+t("you")+"</span>"+
+    (st.reto&&!st.explore?'<button class="pchip" data-otra="1" aria-pressed="'+!!st.retoVer+'">'+otraSw+esc(t("rc_otra"))+"</button>":"")+R.map(function(r){var p=r.p;return'<button class="pchip'+(p.id===st.sel?" sel":"")+'" data-id="'+p.id+'" aria-pressed="'+!hidden[p.id]+'">'+sw(p)+esc(pn(p))+"</button>";}).join("");
 }
-$("chips").addEventListener("click",function(e){var b=e.target.closest(".pchip[data-id]");if(!b)return;hidden[b.dataset.id]=!hidden[b.dataset.id];chips();draw();});
+$("chips").addEventListener("click",function(e){
+  if(e.target.closest("[data-otra]")){st.retoVer=!st.retoVer;chips();draw();return;}
+  var b=e.target.closest(".pchip[data-id]");if(!b)return;hidden[b.dataset.id]=!hidden[b.dataset.id];chips();draw();});
 document.querySelector(".quick").addEventListener("click",function(e){
   var b=e.target.closest("button");if(!b)return;var q=b.dataset.q,R=ranked();
   E().parties.forEach(function(p){hidden[p.id]=q==="none"?true:q==="all"?false:R.slice(0,3).every(function(r){return r.p.id!==p.id;});});
@@ -387,6 +395,7 @@ function tablaAlt(){
   var attrs=E().attrs,P=E().parties;
   var head="<tr><th scope=\"col\">"+esc(t("tbl_p"))+"</th>"+attrs.map(function(k){return'<th scope="col" class="c" title="'+esc(an(A[k]))+'">'+esc(code(k))+"</th>";}).join("")+"</tr>";
   var you=st.explore?"":"<tr><th scope=\"row\">"+esc(t("you"))+"</th>"+attrs.map(function(k,i){return'<td class="c">'+(st.ans[i]===null?"—":st.ans[i])+"</td>";}).join("")+"</tr>";
+  if(st.reto&&!st.explore)you+="<tr><th scope=\"row\">"+esc(t("rc_otra"))+"</th>"+attrs.map(function(k,i){return'<td class="c">'+(st.reto.ans[i]==null?"—":st.reto.ans[i])+"</td>";}).join("")+"</tr>";
   var rows=P.map(function(p){return"<tr><th scope=\"row\">"+esc(pn(p))+"</th>"+attrs.map(function(k,i){return'<td class="c">'+p.s[i]+(isEst(p,i)?"*":"")+"</td>";}).join("")+"</tr>";}).join("");
   $("tabla-alt").innerHTML='<div class="table-scroll" tabindex="0" role="region" aria-label="'+esc(t("tbl_s"))+'"><table class="data-table"><thead>'+head+"</thead><tbody>"+you+rows+'</tbody></table></div><p class="small" style="margin-top:6px">'+esc(t("tbl_n"))+"</p>";
 }
@@ -416,6 +425,28 @@ $("adjust").addEventListener("click",function(e){
   syncAdj(i);update(false);
 });
 
+/* Curva de una persona. Se corta en los temas sin respuesta: no se dibuja una posición que no dio.
+   La tuya va punteada con círculos; la de la otra persona de un reto, continua con rombos grises. */
+function lineaPersona(ans,w,X,Y,otra){
+  var seg=[],cs=[],mk=[],o=[],i;
+  for(i=0;i<ans.length;i++){
+    if(ans[i]==null){if(cs.length)seg.push(cs);cs=[];continue;}
+    var x=X(i).toFixed(1),y=Y(ans[i]).toFixed(1),p=C.peso(ans,w,i);cs.push(x+","+y);
+    mk.push(otra?'<g opacity="'+(p?1:.35)+'">'+shape("diamond",+x,+y,4.2)+"</g>":'<circle cx="'+x+'" cy="'+y+'" r="6" opacity="'+(p?1:.3)+'"'+(p===2?' stroke-width="3.5"':"")+"/>");
+  }
+  if(cs.length)seg.push(cs);
+  seg.forEach(function(s){if(s.length>1)o.push('<polyline points="'+s.join(" ")+'" fill="none" stroke="var(--'+(otra?"ink-2":"ink")+')" stroke-width="2"'+(otra?"":' stroke-dasharray="2 5"')+' stroke-linecap="round" stroke-linejoin="round"/>');});
+  o.push(otra?'<g fill="var(--ink-2)" stroke="var(--surface)" stroke-width="1.5">'+mk.join("")+"</g>":'<g fill="var(--surface)" stroke="var(--ink)" stroke-width="2">'+mk.join("")+"</g>");
+  return o.join("");
+}
+/* Rejilla de 1 a 5 y códigos de los temas de los gráficos pequeños (comparador y reto). */
+function marco(W,H){
+  var n=NT(),mL=22,mR=4,mT=12,mB=28,band=(W-mL-mR)/n,o=[],v;
+  function X(i){return mL+(i+.5)*band;} function Y(v){return mT+(5-v)/4*(H-mT-mB);}
+  for(v=1;v<=5;v++)o.push('<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--grid)"/><text x="9" y="'+(Y(v)+4)+'" text-anchor="middle" fill="var(--ink-2)" font-size="11">'+v+"</text>");
+  E().attrs.forEach(function(k,i){o.push('<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="600">'+code(k)+"</text>");});
+  return{o:o,X:X,Y:Y};
+}
 var geo=null;
 function draw(){
   var wrap=$("wrap"),W=Math.max(280,wrap.clientWidth),svg=$("chart"),attrs=E().attrs,n=NT();
@@ -433,16 +464,8 @@ function draw(){
     for(i=0;i<n;i++){var x=+(X(i)+d).toFixed(1),y=+Y(p.s[i]).toFixed(1);pts.push(x+","+y);(isEst(p,i)?mh:mk).push(shape(p.sh,x,y,isSel?5:4));}
     o.push('<g opacity="'+(isSel?1:.65)+'"><polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="'+(isSel?3:1.75)+'" stroke-linejoin="round" stroke-linecap="round"/><g fill="var(--s'+p.slot+')" stroke="var(--surface)" stroke-width="1.5">'+mk.join("")+'</g><g fill="var(--surface)" stroke="var(--s'+p.slot+')" stroke-width="1.75">'+mh.join("")+"</g></g>");
   });
-  /* La línea del usuario se corta en los temas sin respuesta: no se dibuja una posición que no dio. */
-  var seg=[],cs=[],ym=[];
-  for(i=0;i<n;i++){
-    if(st.ans[i]===null){if(cs.length)seg.push(cs);cs=[];continue;}
-    var ux=X(i).toFixed(1),uy=Y(st.ans[i]).toFixed(1);cs.push(ux+","+uy);
-    ym.push('<circle cx="'+ux+'" cy="'+uy+'" r="6" opacity="'+(weight(i)?1:.3)+'"'+(weight(i)===2?' stroke-width="3.5"':"")+"/>");
-  }
-  if(cs.length)seg.push(cs);
-  seg.forEach(function(s){if(s.length>1)o.push('<polyline points="'+s.join(" ")+'" fill="none" stroke="var(--ink)" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round"/>');});
-  o.push('<g fill="var(--surface)" stroke="var(--ink)" stroke-width="2">'+ym.join("")+"</g>");
+  o.push(lineaPersona(st.ans,st.w,X,Y,false));
+  if(st.reto&&st.retoVer&&!st.explore)o.push(lineaPersona(st.reto.ans,st.reto.w,X,Y,true));
   for(i=0;i<n;i++)o.push('<rect class="hit" data-i="'+i+'" x="'+(X(i)-band/2)+'" y="0" width="'+band+'" height="'+H+'" fill="transparent"/>');
   svg.innerHTML=o.join("");
   geo={W:W,H:H,X:X,band:band};
@@ -451,6 +474,7 @@ function showTip(i){
   var tip=$("tip"),a=attr(i),any=false,rows=E().parties.filter(function(p){return!hidden[p.id];}).map(function(p){return{p:p,v:p.s[i]};}).sort(function(x,y){return y.v-x.v;});
   var h="<b>"+esc(an(a))+"</b>";
   if(!st.explore)h+='<div class="tr">'+youSw+"<span>"+t("you")+(weight(i)?"":" "+t("nocount"))+"</span><span>"+(st.ans[i]===null?"—":st.ans[i])+"</span></div>";
+  if(st.reto&&st.retoVer&&!st.explore)h+='<div class="tr">'+otraSw+"<span>"+t("rc_otra")+"</span><span>"+(st.reto.ans[i]==null?"—":st.reto.ans[i])+"</span></div>";
   rows.forEach(function(r){var e=isEst(r.p,i);any=any||e;h+='<div class="tr">'+sw(r.p)+"<span>"+esc(pn(r.p))+"</span><span>"+r.v+(e?"*":"")+"</span></div>";});
   if(any)h+='<div class="tn">'+t("est_tip")+"</div>";
   tip.innerHTML=h;tip.style.display="block";
@@ -508,10 +532,7 @@ function renderCmp(){
   function opts(v,other){return ord.map(function(p){return'<option value="'+p.id+'"'+(p.id===v?" selected":"")+(p.id===other?" disabled":"")+">"+esc(pn(p))+"</option>";}).join("");}
   $("cmp-a").innerHTML=opts(st.cmpA,st.cmpB);$("cmp-b").innerHTML=opts(st.cmpB,st.cmpA);
   var a=partido(st.cmpA),b=partido(st.cmpB),n=NT(),same=0,i;
-  var W=Math.max(280,$("cmp").clientWidth-32),H=190,mL=22,mR=4,mT=12,mB=28,band=(W-mL-mR)/n,o=[];
-  function X(i){return mL+(i+.5)*band;} function Y(v){return mT+(5-v)/4*(H-mT-mB);}
-  for(var v=1;v<=5;v++)o.push('<line x1="'+mL+'" x2="'+(W-mR)+'" y1="'+Y(v)+'" y2="'+Y(v)+'" stroke="var(--grid)"/><text x="9" y="'+(Y(v)+4)+'" text-anchor="middle" fill="var(--ink-2)" font-size="11">'+v+"</text>");
-  E().attrs.forEach(function(k,i){o.push('<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" fill="var(--ink)" font-size="10.5" font-weight="600">'+code(k)+"</text>");});
+  var W=Math.max(280,$("cmp").clientWidth-32),H=190,M=marco(W,H),o=M.o,X=M.X,Y=M.Y;
   [a,b].forEach(function(p,k){var d=k?1.6:-1.6,pts=[],mk=[],mh=[];
     for(i=0;i<n;i++){var x=+(X(i)+d).toFixed(1),y=+Y(p.s[i]).toFixed(1);pts.push(x+","+y);(isEst(p,i)?mh:mk).push(shape(p.sh,x,y,4.5));}
     o.push('<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--s'+p.slot+')" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/><g fill="var(--s'+p.slot+')" stroke="var(--surface)" stroke-width="1.5">'+mk.join("")+'</g><g fill="var(--surface)" stroke="var(--s'+p.slot+')" stroke-width="1.75">'+mh.join("")+"</g>");});
@@ -557,7 +578,10 @@ function shareImg(){
   x.textAlign="left";x.fillStyle=ink2;x.font="400 26px Inter, Arial, sans-serif";x.fillText(t("share_f0"),80,990);
   x.textAlign="right";x.fillStyle=ink;x.font="700 26px 'Space Grotesk', Arial, sans-serif";x.fillText(web,1000,990);
   try{$("shareimg").src=c.toDataURL("image/png");}catch(e){}
+  /* La imagen se prepara ya: la hoja de compartir tiene que abrirse en el mismo toque, sin esperas. */
+  try{if(c.toBlob)c.toBlob(function(b){shareBlob=b;},"image/png");}catch(e){}
 }
+var shareBlob=null;
 $("copy").addEventListener("click",function(){ev("copiar-resumen");
   var R=ranked(),num=grp(R).length<2,txt=t("share_t")+" · Kurba ("+edName()+"):\n"+R.slice(0,3).map(function(r,k){return(num?(k+1)+". ":"· ")+pn(r.p)+" "+pct(r.a);}).join("\n");
   try{navigator.clipboard.writeText(txt).then(function(){$("copied").textContent=t("copied");},function(){$("copied").textContent=t("nocopy");});}
@@ -566,6 +590,94 @@ $("copy").addEventListener("click",function(){ev("copiar-resumen");
 $("r-edit").addEventListener("click",function(){ev("cambiar-respuestas");st.q=0;renderQ();show("s-q");});
 $("r-restart").addEventListener("click",function(){show("s-start");});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(!$("s-res").hidden)shareImg();});
+
+/* ---------- reto «Compárate conmigo» (js/reto.js) ----------
+   El enlace solo se crea si la persona lo pide y acepta el aviso. Lleva sus respuestas e
+   importancias en el fragmento (#/reto/<código>), que no llega a ningún servidor, y nunca
+   se pone en la barra de direcciones de quien lo crea. */
+var rtCodigo=null;
+function rtCard(){
+  var ok=!st.explore&&RT.respondidas(st.ans)>=RT.MIN_RESPUESTAS;
+  $("rt-card").hidden=!ok;
+  /* Si cambia alguna respuesta, el enlace que se ve ya no es el de ahora. */
+  if(rtCodigo&&(!ok||RT.codificar(E().attrs,st.ans,st.w)!==rtCodigo))rtCerrar();
+}
+function rtCerrar(){
+  rtCodigo=null;$("rt-aviso").hidden=true;$("rt-link").hidden=true;$("rt-go").hidden=false;
+  $("rt-go").setAttribute("aria-expanded","false");$("rt-st").textContent="";$("rt-url").value="";
+}
+function rtUrl(c){return location.origin+location.pathname+(LANG==="eu"?"?lang=eu":"")+"#/reto/"+c;}
+/* Hoja de compartir del sistema con texto, enlace e imagen. Sin ella, el enlace queda a la vista
+   para copiarlo o mandarlo por WhatsApp. */
+function compartir(txt,url){
+  var d={title:"Kurba",text:txt,url:url};
+  try{
+    if(shareBlob&&window.File&&navigator.canShare){
+      var f=new File([shareBlob],"kurba.png",{type:"image/png"});
+      /* Con un fichero, algunas apps descartan «url»: el enlace va también en el texto. */
+      if(navigator.canShare({files:[f]}))d={title:"Kurba",text:txt+"\n"+url,files:[f]};
+    }
+  }catch(e){}
+  try{
+    navigator.share(d).then(function(){$("rt-st").textContent=t("rt_done");},
+      function(e){if(!e||e.name!=="AbortError")$("rt-st").textContent=t("rt_noshare");});
+  }catch(e){$("rt-st").textContent=t("rt_noshare");}
+}
+$("rt-go").addEventListener("click",function(){
+  var abrir=$("rt-aviso").hidden;$("rt-aviso").hidden=!abrir;$("rt-go").setAttribute("aria-expanded",abrir);
+  if(abrir)$("rt-ok").focus();
+});
+$("rt-no").addEventListener("click",function(){$("rt-aviso").hidden=true;$("rt-go").setAttribute("aria-expanded","false");$("rt-go").focus();});
+$("rt-ok").addEventListener("click",function(){
+  rtCodigo=RT.codificar(E().attrs,st.ans,st.w);ev("reto");
+  var url=rtUrl(rtCodigo),txt=t("rt_txt"),puede=!!navigator.share;
+  $("rt-url").value=url;$("rt-wa").href="https://wa.me/?text="+encodeURIComponent(txt+" "+url);
+  $("rt-aviso").hidden=true;$("rt-go").hidden=true;$("rt-link").hidden=false;$("rt-st").textContent="";
+  $("rt-share").hidden=!puede;
+  if(puede)compartir(txt,url);else{$("rt-url").focus();$("rt-url").select();}
+});
+$("rt-share").addEventListener("click",function(){compartir(t("rt_txt"),$("rt-url").value);});
+$("rt-copy").addEventListener("click",function(){
+  var u=$("rt-url").value;
+  function mal(){$("rt-url").focus();$("rt-url").select();$("rt-st").textContent=t("nocopy");}
+  try{navigator.clipboard.writeText(u).then(function(){$("rt-st").textContent=t("copied");},mal);}catch(e){mal();}
+});
+$("rt-wa").addEventListener("click",function(){ev("reto-whatsapp");});
+
+/* Quien abre un reto: la curva de la otra persona solo está en la memoria de esta pestaña. */
+function rcCard(){
+  var on=!!st.reto&&!st.explore&&!!st.res;
+  $("rc-card").hidden=!on;if(!on)return;
+  var o=st.reto,K=RT.coincidencias(st.ans,o.ans),sin=NT()-K.comparables;
+  $("rc-sum").textContent=K.comparables?t("rc_sum").replace("{t}",K.comparables).replace("{n}",K.iguales).replace("{c}",K.cerca):t("rc_none");
+  $("rc-k-you").innerHTML=youSw+esc(t("you"));$("rc-k-otra").innerHTML=otraSw+esc(t("rc_otra"));
+  var W=Math.max(280,$("rc-card").clientWidth-32),H=190,M=marco(W,H);
+  M.o.push(lineaPersona(st.ans,st.w,M.X,M.Y,false),lineaPersona(o.ans,o.w,M.X,M.Y,true));
+  var svg=$("rc-chart");svg.setAttribute("viewBox","0 0 "+W+" "+H);svg.setAttribute("height",H);svg.innerHTML=M.o.join("");
+  $("rc-rows").innerHTML=K.temas.slice().sort(function(x,y){return x.d-y.d||x.i-y.i;}).map(function(x){
+    var i=x.i,a=attr(i);
+    var pill=x.d===0?'<span class="pill good">'+t("rc_eq")+"</span>":'<span class="pill '+(x.d===1?"mid":"bad")+'">'+(x.d===1?t("cmp_d1"):t("cmp_dn").replace("{n}",x.d))+"</span>";
+    function fila(sw0,quien,ans,w){return'<div class="sep-r">'+sw0+"<span><b>"+esc(quien)+"</b> · "+esc(ao(a,ans[i]))+(C.peso(ans,w,i)===2?" "+t("much"):"")+"</span></div>";}
+    return'<div class="sep-t"><div class="th"><span class="tn">'+esc(an(a))+"</span>"+pill+"</div>"+fila(youSw,t("you"),st.ans,st.w)+fila(otraSw,t("rc_otra"),o.ans,o.w)+"</div>";
+  }).join("");
+  $("rc-nota").hidden=!sin;
+  $("rc-nota").textContent=sin===1?t("rc_nc1"):t("rc_nc").replace("{n}",sin);
+}
+function riPintar(){
+  var ok=!!st.reto,hecho=!!st.res&&!st.explore;
+  $("ri-h").textContent=t(ok?"ri_h":"ri_bad_h");
+  $("ri-ok").hidden=!ok;$("ri-bad").hidden=ok;
+  $("ri-test").hidden=hecho;$("ri-ver").hidden=!hecho;
+}
+function olvidarReto(){
+  if(!st.reto)return;
+  st.reto=null;st.retoVer=false;ev("reto-olvidar");toast(t("rc_gone"));
+  if(st.res){rcCard();chips();tablaAlt();if(st.tab==="cur"&&!$("s-res").hidden)draw();}
+}
+$("ri-test").addEventListener("click",empezarTest);
+$("ri-ver").addEventListener("click",function(){show("s-res");setTab("cer");});
+$("ri-forget").addEventListener("click",function(){olvidarReto();show("s-start");});
+$("rc-forget").addEventListener("click",function(){olvidarReto();$("tb-cer").focus();});
 
 /* ---------- rutas: cada pantalla tiene su dirección (#/…) y el botón «atrás» funciona ---------- */
 var navegando=false,primera=true,ultimo=null,pendiente=false,pendPush=false;
@@ -579,6 +691,7 @@ function rutaActual(){
   if(c==="s-priv")return"#/privacidad";
   if(c==="s-legal")return"#/aviso-legal";
   if(c==="s-about")return location.hash==="#/contacto"?"#/contacto":"#/quienes-somos";
+  if(c==="s-reto")return"#/reto";
   if(c==="s-404")return location.hash;
   if(st.tab==="cur")return"#/curvas";
   if(st.tab==="gui")return"#/resultado/guias";
@@ -645,6 +758,15 @@ function aplicar(){
         if(partido(parts[2])&&parts[2]!==st.cmpA)st.cmpB=parts[2];else if(parts[2])st.cmpB=null;
         st.cmpVisto=true;show("s-res");setTab("fic");renderCmp();
         $("cmp").scrollIntoView({block:"start"});break;
+      case"reto":
+        /* El código sale de la barra de direcciones y del historial de la pestaña en cuanto se lee. */
+        if(parts[1]){
+          st.reto=RT.decodificar(E().attrs,parts[1]);st.retoVer=false;
+          if(st.reto)ev("reto-abierto");
+          if(st.res)update(true);
+          history.replaceState(null,"",location.pathname+location.search+"#/reto");
+        }
+        riPintar();show("s-reto");break;
       case"guias":show("s-gl");break;
       case"guia":if(!openRec(parts[1]))show("s-404");break;
       case"metodologia":

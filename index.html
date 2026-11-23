@@ -34,12 +34,13 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.kurba29n.com/#organizacion","name":"Kurba","url":"https://www.kurba29n.com/","logo":{"@type":"ImageObject","url":"https://www.kurba29n.com/assets/icon-512.png","width":512,"height":512},"email":"contacto@kurba29n.com","nonprofitStatus":"Nonprofit","description":"Iniciativa ciudadana independiente y sin ánimo de lucro, sin afiliación ni financiación de ningún partido, que muestra qué propone cada candidatura en Euskadi a las elecciones generales del 29 de noviembre de 2026, tema a tema y con su fuente."},{"@type":"WebSite","@id":"https://www.kurba29n.com/#web","url":"https://www.kurba29n.com/","name":"Kurba · Tu curva de valor electoral","inLanguage":["es","eu"],"publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"WebApplication","@id":"https://www.kurba29n.com/#herramienta","name":"Kurba · Tu curva de valor electoral","url":"https://www.kurba29n.com/","applicationCategory":"ReferenceApplication","operatingSystem":"Web","inLanguage":["es","eu"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Responde 11 preguntas y compara tu curva con la de los 7 partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N. No es una recomendación de voto: las respuestas no salen de tu dispositivo.","publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"Dataset","@id":"https://www.kurba29n.com/#datos","name":"Posiciones y propuestas de los partidos en Euskadi · elecciones generales del 29-N de 2026","description":"Posición de 7 candidaturas en 11 temas (escala de 1 a 5) y propuestas concretas con su fuente, para las circunscripciones de Araba, Bizkaia y Gipuzkoa.","url":"https://www.kurba29n.com/metodologia/","license":"https://creativecommons.org/licenses/by/4.0/","isAccessibleForFree":true,"creator":{"@id":"https://www.kurba29n.com/#organizacion"},"inLanguage":"es","temporalCoverage":"2026-11","spatialCoverage":{"@type":"Place","name":"Araba, Bizkaia y Gipuzkoa"},"distribution":[{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/codificacion.csv","name":"Posiciones por partido y tema"},{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/propuestas.csv","name":"Propuestas con fuente"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://www.kurba29n.com/data/temas.json","name":"Temas y opciones"}]}]}</script>
   <link rel="preload" href="assets/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/kurba.css?v=174e59ca">
+  <link rel="stylesheet" href="css/kurba.css?v=116685e7">
   <script src="js/cercania.js?v=081e1627" defer></script>
-  <script src="js/analitica.js?v=e846000b" defer></script>
+  <script src="js/reto.js?v=c74b8d4f" defer></script>
+  <script src="js/analitica.js?v=a3a74498" defer></script>
   <script src="js/datos.js?v=020ca592" defer></script>
-  <script src="js/paginas.js?v=2be4157f" defer></script>
-  <script src="js/app.js?v=6f80abe4" defer></script>
+  <script src="js/paginas.js?v=8dbbe0c0" defer></script>
+  <script src="js/app.js?v=78075392" defer></script>
 </head>
 <body>
 <a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
@@ -176,6 +177,15 @@
       <h1 style="font-size:28px" data-t="res_h">Tu resultado</h1>
       <p class="lead" id="r-lead" style="font-size:15px"></p>
     </div>
+    <div class="card stack" id="rc-card" style="gap:10px" hidden>
+      <h3 data-t="rc_h">Tú y la otra persona</h3>
+      <p class="small" id="rc-sum"></p>
+      <div class="rc-key small" aria-hidden="true"><span id="rc-k-you"></span><span id="rc-k-otra"></span></div>
+      <svg id="rc-chart" role="img" aria-labelledby="rc-sum"></svg>
+      <div class="sep" id="rc-rows"></div>
+      <p class="small" id="rc-nota"></p>
+      <div class="actions"><button class="ghost" id="rc-forget" data-t="rc_forget">Olvidar este resultado compartido</button></div>
+    </div>
     <div class="card stack" id="rank-card" style="gap:4px">
       <h3 data-t="rank_h">Cercanía con cada partido</h3>
       <p class="small" style="margin-bottom:6px" data-t="rank_s">Lo habitual es coincidir en parte con varios. Toca uno para ver su ficha.</p>
@@ -192,6 +202,20 @@
     </div>
     <button class="btn acc" id="to-curves" data-t="to_cur">Ver las curvas</button>
     <button class="btn" id="to-cmp" data-t="to_cmp">Comparar dos partidos</button>
+    <div class="card stack" id="rt-card" style="gap:10px">
+      <h3 data-t="rt_h">Compárate con otra persona</h3>
+      <p class="small" data-t="rt_s">Crea un enlace para que alguien haga el test y vea vuestras dos curvas juntas y en qué temas coincidís.</p>
+      <button class="btn line" id="rt-go" aria-expanded="false" aria-controls="rt-aviso" data-t="rt_go">Compárate conmigo</button>
+      <div class="rt-aviso stack" id="rt-aviso" style="gap:10px" hidden>
+        <p class="small" data-t="rt_aviso">El enlace incluye tu respuesta y la importancia que diste a cada tema: quien lo tenga podrá verlas. No incluye tu nombre ni tus partidos más cercanos, y no se guarda en ningún servidor.</p>
+        <div class="actions"><button class="btn acc rt-crear" id="rt-ok" data-t="rt_ok">Crear el enlace</button><button class="ghost" id="rt-no" data-t="rt_no">Cancelar</button></div>
+      </div>
+      <div class="rt-link stack" id="rt-link" style="gap:10px" hidden>
+        <label class="small" for="rt-url" data-t="rt_url">Tu enlace para compararos</label>
+        <input id="rt-url" class="rt-url" type="text" readonly>
+        <div class="actions"><button class="ghost" id="rt-share" data-t="rt_share" hidden>Compartir</button><button class="ghost" id="rt-copy" data-t="rt_copy">Copiar enlace</button><a class="ghost" id="rt-wa" href="#" target="_blank" rel="noopener" data-t="rt_wa">WhatsApp</a><span class="small" id="rt-st" role="status"></span></div>
+      </div>
+    </div>
     <div class="card stack" id="sh-card" style="gap:10px">
       <h3 data-t="sh_h">Comparte tu curva</h3>
       <p class="small" data-t="sh_s">Mantén pulsada la imagen para guardarla o compartirla. Solo incluye tu curva: ni partidos ni porcentajes.</p>
@@ -312,6 +336,22 @@
     </ul>
   </div>
   <div class="links"><a href="#/metodologia" data-t="f_met">Metodología y fuentes</a><a href="#/aviso-legal" data-t="f_legal">Aviso legal</a><a href="#/privacidad" data-t="f_priv">Privacidad</a></div>
+</section>
+<!-- RETO RECIBIDO (#/reto/<código>) -->
+<section id="s-reto" class="stack" hidden>
+  <p class="kicker" data-t="ri_k">Compárate conmigo</p>
+  <h1 style="font-size:28px" id="ri-h"></h1>
+  <div class="stack" id="ri-ok">
+    <p class="lead" data-t="ri_s">Haz el test y verás vuestras dos curvas juntas y en qué temas coincidís.</p>
+    <p class="small" data-t="ri_n">No verás sus partidos más cercanos ni ningún porcentaje suyo. Su curva solo está en esta pestaña y tus respuestas no salen de tu dispositivo.</p>
+    <button class="btn acc" id="ri-test" data-t="ex_go">Hacer el test · 2 min</button>
+    <button class="btn line" id="ri-ver" data-t="ri_ver" hidden>Ver la comparación</button>
+    <div class="actions"><button class="ghost" id="ri-forget" data-t="rc_forget">Olvidar este resultado compartido</button></div>
+  </div>
+  <div class="stack" id="ri-bad" hidden>
+    <p class="lead" data-t="ri_bad">Puede que esté incompleto, que sea de una versión anterior de Kurba o que ya hayas olvidado el resultado compartido. Pide que te lo vuelvan a enviar o haz el test.</p>
+    <a class="btn acc" href="#/test" data-t="ex_go">Hacer el test · 2 min</a>
+  </div>
 </section>
 <!-- NO ENCONTRADA -->
 <section id="s-404" class="stack" hidden>
