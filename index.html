@@ -34,13 +34,13 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.kurba29n.com/#organizacion","name":"Kurba","url":"https://www.kurba29n.com/","logo":{"@type":"ImageObject","url":"https://www.kurba29n.com/assets/icon-512.png","width":512,"height":512},"email":"contacto@kurba29n.com","nonprofitStatus":"Nonprofit","description":"Iniciativa ciudadana independiente y sin ánimo de lucro, sin afiliación ni financiación de ningún partido, que muestra qué propone cada candidatura en Euskadi a las elecciones generales del 29 de noviembre de 2026, tema a tema y con su fuente."},{"@type":"WebSite","@id":"https://www.kurba29n.com/#web","url":"https://www.kurba29n.com/","name":"Kurba · Tu curva de valor electoral","inLanguage":["es","eu"],"publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"WebApplication","@id":"https://www.kurba29n.com/#herramienta","name":"Kurba · Tu curva de valor electoral","url":"https://www.kurba29n.com/","applicationCategory":"ReferenceApplication","operatingSystem":"Web","inLanguage":["es","eu"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Responde 11 preguntas y compara tu curva con la de los 7 partidos que se presentan en Araba, Bizkaia y Gipuzkoa a las generales del 29-N. No es una recomendación de voto: las respuestas no salen de tu dispositivo.","publisher":{"@id":"https://www.kurba29n.com/#organizacion"}},{"@type":"Dataset","@id":"https://www.kurba29n.com/#datos","name":"Posiciones y propuestas de los partidos en Euskadi · elecciones generales del 29-N de 2026","description":"Posición de 7 candidaturas en 11 temas (escala de 1 a 5) y propuestas concretas con su fuente, para las circunscripciones de Araba, Bizkaia y Gipuzkoa.","url":"https://www.kurba29n.com/metodologia/","license":"https://creativecommons.org/licenses/by/4.0/","isAccessibleForFree":true,"creator":{"@id":"https://www.kurba29n.com/#organizacion"},"inLanguage":"es","temporalCoverage":"2026-11","spatialCoverage":{"@type":"Place","name":"Araba, Bizkaia y Gipuzkoa"},"distribution":[{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/codificacion.csv","name":"Posiciones por partido y tema"},{"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://www.kurba29n.com/data/propuestas.csv","name":"Propuestas con fuente"},{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://www.kurba29n.com/data/temas.json","name":"Temas y opciones"}]}]}</script>
   <link rel="preload" href="assets/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/kurba.css?v=fe94c45a">
+  <link rel="stylesheet" href="css/kurba.css?v=68ebc9e5">
   <script src="js/cercania.js?v=081e1627" defer></script>
   <script src="js/reto.js?v=c74b8d4f" defer></script>
   <script src="js/analitica.js?v=a3a74498" defer></script>
-  <script src="js/datos.js?v=c4486a75" defer></script>
+  <script src="js/datos.js?v=01267a19" defer></script>
   <script src="js/paginas.js?v=98149157" defer></script>
-  <script src="js/app.js?v=36749bd5" defer></script>
+  <script src="js/app.js?v=475e16e6" defer></script>
 </head>
 <body>
 <a class="skip" href="#contenido" data-t="skip">Saltar al contenido</a>
@@ -80,7 +80,7 @@
     <figcaption class="cifras" id="cifras" hidden>
       <div><b id="c-part">7</b><span data-t="c_part">partidos</span></div>
       <div><b id="c-temas">11</b><span data-t="c_temas">temas</span></div>
-      <div><b id="c-props">65</b><span data-t="c_props">propuestas con fuente</span></div>
+      <div><b id="c-val">76</b><span data-t="c_val">posiciones con su cita</span></div>
     </figcaption>
   </figure>
 <div class="start-txt stack">
@@ -104,7 +104,7 @@
     <h3 data-t="how_h">Cómo lo hacemos</h3>
     <div class="how">
       <div><b class="n">1</b><strong data-t="how1_t">Lo que proponen</strong><span data-t="how1_s">Recogemos lo que cada partido propone para el Congreso y el Gobierno, a partir de su programa del 29-N y otras fuentes públicas.</span></div>
-      <div><b class="n">2</b><strong data-t="how2_t">Con fuente</strong><span data-t="how2_s">Cada propuesta lleva su enlace. Si en un tema no encontramos ninguna, la posición se marca como estimada y lo decimos.</span></div>
+      <div><b class="n">2</b><strong data-t="how2_t">Con fuente</strong><span data-t="how2_s">Cada posición lleva la cita literal de su programa u otra fuente oficial, con el enlace a la página. Si no hay ninguna, la posición se marca como estimada y lo decimos.</span></div>
       <div><b class="n">3</b><strong data-t="how3_t">Sin decirte a quién votar</strong><span data-t="how3_s">Las opciones salen sin números y en orden aleatorio, y el resultado muestra coincidencias, no un ganador.</span></div>
     </div>
   </div>
@@ -239,7 +239,7 @@
     <div class="card stack" style="gap:8px">
       <div class="chartwrap" id="wrap"><svg id="chart" role="img" aria-label="Tu curva superpuesta a la de los partidos" data-ta="a_chart"></svg><div id="tip"></div></div>
       <div class="key" id="key"></div>
-      <p class="small" data-t="est_note">Marcador hueco: posición estimada, sin propuesta localizada.</p>
+      <p class="small" data-t="est_note">Marcador hueco: posición estimada, sin fuente oficial que la documente.</p>
       <details class="tabla-alt"><summary data-t="tbl_s">Ver las posiciones en una tabla</summary><div id="tabla-alt"></div></details>
     </div>
     <div class="card stack you-only" style="gap:6px">
@@ -261,7 +261,7 @@
     <div class="stack" style="gap:10px">
       <h3 id="top-h" data-t="top_h">Tema a tema, de lo que más a lo que menos te importa</h3>
       <div class="stack" style="gap:10px" id="topics"></div>
-      <p class="small" data-th="legend">Información pública actualizada a 22 de noviembre de 2026. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
+      <p class="small" data-th="legend">Información pública actualizada a 23 de noviembre de 2026. «Por qué está en esta opción» es la cita literal que justifica la posición del partido, con el enlace a la página de su fuente oficial. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
     </div>
     <div class="stack" style="gap:10px" id="f-otros-w">
       <h3 data-t="otros_h">Otros compromisos</h3>
@@ -278,7 +278,7 @@
     </div>
     <div class="stack" style="gap:10px">
       <h3 data-t="rest_h">El resto de partidos</h3>
-      <p class="small" style="font-size:14px" data-t="rest_s">Cada partido tiene la misma ficha: tema a tema, candidaturas y programa.</p>
+      <p class="small" style="font-size:14px" data-t="rest_s">Cada partido tiene la misma ficha: tema a tema, con la cita de cada posición, candidaturas y programa.</p>
       <nav class="list others" id="others" aria-label="Fichas del resto de partidos" data-ta="a_rest"></nav>
     </div>
     </div>

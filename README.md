@@ -36,7 +36,7 @@ assets/               Favicon, iconos de la app, imagen para compartir y tipogra
 manifest.webmanifest  Manifiesto web (nombre, colores e iconos)
 scripts/generar_paginas.js  Genera las páginas indexables y sitemap.xml desde data/
 js/estatica.js        Recuento anónimo de visitas en las páginas generadas
-revision/             Hoja de citas de las casillas provisionales y estado de la revisión de fuentes
+revision/             Hoja de citas y registro de la validación de fuentes (23-N)
 ```
 
 ## Cómo actualizar la codificación
@@ -61,7 +61,7 @@ Las propuestas de las fichas van en `data/propuestas.csv` con `etiqueta` = `Prog
 - Primero el programa oficial del 29-N, enlazado en la web del partido. Si la propuesta sale del programa, la `fuente` indica la página («Programa electoral del PP (29-N), pág. 53») y la `url` termina en `#page=53`, para que el PDF se abra por esa página. Es la página del PDF, la que muestra el visor.
 - Si no está en el programa, un medio de referencia (EITB, Deia, El Correo, EFE, Europa Press…), en castellano o en euskera, no una traducción.
 - `validar_datos.py` rechaza los dominios descartados (`DOMINIOS_DESCARTADOS`: brainsre.news, diarioestrategia.cl, vivirediciones.es).
-- Cada casilla `provisional` lleva la `fuente`, la `url` y la `fecha_consulta` de su propuesta principal. La `cita` la pega una persona a partir del original. La hoja de trabajo está en `revision/citas-provisionales.csv`, y el estado de la revisión de fuentes en `revision/README.md`.
+- En `codificacion.csv`, una casilla es `validado` cuando lleva una `cita` literal de una fuente oficial (el programa del 29-N, otro documento oficial del partido o el Diario de Sesiones del Congreso), con su `fuente`, la `url` a la página y la `fecha_consulta`, y alguien del equipo ha comprobado que la cita está en la fuente y corresponde al `nivel`. Firma en `codificadores` (basta una firma: «Equipo Kurba»). La ficha de cada partido muestra esa cita en su tema, en la app y en `/partido/<id>/`. El registro de la validación del 23-N está en `revision/README.md`.
 
 ### Euskera
 

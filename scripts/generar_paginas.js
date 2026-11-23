@@ -262,11 +262,22 @@ function paginasDePartido({ D }) {
   const fuente = (k, lab = 'Fuente') => ` <a href="${esc(S[k].u)}" title="${esc(S[k].t)}" target="_blank" rel="noopener">${lab} ↗</a>`;
   const fuentePer = (x) => (x[4] ? `${fuente(x[4])} ·${fuente(x[3], 'Candidatura')}` : fuente(x[3]));
   const prop = (x) => `<li><span class="tag">${TAG[x[2]]}</span> ${esc(x[0])}${fuente(x[1])}</li>`;
+  // Por qué está en esa opción: la cita literal que la respalda, con su fuente, o el aviso de que es estimada.
+  const base = (c) => {
+    if (!c) return '';
+    const nota = c[3] ? `<p class="cita-n">${esc(c[3])}</p>` : '';
+    if (c[0] && c[1]) {
+      // El estado (Validada, Provisional) ya va en la píldora de la cabecera del tema.
+      return `<div class="cita"><p class="cita-h">Por qué está en esta opción</p><blockquote>«${esc(c[0])}»</blockquote><p class="cita-f"><a href="${esc(S[c[1]].u)}" target="_blank" rel="noopener">${esc(S[c[1]].t)} ↗</a></p>${nota}</div>`;
+    }
+    return `<div class="cita est-c"><p class="cita-h">Ninguna fuente oficial la documenta: se deduce por coherencia con el resto de posiciones del partido.</p>${nota}</div>`;
+  };
   const ext = (href, texto) => `<a href="${esc(href)}" target="_blank" rel="noopener"><span>${esc(texto)}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"/></svg></a>`;
 
   return partidos.map((p) => {
     const nProps = p.props.reduce((n, t) => n + t.length, 0);
     const conPropuesta = p.props.filter((t) => t.length).length;
+    const validadas = p.estado.filter((e) => e === 'validado').length;
     const titulo = `${p.n}: qué propone en Euskadi para el 29-N`;
     const descripcion = `Las posiciones de ${nombre[p.id]} (${p.n}) en ${temas.length} temas para las elecciones generales del 29-N en Araba, Bizkaia y Gipuzkoa: ${nProps} propuestas con su fuente, candidaturas y programa.`;
     const temasHtml = temas.map((id, i) => {
@@ -278,6 +289,7 @@ function paginasDePartido({ D }) {
   <div class="th"><h3 class="tn">${esc(a.n)}</h3>${etq ? `<span class="pill ${cls}">${etq}</span>` : ''}</div>
   <p class="small"><em>${esc(a.q)}</em></p>
   <div class="tv"><b>${esc(p.n)}</b><span>${esc(a.o[v - 1])}${p.est[i] ? ' <span class="est">(estimado)</span>' : ''}</span></div>
+  ${base(p.cit[i])}
   ${lista}
 </div>`;
     }).join('\n');
@@ -297,7 +309,7 @@ ${nombre[p.id] !== p.n ? `<p class="small" style="margin-top:-8px">${esc(nombre[
 ${CTA(`¿En qué coincides con ${esc(p.n)} y en qué no? Responde 11 preguntas y compara tu curva con la de los ${partidos.length} partidos. Tus respuestas no salen de tu dispositivo.`)}
 <p class="small"><a href="/#/partido/${p.id}">Ver la curva de ${esc(p.n)} junto a la de los demás partidos →</a></p>
 <h2>Tema a tema</h2>
-<p class="small">${conPropuesta} de ${temas.length} temas con propuestas localizadas y ${nProps} propuestas con su fuente. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
+<p class="small">${validadas} de ${temas.length} posiciones validadas: cada una lleva la cita literal de una fuente oficial que la justifica, con el enlace a la página. ${conPropuesta} de ${temas.length} temas con propuestas localizadas y ${nProps} propuestas con su fuente. <span class="tag">Programa</span> viene del programa o de un documento del 29-N, <span class="tag">Campaña</span> es un compromiso anunciado en campaña y <span class="tag">Antes del 29-N</span> es una actuación o postura previa.</p>
 <div class="stack" style="gap:10px">
 ${temasHtml}
 </div>

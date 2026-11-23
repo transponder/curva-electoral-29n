@@ -98,6 +98,12 @@
         s: temaIds.map(function (t) { var c = cod[p.id + '|' + t]; return c ? +c.nivel : 3; }),
         est: temaIds.map(function (t) { var c = cod[p.id + '|' + t]; return !c || c.estado === 'estimado'; }),
         estado: temaIds.map(function (t) { var c = cod[p.id + '|' + t]; return c ? c.estado : ''; }),
+        // Por qué está en esa opción: [cita, clave de fuente o null, estado, nota, fecha de consulta].
+        cit: temaIds.map(function (t) {
+          var c = cod[p.id + '|' + t];
+          if (!c) return null;
+          return [c.cita || '', c.cita && c.url ? fuente(c.fuente, c.url) : null, c.estado, c.nota || '', c.fecha_consulta || ''];
+        }),
         note: p.nota || '', pres: p.candidatura_presidencia || null, web: p.web || '',
         prog: { docs: (p.programa_docs || []).map(function (x) { return { t: x.titulo, u: x.url }; }), note: p.programa_nota || '' },
         props: props[p.id] || temaIds.map(function () { return []; }),
